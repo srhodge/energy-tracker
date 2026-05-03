@@ -1,0 +1,142 @@
+from fastapi import APIRouter, Depends, Query, HTTPException
+from sqlalchemy import select, func, and_
+from sqlalchemy.orm import Session, selectinload
+from typing import Optional
+
+from app.database import get_db
+from app.models import Company, Financial, EnergySegment, ValueChainPosition
+from app.schemas import CompanyOut, CompanyDetail, PaginatedCompanies, TerritoryRollup
+
+router = APIRouter(prefix="/companies", tags=["companies"])
+
+
+def _latest_financial_subquery(db: Session):
+    """Subquery: most recent financial snapshot per company."""
+    return (
+        select(Financial.company_id, func.max(Financial.snapshot_date).label("max_date"))
+        .group_by(Financial.company_id)
+        .subquery()
+    )
+
+
+@router.get("", response_model=PaginatedCompanies)
+def list_companies(
+    wwt_territory: Optional[str] = Query(None),
+    energy_segment: Optional[EnergySegment] = Query(None),
+    value_chain_position: Optional[ValueChainPosition] = Query(None),
+    country: Optional[str] = Query(None),
+    search: Optional[str] = Query(None),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(50, ge=1, le=200),
+    db: Session = Depends(get_db),
+):
+    filters = []
+    if wwt_territory:
+        filters.append(Company.wwt_territory == wwt_territory)
+    if energy_segment:
+        filters.append(Company.energy_segment == energy_segment)
+    if value_chain_position:
+        filters.append(Company.value_chain_position == value_chain_position)
+    if country:
+        filters.append(Company.country == country)
+    if search:
+        filters.append(Company.name.ilike(f"%{search}%"))
+
+    base_q = select(Company).where(and_(*filters)) if filters else select(Company)
+    total = db.scalar(select(func.count()).select_from(base_q.subquery()))
+
+    latest_sq = _latest_financial_subquery(db)
+    companies_q = (
+        base_q.outerjoin(
+            latest_sq, Company.id == latest_sq.c.company_id
+        )
+        .outerjoin(
+            Financial,
+            and_(
+                Financial.company_id == Company.id,
+                Financial.snapshot_date == latest_sq.c.max_date,
+            ),
+        )
+        .add_columns(Financial.market_cap_usd, Financial.price_usd)
+        .order_by(Financial.market_cap_usd.desc().nullslast(), Company.name)
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+    )
+
+    rows = db.execute(companies_q).all()
+    items = []
+    for row in rows:
+        company = row[0]
+        out = CompanyOut.model_validate(company)
+        out.latest_market_cap = row[1]
+        out.latest_price = row[2]
+        items.append(out)
+
+    return PaginatedCompanies(total=total, page=page, page_size=page_size, items=items)
+
+
+@router.get("/territory-rollup", response_model=list[TerritoryRollup])
+def territory_rollup(db: Session = Depends(get_db)):
+    latest_sq = _latest_financial_subquery(db)
+    rows = db.execute(
+        select(
+            Company.wwt_territory,
+            func.count(Company.id).label("company_count"),
+            func.sum(Financial.market_cap_usd).label("total_market_cap_usd"),
+        )
+        .outerjoin(latest_sq, Company.id == latest_sq.c.company_id)
+        .outerjoin(
+            Financial,
+            and_(
+                Financial.company_id == Company.id,
+                Financial.snapshot_date == latest_sq.c.max_date,
+            ),
+        )
+        .where(Company.wwt_territory.isnot(None))
+        .group_by(Company.wwt_territory)
+        .order_by(func.sum(Financial.market_cap_usd).desc().nullslast())
+    ).all()
+
+    return [
+        TerritoryRollup(
+            wwt_territory=r.wwt_territory,
+            company_count=r.company_count,
+            total_market_cap_usd=r.total_market_cap_usd,
+        )
+        for r in rows
+    ]
+
+
+@router.get("/filter-options")
+def filter_options(db: Session = Depends(get_db)):
+    """Return distinct values for filter dropdowns."""
+    territories = db.scalars(
+        select(Company.wwt_territory).distinct().where(Company.wwt_territory.isnot(None)).order_by(Company.wwt_territory)
+    ).all()
+    countries = db.scalars(
+        select(Company.country).distinct().where(Company.country.isnot(None)).order_by(Company.country)
+    ).all()
+    return {
+        "wwt_territories": territories,
+        "countries": countries,
+        "energy_segments": [e.value for e in EnergySegment],
+        "value_chain_positions": [v.value for v in ValueChainPosition],
+    }
+
+
+@router.get("/{company_id}", response_model=CompanyDetail)
+def get_company(company_id: int, db: Session = Depends(get_db)):
+    company = db.scalar(
+        select(Company)
+        .options(selectinload(Company.financials), selectinload(Company.events))
+        .where(Company.id == company_id)
+    )
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+
+    out = CompanyDetail.model_validate(company)
+    if company.financials:
+        latest = max(company.financials, key=lambda f: f.snapshot_date)
+        out.latest_market_cap = latest.market_cap_usd
+        out.latest_price = latest.price_usd
+    return out

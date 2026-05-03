@@ -1,0 +1,111 @@
+from datetime import datetime, date
+from sqlalchemy import String, Integer, Float, Date, DateTime, ForeignKey, Enum as SAEnum
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.database import Base
+import enum
+
+
+class EnergyMaturity(str, enum.Enum):
+    mature = "Mature"
+    developing = "Developing"
+
+
+class EnergyCategory(str, enum.Enum):
+    energy = "Energy"
+    chemicals = "Chemicals"
+    resources = "Resources"
+
+
+class EnergySegment(str, enum.Enum):
+    integrated_gas = "Integrated Gas"
+    onshore = "Onshore"
+    offshore = "Offshore"
+    combustion_energy = "Combustion Energy"
+    midstream_infrastructure = "Midstream Infrastructure"
+    petrochemicals = "Petrochemicals"
+    chemicals = "Chemicals"
+    refined_fuels = "Refined Fuels"
+    specialty_chemicals = "Specialty Chemicals"
+    fuel_transport = "Fuel Transport"
+    bulk_minerals = "Bulk Minerals"
+    agriculture_plants = "Agriculture Plants"
+    resource_infrastructure = "Resource Infrastructure"
+    metals = "Metals"
+    low_carbon_hydrogen = "Low Carbon Hydrogen"
+    renewable_energy = "Renewable Energy"
+    energy_storage = "Energy Storage"
+    nuclear_smr = "Nuclear SMR"
+    power_to_x = "Power to X"
+    low_carbon_fuels = "Low Carbon Fuels"
+    direct_air_capture = "Direct Air Capture"
+    ammonia_methanol = "Ammonia/Methanol"
+    plastics_recovery = "Plastics Recovery"
+    energy_transition_materials = "Energy Transition Materials"
+    battery_materials = "Battery Materials"
+    water_recycling = "Water Recycling"
+
+
+class ValueChainPosition(str, enum.Enum):
+    upstream = "Upstream"
+    midstream = "Midstream"
+    downstream = "Downstream"
+    integrated = "Integrated"
+    services = "Services"
+
+
+class EventType(str, enum.Enum):
+    news = "news"
+    project = "project"
+    earnings = "earnings"
+    filing = "filing"
+
+
+class Company(Base):
+    __tablename__ = "companies"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    ticker: Mapped[str | None] = mapped_column(String(20), index=True)
+    exchange: Mapped[str | None] = mapped_column(String(50))
+    country: Mapped[str | None] = mapped_column(String(100), index=True)
+    website: Mapped[str | None] = mapped_column(String(500))
+    description: Mapped[str | None] = mapped_column(String(2000))
+
+    wwt_territory: Mapped[str | None] = mapped_column(String(50), index=True)
+    wwt_model: Mapped[str | None] = mapped_column(String(100))
+
+    energy_maturity: Mapped[EnergyMaturity | None] = mapped_column(SAEnum(EnergyMaturity))
+    energy_category: Mapped[EnergyCategory | None] = mapped_column(SAEnum(EnergyCategory))
+    energy_segment: Mapped[EnergySegment | None] = mapped_column(SAEnum(EnergySegment))
+    value_chain_position: Mapped[ValueChainPosition | None] = mapped_column(SAEnum(ValueChainPosition))
+
+    financials: Mapped[list["Financial"]] = relationship(back_populates="company", cascade="all, delete-orphan")
+    events: Mapped[list["Event"]] = relationship(back_populates="company", cascade="all, delete-orphan")
+
+
+class Financial(Base):
+    __tablename__ = "financials"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    company_id: Mapped[int] = mapped_column(ForeignKey("companies.id"), nullable=False, index=True)
+    market_cap_usd: Mapped[float | None] = mapped_column(Float)
+    price_usd: Mapped[float | None] = mapped_column(Float)
+    revenue_annual_usd: Mapped[float | None] = mapped_column(Float)
+    snapshot_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
+
+    company: Mapped["Company"] = relationship(back_populates="financials")
+
+
+class Event(Base):
+    __tablename__ = "events"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    company_id: Mapped[int] = mapped_column(ForeignKey("companies.id"), nullable=False, index=True)
+    event_type: Mapped[EventType] = mapped_column(SAEnum(EventType), nullable=False)
+    title: Mapped[str] = mapped_column(String(500), nullable=False)
+    summary: Mapped[str | None] = mapped_column(String(5000))
+    source_url: Mapped[str | None] = mapped_column(String(1000))
+    event_date: Mapped[date | None] = mapped_column(Date)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    company: Mapped["Company"] = relationship(back_populates="events")
