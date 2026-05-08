@@ -388,11 +388,12 @@ export default function CompanyList() {
         style={{
           cursor: "pointer", userSelect: "none", whiteSpace: "nowrap",
           textAlign: right ? "right" : "left",
+          color: active ? "#2563eb" : undefined,
         }}
       >
-        {children}
-        <span style={{ marginLeft: 4, opacity: active ? 1 : 0.25, fontSize: 10 }}>
-          {active ? (sortDir === "asc" ? "▲" : "▼") : "▼"}
+        <span style={{ fontWeight: active ? 700 : undefined }}>{children}</span>
+        <span style={{ marginLeft: 5, fontSize: 11, color: active ? "#2563eb" : "#9ca3af" }}>
+          {active ? (sortDir === "asc" ? "▲" : "▼") : "↕"}
         </span>
       </th>
     );
