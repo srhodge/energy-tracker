@@ -1,31 +1,37 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { fetchCompany } from "../api/client";
+import { useParams, useNavigate } from "react-router-dom";
+import { fetchCompany, fetchCompanyByTicker } from "../api/client";
 import type { CompanyDetail as CompanyDetailType } from "../types";
 import { formatCap, formatPrice } from "../components/FormatCap";
 
 export default function CompanyDetail() {
-  const { id } = useParams<{ id: string }>();
+  const { id, ticker } = useParams<{ id?: string; ticker?: string }>();
+  const navigate = useNavigate();
   const [company, setCompany] = useState<CompanyDetailType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!id) return;
     setLoading(true);
-    fetchCompany(Number(id))
+    setError(null);
+    const req = ticker
+      ? fetchCompanyByTicker(ticker)
+      : id
+      ? fetchCompany(Number(id))
+      : Promise.reject(new Error("No company identifier"));
+    req
       .then(setCompany)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, ticker]);
 
   if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="page-body"><div className="error">{error}</div></div>;
   if (!company) return null;
 
-  const sortedFinancials = [...company.financials].sort(
-    (a, b) => b.snapshot_date.localeCompare(a.snapshot_date)
-  ).slice(0, 30);
+  const sortedFinancials = [...company.financials]
+    .sort((a, b) => b.snapshot_date.localeCompare(a.snapshot_date))
+    .slice(0, 30);
 
   const sortedEvents = [...company.events].sort(
     (a, b) => (b.event_date ?? b.created_at).localeCompare(a.event_date ?? a.created_at)
@@ -34,14 +40,15 @@ export default function CompanyDetail() {
   return (
     <>
       <div className="page-header">
-        <div>
-          <Link to="/" className="back-link">← Companies</Link>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
           <h1>{company.name}</h1>
+          {company.ticker && (
+            <span className="ticker-badge">{company.ticker}</span>
+          )}
         </div>
-        {company.ticker && (
-          <span style={{ fontFamily: "monospace", background: "#f0f2f5", padding: "4px 10px", borderRadius: 4, fontSize: 15 }}>
-            {company.ticker}
-          </span>
+        {company.energy_segment && (
+          <span className="badge badge-segment">{company.energy_segment}</span>
         )}
       </div>
 
@@ -52,18 +59,17 @@ export default function CompanyDetail() {
             <div className="value">{formatCap(company.latest_market_cap)}</div>
           </div>
           <div className="stat-card">
+            <div className="label">Revenue (Annual)</div>
+            <div className="value">{formatCap(company.latest_revenue)}</div>
+          </div>
+          <div className="stat-card">
             <div className="label">Price (USD)</div>
             <div className="value">{formatPrice(company.latest_price)}</div>
           </div>
           <div className="stat-card">
-            <div className="label">WWT Territory</div>
-            <div className="value" style={{ fontSize: 18 }}>{company.wwt_territory ?? "—"}</div>
-            <div className="sub">{company.wwt_model ?? ""}</div>
-          </div>
-          <div className="stat-card">
             <div className="label">Value Chain</div>
             <div className="value" style={{ fontSize: 18 }}>{company.value_chain_position ?? "—"}</div>
-            <div className="sub">{company.energy_segment ?? ""}</div>
+            <div className="sub">{company.wwt_territory ?? ""}</div>
           </div>
         </div>
 
@@ -72,19 +78,31 @@ export default function CompanyDetail() {
             <div className="detail-section card">
               <h2>Company Info</h2>
               <dl className="detail-kv">
-                <dt>Country</dt><dd>{company.country ?? "—"}</dd>
-                <dt>Exchange</dt><dd>{company.exchange ?? "—"}</dd>
+                <dt>Sector</dt>
+                <dd>{company.energy_segment ?? "—"}</dd>
+                <dt>Country</dt>
+                <dd>{company.country ?? "—"}</dd>
+                <dt>Exchange</dt>
+                <dd>{company.exchange ?? "—"}</dd>
                 <dt>Website</dt>
                 <dd>
                   {company.website
                     ? <a href={company.website} target="_blank" rel="noopener noreferrer">{company.website}</a>
                     : "—"}
                 </dd>
-                <dt>Category</dt><dd>{company.energy_category ?? "—"}</dd>
-                <dt>Maturity</dt><dd>{company.energy_maturity ?? "—"}</dd>
+                <dt>Category</dt>
+                <dd>{company.energy_category ?? "—"}</dd>
+                <dt>Maturity</dt>
+                <dd>{company.energy_maturity ?? "—"}</dd>
+                <dt>WWT Territory</dt>
+                <dd>{company.wwt_territory ?? "—"}</dd>
+                <dt>WWT Model</dt>
+                <dd>{company.wwt_model ?? "—"}</dd>
               </dl>
               {company.description && (
-                <p style={{ marginTop: 14, fontSize: 13, color: "#4b5563", lineHeight: 1.6 }}>{company.description}</p>
+                <p style={{ marginTop: 14, fontSize: 13, color: "#4b5563", lineHeight: 1.6 }}>
+                  {company.description}
+                </p>
               )}
             </div>
 
@@ -99,6 +117,7 @@ export default function CompanyDetail() {
                       <th>Date</th>
                       <th style={{ textAlign: "right" }}>Price</th>
                       <th style={{ textAlign: "right" }}>Market Cap</th>
+                      <th style={{ textAlign: "right" }}>Revenue</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -107,6 +126,7 @@ export default function CompanyDetail() {
                         <td>{f.snapshot_date}</td>
                         <td style={{ textAlign: "right" }}>{formatPrice(f.price_usd)}</td>
                         <td style={{ textAlign: "right" }}>{formatCap(f.market_cap_usd)}</td>
+                        <td style={{ textAlign: "right" }}>{formatCap(f.revenue_annual_usd)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -130,7 +150,11 @@ export default function CompanyDetail() {
                     {e.source_url
                       ? <a href={e.source_url} target="_blank" rel="noopener noreferrer" className="event-title">{e.title}</a>
                       : <div className="event-title">{e.title}</div>}
-                    {e.summary && <div className="event-summary">{e.summary.slice(0, 300)}{e.summary.length > 300 ? "…" : ""}</div>}
+                    {e.summary && (
+                      <div className="event-summary">
+                        {e.summary.slice(0, 300)}{e.summary.length > 300 ? "…" : ""}
+                      </div>
+                    )}
                   </div>
                 ))
               )}

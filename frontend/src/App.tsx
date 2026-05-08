@@ -20,6 +20,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<CompanyList />} />
             <Route path="/companies/:id" element={<CompanyDetail />} />
+            <Route path="/company/:ticker" element={<CompanyDetail />} />
             <Route path="/territories" element={<TerritoryDashboard />} />
             <Route path="/activity" element={<ActivityFeed />} />
           </Routes>

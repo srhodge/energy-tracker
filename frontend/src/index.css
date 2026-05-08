@@ -154,3 +154,29 @@ tr:hover td { background: #f8fafc; }
 
 /* Back link */
 .back-link { font-size: 13px; color: #6b7280; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 4px; }
+
+/* Back button */
+.back-btn {
+  background: none;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 13px;
+  color: #6b7280;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.back-btn:hover { background: #f3f4f6; color: #1a1a2e; }
+
+/* Ticker badge */
+.ticker-badge {
+  font-family: monospace;
+  font-size: 13px;
+  font-weight: 600;
+  background: #f0f2f5;
+  border: 1px solid #d1d5db;
+  padding: 3px 10px;
+  border-radius: 4px;
+  color: #374151;
+  letter-spacing: 0.05em;
+}

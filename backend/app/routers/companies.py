@@ -139,4 +139,24 @@ def get_company(company_id: int, db: Session = Depends(get_db)):
         latest = max(company.financials, key=lambda f: f.snapshot_date)
         out.latest_market_cap = latest.market_cap_usd
         out.latest_price = latest.price_usd
+        out.latest_revenue = latest.revenue_annual_usd
+    return out
+
+
+@router.get("/by-ticker/{ticker}", response_model=CompanyDetail)
+def get_company_by_ticker(ticker: str, db: Session = Depends(get_db)):
+    company = db.scalar(
+        select(Company)
+        .options(selectinload(Company.financials), selectinload(Company.events))
+        .where(func.upper(Company.ticker) == ticker.upper())
+    )
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+
+    out = CompanyDetail.model_validate(company)
+    if company.financials:
+        latest = max(company.financials, key=lambda f: f.snapshot_date)
+        out.latest_market_cap = latest.market_cap_usd
+        out.latest_price = latest.price_usd
+        out.latest_revenue = latest.revenue_annual_usd
     return out

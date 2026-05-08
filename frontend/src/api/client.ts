@@ -44,6 +44,10 @@ export function fetchCompany(id: number): Promise<CompanyDetail> {
   return get(`/companies/${id}`);
 }
 
+export function fetchCompanyByTicker(ticker: string): Promise<CompanyDetail> {
+  return get(`/companies/by-ticker/${encodeURIComponent(ticker)}`);
+}
+
 export function fetchFilterOptions(): Promise<FilterOptions> {
   return get("/companies/filter-options");
 }

@@ -114,7 +114,7 @@ export default function CompanyList() {
                   ) : companies.map((c) => (
                     <tr key={c.id}>
                       <td>
-                        <Link to={`/companies/${c.id}`} style={{ fontWeight: 500 }}>{c.name}</Link>
+                        <Link to={c.ticker ? `/company/${c.ticker}` : `/companies/${c.id}`} style={{ fontWeight: 500 }}>{c.name}</Link>
                       </td>
                       <td style={{ fontFamily: "monospace", color: "#6b7280" }}>{c.ticker ?? "—"}</td>
                       <td>{c.wwt_territory ? <span className="badge badge-territory">{c.wwt_territory}</span> : "—"}</td>

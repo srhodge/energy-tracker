@@ -57,6 +57,7 @@ class CompanyOut(CompanyBase):
     id: int
     latest_market_cap: Optional[float] = None
     latest_price: Optional[float] = None
+    latest_revenue: Optional[float] = None
 
 
 class CompanyDetail(CompanyOut):

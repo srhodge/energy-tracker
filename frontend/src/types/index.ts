@@ -29,6 +29,7 @@ export interface Company {
   value_chain_position?: ValueChainPosition;
   latest_market_cap?: number;
   latest_price?: number;
+  latest_revenue?: number;
 }
 
 export interface Financial {
