@@ -497,20 +497,20 @@ export default function CompanyList() {
             {filters?.wwt_territories.map((t) => <option key={t}>{t}</option>)}
           </select>
           <select value={segment} onChange={handleFilterChange(setSegment)}>
-            <option value="">All segments</option>
+            <option value="">All Segments</option>
             {filters?.energy_segments.map((s) => <option key={s}>{s}</option>)}
           </select>
           <select value={supplyChain} onChange={handleFilterChange(setSupplyChain)}>
-            <option value="">All energy value chain positions</option>
+            <option value="">All Energy Value Chain Positions</option>
             {filters?.supply_chain_positions.map((v) => <option key={v}>{v}</option>)}
           </select>
           <select value={country} onChange={handleFilterChange(setCountry)}>
-            <option value="">All countries</option>
+            <option value="">All Countries</option>
             {filters?.countries.map((c) => <option key={c}>{c}</option>)}
           </select>
           <select value={statusFilter} onChange={handleFilterChange(setStatusFilter)}>
-            <option value="">Active only</option>
-            <option value="all">All statuses</option>
+            <option value="">Active Only</option>
+            <option value="all">All Statuses</option>
             <option value="Active">Active</option>
             <option value="Acquired">Acquired</option>
             <option value="Merged">Merged</option>
