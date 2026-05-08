@@ -356,7 +356,6 @@ export default function CompanyList() {
   const [search, setSearch] = useState("");
   const [territory, setTerritory] = useState("");
   const [segment, setSegment] = useState("");
-  const [chainPos, setChainPos] = useState("");
   const [supplyChain, setSupplyChain] = useState("");
   const [country, setCountry] = useState("");
   const [includeInactive, setIncludeInactive] = useState(false);
@@ -373,7 +372,6 @@ export default function CompanyList() {
       search: search || undefined,
       wwt_territory: territory || undefined,
       energy_segment: (segment as EnergySegment) || undefined,
-      value_chain_position: (chainPos as ValueChainPosition) || undefined,
       supply_chain_position: supplyChain || undefined,
       country: country || undefined,
       include_inactive: includeInactive || undefined,
@@ -386,7 +384,7 @@ export default function CompanyList() {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [search, territory, segment, chainPos, supplyChain, country, includeInactive, page]);
+  }, [search, territory, segment, supplyChain, country, includeInactive, page]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -465,10 +463,6 @@ export default function CompanyList() {
           <select value={segment} onChange={handleFilterChange(setSegment)}>
             <option value="">All segments</option>
             {filters?.energy_segments.map((s) => <option key={s}>{s}</option>)}
-          </select>
-          <select value={chainPos} onChange={handleFilterChange(setChainPos)}>
-            <option value="">All value chain positions</option>
-            {filters?.value_chain_positions.map((v) => <option key={v}>{v}</option>)}
           </select>
           <select value={supplyChain} onChange={handleFilterChange(setSupplyChain)}>
             <option value="">All supply chain positions</option>
