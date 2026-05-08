@@ -194,19 +194,23 @@ def admin_status():
     from app.services.market_poller import _ENERGY_SEGMENT_VALUES
     with SessionLocal() as db:
         total = db.scalar(select(func.count(Company.id)))
-        missing_industry = db.scalar(
+        null_industry = db.scalar(
+            select(func.count(Company.id)).where(Company.industry.is_(None))
+        )
+        seeded_industry = db.scalar(
             select(func.count(Company.id)).where(
-                or_(
-                    Company.industry.is_(None),
-                    Company.industry.in_(_ENERGY_SEGMENT_VALUES),
-                )
+                Company.industry.isnot(None),
+                Company.industry.in_(_ENERGY_SEGMENT_VALUES),
             )
         )
+        yf_industry = total - null_industry - seeded_industry
         needs_industry = needs_industry_population(db)
         needs_fundamentals = needs_initial_fundamentals(db)
     return {
         "total_companies": total,
-        "missing_yf_industry": missing_industry,
+        "null_industry": null_industry,
+        "seeded_from_energy_segment": seeded_industry,
+        "populated_from_yfinance": yf_industry,
         "needs_industry_population": needs_industry,
         "needs_initial_fundamentals": needs_fundamentals,
     }
