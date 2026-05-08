@@ -5,6 +5,11 @@ from app.database import Base
 import enum
 
 
+def _enum(py_enum):
+    """SAEnum that stores .value ('Mature') not .name ('mature')."""
+    return SAEnum(py_enum, values_callable=lambda members: [m.value for m in members])
+
+
 class EnergyMaturity(str, enum.Enum):
     mature = "Mature"
     developing = "Developing"
@@ -74,10 +79,10 @@ class Company(Base):
     wwt_territory: Mapped[str | None] = mapped_column(String(50), index=True)
     wwt_model: Mapped[str | None] = mapped_column(String(100))
 
-    energy_maturity: Mapped[EnergyMaturity | None] = mapped_column(SAEnum(EnergyMaturity))
-    energy_category: Mapped[EnergyCategory | None] = mapped_column(SAEnum(EnergyCategory))
-    energy_segment: Mapped[EnergySegment | None] = mapped_column(SAEnum(EnergySegment))
-    value_chain_position: Mapped[ValueChainPosition | None] = mapped_column(SAEnum(ValueChainPosition))
+    energy_maturity: Mapped[EnergyMaturity | None] = mapped_column(_enum(EnergyMaturity))
+    energy_category: Mapped[EnergyCategory | None] = mapped_column(_enum(EnergyCategory))
+    energy_segment: Mapped[EnergySegment | None] = mapped_column(_enum(EnergySegment))
+    value_chain_position: Mapped[ValueChainPosition | None] = mapped_column(_enum(ValueChainPosition))
     supply_chain_position: Mapped[str | None] = mapped_column(String(50), index=True)
 
     financials: Mapped[list["Financial"]] = relationship(back_populates="company", cascade="all, delete-orphan")
@@ -103,7 +108,7 @@ class Event(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     company_id: Mapped[int] = mapped_column(ForeignKey("companies.id"), nullable=False, index=True)
-    event_type: Mapped[EventType] = mapped_column(SAEnum(EventType), nullable=False)
+    event_type: Mapped[EventType] = mapped_column(_enum(EventType), nullable=False)
     title: Mapped[str] = mapped_column(String(500), nullable=False)
     summary: Mapped[str | None] = mapped_column(String(5000))
     source_url: Mapped[str | None] = mapped_column(String(1000))
