@@ -494,11 +494,11 @@ export default function CompanyList() {
                   <tr>
                     <th>Company</th>
                     <th>Ticker</th>
-                    <th>Territory</th>
-                    <th>Segment</th>
-                    <th>Energy Value Chain</th>
-                    <th>Country</th>
                     <th style={{ textAlign: "right" }}>Price</th>
+                    <th>Country</th>
+                    <th>Territory</th>
+                    <th>Energy Value Chain</th>
+                    <th>Segment</th>
                     <th style={{ textAlign: "right" }}>Q Rev</th>
                     <th style={{ textAlign: "right" }}>FY Rev</th>
                     <th style={{ textAlign: "right" }}>Market Cap</th>
@@ -526,11 +526,11 @@ export default function CompanyList() {
                           <StatusBadge status={c.status} />
                         </td>
                         <td style={{ fontFamily: "monospace", color: "#6b7280" }}>{c.ticker ?? "—"}</td>
-                        <td>{c.wwt_territory ? <span className="badge badge-territory">{c.wwt_territory}</span> : "—"}</td>
-                        <td>{c.energy_segment ? <span className="badge badge-segment">{c.energy_segment}</span> : "—"}</td>
-                        <td>{c.supply_chain_position ? <span className="badge badge-supply-chain">{c.supply_chain_position}</span> : "—"}</td>
-                        <td>{c.country ?? "—"}</td>
                         <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{formatPrice(c.latest_price)}</td>
+                        <td>{c.country ?? "—"}</td>
+                        <td>{c.wwt_territory ? <span className="badge badge-territory">{c.wwt_territory}</span> : "—"}</td>
+                        <td>{c.supply_chain_position ? <span className="badge badge-supply-chain">{c.supply_chain_position}</span> : "—"}</td>
+                        <td>{c.energy_segment ? <span className="badge badge-segment">{c.energy_segment}</span> : "—"}</td>
                         <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums", color: "#6b7280" }}>
                           {c.latest_quarterly_revenue ? `${formatCap(c.latest_quarterly_revenue)}${c.latest_quarter_label ? ` ${c.latest_quarter_label}` : ""}` : "—"}
                         </td>
