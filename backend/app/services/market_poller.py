@@ -371,6 +371,22 @@ def has_missing_revenue(db: Session) -> bool:
     return (filled or 0) < len(pollable_ids)
 
 
+def needs_initial_fundamentals(db: Session) -> bool:
+    """Return True if more than half of pollable companies lack quarterly revenue data."""
+    pollable_ids = db.scalars(
+        select(Company.id).where(Company.skip_market_poll == False)
+    ).all()
+    if not pollable_ids:
+        return False
+    filled = db.scalar(
+        select(func.count(Financial.company_id.distinct())).where(
+            Financial.company_id.in_(pollable_ids),
+            Financial.revenue_quarterly_usd.isnot(None),
+        )
+    )
+    return (filled or 0) < len(pollable_ids) // 2
+
+
 # ---------------------------------------------------------------------------
 # Core poll logic
 # ---------------------------------------------------------------------------
@@ -551,7 +567,7 @@ def poll_once(db: Session, batch_size: int = 50, company_ids: set[int] | None = 
                 failed += 1
                 continue
 
-            # Revenue: carry forward from most recent historical record if available
+            # Revenue: carry forward from previous record (fundamentals poll updates separately)
             prev = prev_revenue.get(company.id)
 
             if company.id in existing_today:
@@ -559,7 +575,6 @@ def poll_once(db: Session, batch_size: int = 50, company_ids: set[int] | None = 
                 rec.price_usd = price
                 rec.market_cap_usd = market_cap
                 rec.last_market_update = now
-                needs_revenue = rec.revenue_annual_usd is None
             else:
                 rec = Financial(
                     company_id=company.id,
@@ -574,20 +589,6 @@ def poll_once(db: Session, batch_size: int = 50, company_ids: set[int] | None = 
                 )
                 db.add(rec)
                 existing_today[company.id] = rec
-                needs_revenue = rec.revenue_annual_usd is None
-
-            # Fetch fresh revenue only when none exists yet
-            if needs_revenue and company.ticker:
-                rev_cur = _revenue_currency(currency)
-                q_rev, a_rev, q_label, fy_label = _fetch_revenue(company.ticker, rev_cur, fx_rates)
-                if a_rev is not None or q_rev is not None:
-                    rec.revenue_quarterly_usd = q_rev
-                    rec.revenue_annual_usd = a_rev
-                    rec.revenue_quarter_label = q_label
-                    rec.revenue_fiscal_year_label = fy_label
-                    # Cache so future records in this session carry forward
-                    prev_revenue[company.id] = (q_rev, a_rev, q_label, fy_label)
-                time.sleep(0.3)
 
             updated += 1
 
@@ -619,6 +620,124 @@ def poll_non_usd_companies(db: Session) -> dict:
 
     print(f"[market-poll] Re-polling {len(non_usd_ids)} non-USD companies for currency correction...", flush=True)
     return poll_once(db, company_ids=non_usd_ids)
+
+
+# ---------------------------------------------------------------------------
+# Fundamentals poller (revenue — runs weekly, Saturday 8am ET)
+# ---------------------------------------------------------------------------
+
+def _is_stale(label: str | None) -> bool:
+    """Return True if a quarter label is null or older than 4 months."""
+    if not label:
+        return True
+    try:
+        parts = label.split()
+        if len(parts) != 2 or not parts[0].startswith("Q"):
+            return True
+        q_num = int(parts[0][1:])
+        year = int(parts[1])
+        q_end_month = q_num * 3
+        cutoff_month = q_end_month + 4
+        cutoff_year = year + (cutoff_month - 1) // 12
+        cutoff_month = (cutoff_month - 1) % 12 + 1
+        return date.today() >= date(cutoff_year, cutoff_month, 1)
+    except Exception:
+        return True
+
+
+def poll_fundamentals(db: Session) -> dict:
+    """
+    Fetch/refresh quarterly and annual revenue for all pollable companies.
+    Only re-fetches companies whose revenue_quarter_label is null or >4 months old.
+    """
+    pollable = db.scalars(
+        select(Company).where(Company.skip_market_poll == False)
+    ).all()
+
+    if not pollable:
+        print("[fundamentals] No pollable companies.", flush=True)
+        return {}
+
+    # Fetch FX rates upfront for all non-USD currencies
+    all_currencies = {_ticker_currency(c.ticker or "") for c in pollable} - {"USD"}
+    fx_rates: dict[str, float] = _fetch_fx_rates(all_currencies) if all_currencies else {}
+
+    # Latest Financial record per company
+    latest_sq = (
+        select(Financial.company_id, func.max(Financial.snapshot_date).label("max_date"))
+        .group_by(Financial.company_id)
+        .subquery()
+    )
+    latest_records: dict[int, Financial] = {
+        f.company_id: f
+        for f in db.scalars(
+            select(Financial).join(latest_sq, and_(
+                Financial.company_id == latest_sq.c.company_id,
+                Financial.snapshot_date == latest_sq.c.max_date,
+            ))
+        ).all()
+    }
+
+    today = _et_today()
+    updated = skipped = failed = 0
+
+    for i, company in enumerate(pollable):
+        if not company.ticker:
+            skipped += 1
+            continue
+
+        rec = latest_records.get(company.id)
+        q_label = rec.revenue_quarter_label if rec else None
+
+        if not _is_stale(q_label):
+            skipped += 1
+            continue
+
+        ticker = company.ticker.upper()
+        currency = _ticker_currency(ticker)
+        rev_currency = _revenue_currency(currency)
+
+        if rev_currency != "USD" and rev_currency not in fx_rates:
+            extra = _fetch_fx_rates({rev_currency})
+            fx_rates.update(extra)
+
+        q_rev, a_rev, q_lbl, fy_lbl = _fetch_revenue(ticker, rev_currency, fx_rates)
+
+        if q_rev is None and a_rev is None:
+            failed += 1
+            time.sleep(0.4)
+            continue
+
+        if rec is None:
+            rec = Financial(
+                company_id=company.id,
+                snapshot_date=today,
+                revenue_quarterly_usd=q_rev,
+                revenue_annual_usd=a_rev,
+                revenue_quarter_label=q_lbl,
+                revenue_fiscal_year_label=fy_lbl,
+            )
+            db.add(rec)
+        else:
+            rec.revenue_quarterly_usd = q_rev
+            rec.revenue_annual_usd = a_rev
+            rec.revenue_quarter_label = q_lbl
+            rec.revenue_fiscal_year_label = fy_lbl
+
+        updated += 1
+
+        if (i + 1) % 10 == 0:
+            print(f"[fundamentals] {i + 1}/{len(pollable)} processed ...", flush=True)
+            db.commit()
+
+        time.sleep(0.4)
+
+    db.commit()
+    print(
+        f"[fundamentals] Done — updated {updated}, skipped {skipped} (fresh), failed {failed}",
+        flush=True,
+    )
+    return {"updated": updated, "skipped": skipped, "failed": failed}
 
 
 # ---------------------------------------------------------------------------

@@ -45,11 +45,11 @@ def _run_non_usd_poll():
         poll_non_usd_companies(db)
 
 
-def _run_revenue_poll():
-    """Full market poll that will fetch revenue for any companies missing it."""
-    from app.services.market_poller import poll_once
+def _run_fundamentals_poll():
+    """Fetch/refresh revenue for companies with stale or missing quarterly data."""
+    from app.services.market_poller import poll_fundamentals
     with SessionLocal() as db:
-        poll_once(db)
+        poll_fundamentals(db)
 
 
 def _run_migrations():
@@ -108,11 +108,11 @@ async def lifespan(app: FastAPI):
             print(f"[status] Done — {changed} companies enriched beyond Unknown.")
 
         # Classify skip_market_poll flags (fast — DB queries only, no external calls)
-        from app.services.market_poller import classify_skip_flags, is_poll_stale, is_trading_day, has_missing_revenue
+        from app.services.market_poller import classify_skip_flags, is_poll_stale, is_trading_day, needs_initial_fundamentals
         skip, active = classify_skip_flags(db)
         print(f"[market-poll] Skip flags set: {skip} skipped, {active} pollable", flush=True)
         startup_poll_needed = is_poll_stale(db) and is_trading_day()
-        revenue_poll_needed = has_missing_revenue(db)
+        fundamentals_needed = needs_initial_fundamentals(db)
 
     # News scraper: immediately on startup, then every 6 hours
     _scheduler.add_job(_run_scraper, "interval", hours=6, next_run_time=datetime.utcnow())
@@ -139,10 +139,21 @@ async def lifespan(app: FastAPI):
         print("[market-poll] Stale data — scheduling full background poll ...", flush=True)
         _scheduler.add_job(_run_market_poll, "date", run_date=datetime.utcnow())
 
-    # If any company is missing revenue data, fire a revenue-populating poll
-    if revenue_poll_needed and not startup_poll_needed:
-        print("[market-poll] Missing revenue data — scheduling revenue population poll ...", flush=True)
-        _scheduler.add_job(_run_revenue_poll, "date", run_date=datetime.utcnow())
+    # Fundamentals poll: every Saturday at 8am ET
+    _scheduler.add_job(
+        _run_fundamentals_poll,
+        CronTrigger(
+            day_of_week="sat",
+            hour=8,
+            minute=0,
+            timezone="America/New_York",
+        ),
+    )
+
+    # On startup, run fundamentals immediately if more than half of companies lack quarterly revenue
+    if fundamentals_needed:
+        print("[fundamentals] Missing quarterly revenue — scheduling startup fundamentals poll ...", flush=True)
+        _scheduler.add_job(_run_fundamentals_poll, "date", run_date=datetime.utcnow())
 
     _scheduler.start()
 
