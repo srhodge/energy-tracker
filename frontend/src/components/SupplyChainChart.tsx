@@ -41,7 +41,18 @@ function CustomTooltip({ active, payload }: TooltipProps) {
   );
 }
 
-export default function SupplyChainChart() {
+interface Props {
+  selectedPosition?: string;
+  onSelect?: (position: string) => void;
+}
+
+interface TickProps {
+  x?: string | number;
+  y?: string | number;
+  payload?: { value: string };
+}
+
+export default function SupplyChainChart({ selectedPosition, onSelect }: Props) {
   const [data, setData] = useState<SupplyChainRollup[]>([]);
 
   useEffect(() => {
@@ -52,10 +63,51 @@ export default function SupplyChainChart() {
 
   if (!data.length) return null;
 
+  const hasSelection = !!selectedPosition;
+
+  function handleClick(position: string) {
+    onSelect?.(position);
+  }
+
+  function CustomTick({ x = 0, y = 0, payload }: TickProps) {
+    const nx = typeof x === "string" ? parseFloat(x) : x;
+    const ny = typeof y === "string" ? parseFloat(y) : y;
+    const pos = payload?.value ?? "";
+    const isSelected = pos === selectedPosition;
+    return (
+      <g
+        transform={`translate(${nx},${ny})`}
+        onClick={() => handleClick(pos)}
+        style={{ cursor: onSelect ? "pointer" : "default" }}
+      >
+        <text
+          x={-6}
+          y={0}
+          dy={4}
+          textAnchor="end"
+          fill={isSelected ? (COLORS[pos] ?? "#374151") : "#374151"}
+          fontWeight={isSelected ? 700 : 400}
+          fontSize={12}
+          style={{ userSelect: "none" }}
+        >
+          {pos}
+        </text>
+      </g>
+    );
+  }
+
   return (
     <div className="card" style={{ marginBottom: 18 }}>
       <div style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 12 }}>
         Market Cap by Supply Chain Position
+        {hasSelection && (
+          <span
+            onClick={() => onSelect?.("")}
+            style={{ marginLeft: 10, fontSize: 12, fontWeight: 400, color: "#2563eb", cursor: "pointer" }}
+          >
+            Clear filter ✕
+          </span>
+        )}
       </div>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data} layout="vertical" margin={{ left: 0, right: 24, top: 0, bottom: 0 }}>
@@ -70,18 +122,28 @@ export default function SupplyChainChart() {
             type="category"
             dataKey="supply_chain_position"
             width={110}
-            tick={{ fontSize: 12, fill: "#374151" }}
             axisLine={false}
             tickLine={false}
+            tick={(props: TickProps) => <CustomTick {...props} />}
           />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: "#f8fafc" }} />
-          <Bar dataKey="total_market_cap_usd" radius={[0, 4, 4, 0]}>
-            {data.map(entry => (
-              <Cell
-                key={entry.supply_chain_position}
-                fill={COLORS[entry.supply_chain_position] ?? "#94a3b8"}
-              />
-            ))}
+          <Bar
+            dataKey="total_market_cap_usd"
+            radius={[0, 4, 4, 0]}
+            style={{ cursor: onSelect ? "pointer" : "default" }}
+            onClick={(d) => handleClick((d as unknown as SupplyChainRollup).supply_chain_position)}
+          >
+            {data.map(entry => {
+              const isSelected = entry.supply_chain_position === selectedPosition;
+              const opacity = hasSelection && !isSelected ? 0.3 : 1;
+              return (
+                <Cell
+                  key={entry.supply_chain_position}
+                  fill={COLORS[entry.supply_chain_position] ?? "#94a3b8"}
+                  opacity={opacity}
+                />
+              );
+            })}
           </Bar>
         </BarChart>
       </ResponsiveContainer>

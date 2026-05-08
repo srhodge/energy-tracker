@@ -350,6 +350,7 @@ export default function CompanyList() {
   const [statusSummary, setStatusSummary] = useState<StatusSummary | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   // Filter state
   const [search, setSearch] = useState("");
@@ -438,7 +439,15 @@ export default function CompanyList() {
         </div>
       </div>
       <div className="page-body">
-        <SupplyChainChart />
+        <SupplyChainChart
+          selectedPosition={supplyChain}
+          onSelect={(pos) => {
+            const next = pos && pos !== supplyChain ? pos : "";
+            setSupplyChain(next);
+            setPage(1);
+            if (next) setTimeout(() => tableRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+          }}
+        />
 
         {statusSummary && <StatusSummaryBar summary={statusSummary} />}
 
@@ -481,7 +490,7 @@ export default function CompanyList() {
 
         {error && <div className="error">{error}</div>}
 
-        <div className="card" style={{ padding: 0 }}>
+        <div className="card" style={{ padding: 0 }} ref={tableRef}>
           <div className="table-wrap">
             {loading ? (
               <div className="loading">Loading...</div>
