@@ -13,6 +13,7 @@ from app.database import engine, SessionLocal
 from app.models import Base, Company
 from app.routers import companies, events
 from app.routers import news as news_router
+from app.routers import admin as admin_router
 
 _SEED_FILE = Path(__file__).parent.parent / "data" / "companies.xlsx"
 _ALEMBIC_INI = Path(__file__).parent.parent / "alembic.ini"
@@ -96,6 +97,7 @@ app.add_middleware(
 app.include_router(companies.router)
 app.include_router(events.router)
 app.include_router(news_router.router)
+app.include_router(admin_router.router)
 
 
 @app.get("/health")
