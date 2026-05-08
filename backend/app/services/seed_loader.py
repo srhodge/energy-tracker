@@ -132,7 +132,13 @@ def _row_to_company(row: dict) -> dict:
 
 
 def load_excel(path: str | Path, db: Session) -> int:
+    from sqlalchemy import select as _select
     wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+
+    # Load names already in DB so re-runs don't duplicate
+    existing_names: set[str] = {
+        row[0].lower() for row in db.execute(_select(Company.name)).all()
+    }
     seen_names: set[str] = set()
     loaded = 0
 
@@ -144,9 +150,10 @@ def load_excel(path: str | Path, db: Session) -> int:
             if not data:
                 continue
             key = (data["name"] or "").lower()
-            if key in seen_names:
+            if key in seen_names or key in existing_names:
                 continue
             seen_names.add(key)
+            existing_names.add(key)
 
             market_cap = data.pop("_market_cap", None)
             price_usd = data.pop("_price_usd", None)

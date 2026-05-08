@@ -4,7 +4,8 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import select, func, text
+from sqlalchemy import select, func, inspect as sa_inspect
+
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from app.config import settings
@@ -14,6 +15,7 @@ from app.routers import companies, events
 from app.routers import news as news_router
 
 _SEED_FILE = Path(__file__).parent.parent / "data" / "companies.xlsx"
+_ALEMBIC_INI = Path(__file__).parent.parent / "alembic.ini"
 
 _scheduler = BackgroundScheduler()
 
@@ -26,23 +28,29 @@ def _run_scraper():
             print(f"[news] +{n} new items", flush=True)
 
 
+def _run_migrations():
+    from alembic.config import Config
+    from alembic import command
+
+    alembic_cfg = Config(str(_ALEMBIC_INI))
+
+    # If tables exist but alembic_version doesn't (pre-alembic local SQLite),
+    # stamp as current rather than trying to re-create everything.
+    with engine.connect() as conn:
+        tables = sa_inspect(conn).get_table_names()
+        if "companies" in tables and "alembic_version" not in tables:
+            print("[migrations] Existing DB detected — stamping alembic head", flush=True)
+            command.stamp(alembic_cfg, "head")
+            return
+
+    print("[migrations] Running alembic upgrade head ...", flush=True)
+    command.upgrade(alembic_cfg, "head")
+    print("[migrations] Done.", flush=True)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)
-
-    # Add supply_chain_position column on existing DBs that pre-date it
-    db_url = settings.database_url
-    migration_sql = (
-        "ALTER TABLE companies ADD COLUMN IF NOT EXISTS supply_chain_position VARCHAR(50)"
-        if ("postgresql" in db_url or "postgres" in db_url)
-        else "ALTER TABLE companies ADD COLUMN supply_chain_position VARCHAR(50)"
-    )
-    with engine.connect() as conn:
-        try:
-            conn.execute(text(migration_sql))
-            conn.commit()
-        except Exception:
-            pass
+    _run_migrations()
 
     with SessionLocal() as db:
         count = db.scalar(select(func.count(Company.id)))
