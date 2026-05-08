@@ -185,3 +185,39 @@ app.include_router(news_router.router)
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/admin/status")
+def admin_status():
+    from app.services.market_poller import needs_industry_population, needs_initial_fundamentals
+    from sqlalchemy import select, func, or_
+    from app.services.market_poller import _ENERGY_SEGMENT_VALUES
+    with SessionLocal() as db:
+        total = db.scalar(select(func.count(Company.id)))
+        missing_industry = db.scalar(
+            select(func.count(Company.id)).where(
+                or_(
+                    Company.industry.is_(None),
+                    Company.industry.in_(_ENERGY_SEGMENT_VALUES),
+                )
+            )
+        )
+        needs_industry = needs_industry_population(db)
+        needs_fundamentals = needs_initial_fundamentals(db)
+    return {
+        "total_companies": total,
+        "missing_yf_industry": missing_industry,
+        "needs_industry_population": needs_industry,
+        "needs_initial_fundamentals": needs_fundamentals,
+    }
+
+
+@app.post("/admin/trigger-fundamentals")
+def admin_trigger_fundamentals():
+    import threading
+    def _run():
+        from app.services.market_poller import poll_fundamentals
+        with SessionLocal() as db:
+            poll_fundamentals(db)
+    threading.Thread(target=_run, daemon=True).start()
+    return {"status": "fundamentals poll started in background"}
