@@ -204,7 +204,8 @@ def _fetch_fx_rates(currencies: set[str]) -> dict[str, float]:
 
         if len(pairs) == 1:
             cur = pairs[0][3:6]  # "USDIDR=X" → "IDR"
-            series = raw["Close"].dropna()
+            # .squeeze() collapses a single-column DataFrame to a Series
+            series = raw["Close"].squeeze().dropna()
             if not series.empty:
                 rates[cur] = float(series.iloc[-1])
         else:
@@ -213,7 +214,7 @@ def _fetch_fx_rates(currencies: set[str]) -> dict[str, float]:
                 cur = pair[3:6]
                 try:
                     col = close[pair] if pair in close.columns else pd.Series(dtype=float)
-                    series = col.dropna()
+                    series = col.squeeze().dropna()
                     if not series.empty:
                         rates[cur] = float(series.iloc[-1])
                 except Exception:
@@ -291,7 +292,7 @@ def _fetch_batch(tickers: list[str]) -> dict[str, tuple[float | None, float | No
         if len(tickers) == 1:
             t = tickers[0]
             try:
-                close_series = raw["Close"].dropna()
+                close_series = raw["Close"].squeeze().dropna()
                 price = float(close_series.iloc[-1]) if not close_series.empty else None
             except Exception:
                 price = None
