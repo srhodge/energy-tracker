@@ -114,6 +114,9 @@ class Financial(Base):
     market_cap_usd: Mapped[float | None] = mapped_column(Float)
     price_usd: Mapped[float | None] = mapped_column(Float)
     revenue_annual_usd: Mapped[float | None] = mapped_column(Float)
+    revenue_quarterly_usd: Mapped[float | None] = mapped_column(Float)
+    revenue_quarter_label: Mapped[str | None] = mapped_column(String(10))
+    revenue_fiscal_year_label: Mapped[str | None] = mapped_column(String(10))
     snapshot_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
     last_market_update: Mapped[datetime | None] = mapped_column(DateTime)
 

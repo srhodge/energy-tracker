@@ -498,14 +498,16 @@ export default function CompanyList() {
                     <th>Segment</th>
                     <th>Energy Value Chain</th>
                     <th>Country</th>
-                    <th style={{ textAlign: "right" }}>Market Cap</th>
                     <th style={{ textAlign: "right" }}>Price</th>
+                    <th style={{ textAlign: "right" }}>Q Rev</th>
+                    <th style={{ textAlign: "right" }}>FY Rev</th>
+                    <th style={{ textAlign: "right" }}>Market Cap</th>
                   </tr>
                 </thead>
                 <tbody>
                   {companies.length === 0 ? (
                     <tr>
-                      <td colSpan={8} style={{ textAlign: "center", padding: "32px", color: "#9ca3af" }}>
+                      <td colSpan={10} style={{ textAlign: "center", padding: "32px", color: "#9ca3af" }}>
                         No companies match the current filters.
                       </td>
                     </tr>
@@ -528,8 +530,14 @@ export default function CompanyList() {
                         <td>{c.energy_segment ? <span className="badge badge-segment">{c.energy_segment}</span> : "—"}</td>
                         <td>{c.supply_chain_position ? <span className="badge badge-supply-chain">{c.supply_chain_position}</span> : "—"}</td>
                         <td>{c.country ?? "—"}</td>
-                        <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{formatCap(c.latest_market_cap)}</td>
                         <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{formatPrice(c.latest_price)}</td>
+                        <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums", color: "#6b7280" }}>
+                          {c.latest_quarterly_revenue ? `${formatCap(c.latest_quarterly_revenue)}${c.latest_quarter_label ? ` ${c.latest_quarter_label}` : ""}` : "—"}
+                        </td>
+                        <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums", color: "#6b7280" }}>
+                          {c.latest_revenue ? `${formatCap(c.latest_revenue)}${c.latest_fiscal_year_label ? ` ${c.latest_fiscal_year_label}` : ""}` : "—"}
+                        </td>
+                        <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{formatCap(c.latest_market_cap)}</td>
                       </tr>
                     );
                   })}

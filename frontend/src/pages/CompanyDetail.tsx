@@ -292,17 +292,16 @@ export default function CompanyDetail() {
             <div className="value">{formatCap(company.latest_market_cap)}</div>
           </div>
           <div className="stat-card">
-            <div className="label">Revenue (Annual)</div>
-            <div className="value">{formatCap(company.latest_revenue)}</div>
-          </div>
-          <div className="stat-card">
             <div className="label">Price (USD)</div>
             <div className="value">{formatPrice(company.latest_price)}</div>
           </div>
           <div className="stat-card">
-            <div className="label">Value Chain</div>
-            <div className="value" style={{ fontSize: 18 }}>{company.value_chain_position ?? "—"}</div>
-            <div className="sub">{company.wwt_territory ?? ""}</div>
+            <div className="label">Q Revenue{company.latest_quarter_label ? ` (${company.latest_quarter_label})` : ""}</div>
+            <div className="value">{formatCap(company.latest_quarterly_revenue)}</div>
+          </div>
+          <div className="stat-card">
+            <div className="label">FY Revenue{company.latest_fiscal_year_label ? ` (${company.latest_fiscal_year_label})` : ""}</div>
+            <div className="value">{formatCap(company.latest_revenue)}</div>
           </div>
         </div>
 
@@ -395,7 +394,8 @@ export default function CompanyDetail() {
                       <th>Date</th>
                       <th style={{ textAlign: "right" }}>Price</th>
                       <th style={{ textAlign: "right" }}>Market Cap</th>
-                      <th style={{ textAlign: "right" }}>Revenue</th>
+                      <th style={{ textAlign: "right" }}>Q Revenue</th>
+                      <th style={{ textAlign: "right" }}>FY Revenue</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -404,7 +404,12 @@ export default function CompanyDetail() {
                         <td>{f.snapshot_date}</td>
                         <td style={{ textAlign: "right" }}>{formatPrice(f.price_usd)}</td>
                         <td style={{ textAlign: "right" }}>{formatCap(f.market_cap_usd)}</td>
-                        <td style={{ textAlign: "right" }}>{formatCap(f.revenue_annual_usd)}</td>
+                        <td style={{ textAlign: "right" }}>
+                          {f.revenue_quarterly_usd ? `${formatCap(f.revenue_quarterly_usd)}${f.revenue_quarter_label ? ` ${f.revenue_quarter_label}` : ""}` : "—"}
+                        </td>
+                        <td style={{ textAlign: "right" }}>
+                          {f.revenue_annual_usd ? `${formatCap(f.revenue_annual_usd)}${f.revenue_fiscal_year_label ? ` ${f.revenue_fiscal_year_label}` : ""}` : "—"}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

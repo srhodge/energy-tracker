@@ -35,6 +35,9 @@ export interface Company {
   latest_market_cap?: number;
   latest_price?: number;
   latest_revenue?: number;
+  latest_quarterly_revenue?: number;
+  latest_quarter_label?: string;
+  latest_fiscal_year_label?: string;
 }
 
 export interface StatusSummary {
@@ -53,6 +56,9 @@ export interface Financial {
   market_cap_usd?: number;
   price_usd?: number;
   revenue_annual_usd?: number;
+  revenue_quarterly_usd?: number;
+  revenue_quarter_label?: string;
+  revenue_fiscal_year_label?: string;
   snapshot_date: string;
 }
 

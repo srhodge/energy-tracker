@@ -45,6 +45,13 @@ def _run_non_usd_poll():
         poll_non_usd_companies(db)
 
 
+def _run_revenue_poll():
+    """Full market poll that will fetch revenue for any companies missing it."""
+    from app.services.market_poller import poll_once
+    with SessionLocal() as db:
+        poll_once(db)
+
+
 def _run_migrations():
     from alembic.config import Config
     from alembic import command
@@ -101,10 +108,11 @@ async def lifespan(app: FastAPI):
             print(f"[status] Done — {changed} companies enriched beyond Unknown.")
 
         # Classify skip_market_poll flags (fast — DB queries only, no external calls)
-        from app.services.market_poller import classify_skip_flags, is_poll_stale, is_trading_day
+        from app.services.market_poller import classify_skip_flags, is_poll_stale, is_trading_day, has_missing_revenue
         skip, active = classify_skip_flags(db)
         print(f"[market-poll] Skip flags set: {skip} skipped, {active} pollable", flush=True)
         startup_poll_needed = is_poll_stale(db) and is_trading_day()
+        revenue_poll_needed = has_missing_revenue(db)
 
     # News scraper: immediately on startup, then every 6 hours
     _scheduler.add_job(_run_scraper, "interval", hours=6, next_run_time=datetime.utcnow())
@@ -130,6 +138,11 @@ async def lifespan(app: FastAPI):
     if startup_poll_needed:
         print("[market-poll] Stale data — scheduling full background poll ...", flush=True)
         _scheduler.add_job(_run_market_poll, "date", run_date=datetime.utcnow())
+
+    # If any company is missing revenue data, fire a revenue-populating poll
+    if revenue_poll_needed and not startup_poll_needed:
+        print("[market-poll] Missing revenue data — scheduling revenue population poll ...", flush=True)
+        _scheduler.add_job(_run_revenue_poll, "date", run_date=datetime.utcnow())
 
     _scheduler.start()
 

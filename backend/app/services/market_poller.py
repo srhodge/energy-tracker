@@ -254,6 +254,75 @@ def _fetch_fx_rates(currencies: set[str]) -> dict[str, float]:
     return rates
 
 
+def _revenue_currency(ticker_currency: str) -> str:
+    """Financial statements are reported in major currency units, never subunits."""
+    return {"GBX": "GBP", "ILA": "ILS"}.get(ticker_currency, ticker_currency)
+
+
+def _fetch_revenue(
+    ticker: str, currency: str, fx_rates: dict[str, float]
+) -> tuple[float | None, float | None, str | None, str | None]:
+    """
+    Fetch quarterly and annual total revenue from yfinance income statements.
+    Returns (quarterly_usd, annual_usd, q_label, fy_label).
+    currency should be the major currency (GBP not GBX, ILS not ILA).
+    """
+    try:
+        t = yf.Ticker(ticker)
+        q_rev_usd = q_label = a_rev_usd = fy_label = None
+
+        REV_NAMES = ("Total Revenue", "TotalRevenue", "totalRevenue")
+
+        def _extract(df) -> tuple[float | None, str | None]:
+            if df is None or df.empty:
+                return None, None
+            for name in REV_NAMES:
+                if name in df.index:
+                    series = df.loc[name].dropna()
+                    if not series.empty:
+                        period_date = series.index[0]
+                        rev_val = float(series.iloc[0])
+                        return rev_val, period_date
+            return None, None
+
+        # Quarterly
+        try:
+            qf = t.quarterly_income_stmt
+        except Exception:
+            qf = None
+        if qf is None or (hasattr(qf, "empty") and qf.empty):
+            try:
+                qf = t.quarterly_financials
+            except Exception:
+                qf = None
+
+        q_rev, q_date = _extract(qf)
+        if q_rev is not None and q_date is not None:
+            q_num = (q_date.month - 1) // 3 + 1
+            q_label = f"Q{q_num} {q_date.year}"
+            q_rev_usd = _to_usd(q_rev, currency, fx_rates) if currency != "USD" else q_rev
+
+        # Annual
+        try:
+            af = t.income_stmt
+        except Exception:
+            af = None
+        if af is None or (hasattr(af, "empty") and af.empty):
+            try:
+                af = t.financials
+            except Exception:
+                af = None
+
+        a_rev, a_date = _extract(af)
+        if a_rev is not None and a_date is not None:
+            fy_label = f"FY{a_date.year}"
+            a_rev_usd = _to_usd(a_rev, currency, fx_rates) if currency != "USD" else a_rev
+
+        return q_rev_usd, a_rev_usd, q_label, fy_label
+    except Exception:
+        return None, None, None, None
+
+
 def _to_usd(value: float | None, currency: str, fx_rates: dict[str, float]) -> float | None:
     """
     Convert value from native currency to USD.
@@ -284,6 +353,22 @@ def is_poll_stale(db: Session) -> bool:
         )
     )
     return (count or 0) == 0
+
+
+def has_missing_revenue(db: Session) -> bool:
+    """Return True if any pollable company has never had revenue data fetched."""
+    pollable_ids = db.scalars(
+        select(Company.id).where(Company.skip_market_poll == False)
+    ).all()
+    if not pollable_ids:
+        return False
+    filled = db.scalar(
+        select(func.count(Financial.company_id.distinct())).where(
+            Financial.company_id.in_(pollable_ids),
+            Financial.revenue_annual_usd.isnot(None),
+        )
+    )
+    return (filled or 0) < len(pollable_ids)
 
 
 # ---------------------------------------------------------------------------
@@ -405,6 +490,32 @@ def poll_once(db: Session, batch_size: int = 50, company_ids: set[int] | None = 
         ).all()
     }
 
+    # Latest revenue per company (carry-forward: avoids re-fetching every day)
+    latest_rev_sq = (
+        select(Financial.company_id, func.max(Financial.snapshot_date).label("max_date"))
+        .where(Financial.revenue_annual_usd.isnot(None))
+        .group_by(Financial.company_id)
+        .subquery()
+    )
+    prev_revenue: dict[int, tuple] = {
+        row.company_id: (
+            row.revenue_quarterly_usd, row.revenue_annual_usd,
+            row.revenue_quarter_label, row.revenue_fiscal_year_label,
+        )
+        for row in db.execute(
+            select(
+                Financial.company_id,
+                Financial.revenue_quarterly_usd,
+                Financial.revenue_annual_usd,
+                Financial.revenue_quarter_label,
+                Financial.revenue_fiscal_year_label,
+            ).join(latest_rev_sq, and_(
+                Financial.company_id == latest_rev_sq.c.company_id,
+                Financial.snapshot_date == latest_rev_sq.c.max_date,
+            ))
+        ).all()
+    }
+
     updated = failed = 0
 
     for i in range(0, len(pollable), batch_size):
@@ -440,11 +551,15 @@ def poll_once(db: Session, batch_size: int = 50, company_ids: set[int] | None = 
                 failed += 1
                 continue
 
+            # Revenue: carry forward from most recent historical record if available
+            prev = prev_revenue.get(company.id)
+
             if company.id in existing_today:
                 rec = existing_today[company.id]
                 rec.price_usd = price
                 rec.market_cap_usd = market_cap
                 rec.last_market_update = now
+                needs_revenue = rec.revenue_annual_usd is None
             else:
                 rec = Financial(
                     company_id=company.id,
@@ -452,9 +567,27 @@ def poll_once(db: Session, batch_size: int = 50, company_ids: set[int] | None = 
                     market_cap_usd=market_cap,
                     snapshot_date=today,
                     last_market_update=now,
+                    revenue_quarterly_usd=prev[0] if prev else None,
+                    revenue_annual_usd=prev[1] if prev else None,
+                    revenue_quarter_label=prev[2] if prev else None,
+                    revenue_fiscal_year_label=prev[3] if prev else None,
                 )
                 db.add(rec)
                 existing_today[company.id] = rec
+                needs_revenue = rec.revenue_annual_usd is None
+
+            # Fetch fresh revenue only when none exists yet
+            if needs_revenue and company.ticker:
+                rev_cur = _revenue_currency(currency)
+                q_rev, a_rev, q_label, fy_label = _fetch_revenue(company.ticker, rev_cur, fx_rates)
+                if a_rev is not None or q_rev is not None:
+                    rec.revenue_quarterly_usd = q_rev
+                    rec.revenue_annual_usd = a_rev
+                    rec.revenue_quarter_label = q_label
+                    rec.revenue_fiscal_year_label = fy_label
+                    # Cache so future records in this session carry forward
+                    prev_revenue[company.id] = (q_rev, a_rev, q_label, fy_label)
+                time.sleep(0.3)
 
             updated += 1
 

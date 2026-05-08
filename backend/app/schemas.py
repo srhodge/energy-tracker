@@ -8,6 +8,9 @@ class FinancialBase(BaseModel):
     market_cap_usd: Optional[float] = None
     price_usd: Optional[float] = None
     revenue_annual_usd: Optional[float] = None
+    revenue_quarterly_usd: Optional[float] = None
+    revenue_quarter_label: Optional[str] = None
+    revenue_fiscal_year_label: Optional[str] = None
     snapshot_date: date
 
 
@@ -62,6 +65,9 @@ class CompanyOut(CompanyBase):
     latest_market_cap: Optional[float] = None
     latest_price: Optional[float] = None
     latest_revenue: Optional[float] = None
+    latest_quarterly_revenue: Optional[float] = None
+    latest_quarter_label: Optional[str] = None
+    latest_fiscal_year_label: Optional[str] = None
 
 
 class CompanyDetail(CompanyOut):

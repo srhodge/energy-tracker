@@ -65,7 +65,11 @@ def list_companies(
                 Financial.snapshot_date == latest_sq.c.max_date,
             ),
         )
-        .add_columns(Financial.market_cap_usd, Financial.price_usd)
+        .add_columns(
+            Financial.market_cap_usd, Financial.price_usd,
+            Financial.revenue_quarterly_usd, Financial.revenue_annual_usd,
+            Financial.revenue_quarter_label, Financial.revenue_fiscal_year_label,
+        )
         .order_by(Financial.market_cap_usd.desc().nullslast(), Company.name)
         .offset((page - 1) * page_size)
         .limit(page_size)
@@ -78,6 +82,10 @@ def list_companies(
         out = CompanyOut.model_validate(company)
         out.latest_market_cap = row[1]
         out.latest_price = row[2]
+        out.latest_quarterly_revenue = row[3]
+        out.latest_revenue = row[4]
+        out.latest_quarter_label = row[5]
+        out.latest_fiscal_year_label = row[6]
         items.append(out)
 
     return PaginatedCompanies(total=total, page=page, page_size=page_size, items=items)
@@ -475,6 +483,9 @@ def get_company(company_id: int, db: Session = Depends(get_db)):
         out.latest_market_cap = latest.market_cap_usd
         out.latest_price = latest.price_usd
         out.latest_revenue = latest.revenue_annual_usd
+        out.latest_quarterly_revenue = latest.revenue_quarterly_usd
+        out.latest_quarter_label = latest.revenue_quarter_label
+        out.latest_fiscal_year_label = latest.revenue_fiscal_year_label
     return out
 
 
@@ -494,4 +505,7 @@ def get_company_by_ticker(ticker: str, db: Session = Depends(get_db)):
         out.latest_market_cap = latest.market_cap_usd
         out.latest_price = latest.price_usd
         out.latest_revenue = latest.revenue_annual_usd
+        out.latest_quarterly_revenue = latest.revenue_quarterly_usd
+        out.latest_quarter_label = latest.revenue_quarter_label
+        out.latest_fiscal_year_label = latest.revenue_fiscal_year_label
     return out
