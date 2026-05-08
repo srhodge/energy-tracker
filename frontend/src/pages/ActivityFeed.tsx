@@ -1,29 +1,35 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchEvents } from "../api/client";
-import type { EventWithCompany, EventType } from "../types";
+import { fetchNews } from "../api/client";
+import type { NewsItem } from "../types";
 
-const EVENT_TYPES: { value: EventType | ""; label: string }[] = [
-  { value: "", label: "All types" },
-  { value: "news", label: "News" },
-  { value: "project", label: "Project" },
-  { value: "earnings", label: "Earnings" },
-  { value: "filing", label: "Filing" },
-];
+function timeAgo(iso?: string): string {
+  if (!iso) return "—";
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
+
+const SOURCE_COLORS: Record<string, string> = {
+  "Reuters": "#f97316",
+  "OilPrice.com": "#0ea5e9",
+};
 
 export default function ActivityFeed() {
-  const [events, setEvents] = useState<EventWithCompany[]>([]);
+  const [items, setItems] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [eventType, setEventType] = useState<EventType | "">("");
 
   useEffect(() => {
     setLoading(true);
-    fetchEvents({ event_type: eventType || undefined, limit: 100 })
-      .then(setEvents)
+    fetchNews(100)
+      .then(setItems)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [eventType]);
+  }, []);
 
   return (
     <>
@@ -31,39 +37,49 @@ export default function ActivityFeed() {
         <h1>Activity Feed</h1>
       </div>
       <div className="page-body">
-        <div className="filter-bar" style={{ marginBottom: 16 }}>
-          <select value={eventType} onChange={(e) => setEventType(e.target.value as EventType | "")}>
-            {EVENT_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
-          </select>
-        </div>
-
         {error && <div className="error">{error}</div>}
 
         <div className="card">
           {loading ? (
             <div className="loading">Loading...</div>
-          ) : events.length === 0 ? (
-            <p style={{ color: "#9ca3af", padding: "16px 0" }}>No events yet. Run the news scraper to populate this feed.</p>
+          ) : items.length === 0 ? (
+            <p style={{ color: "#9ca3af", padding: "16px 0" }}>No news yet — scraper runs every 6 hours.</p>
           ) : (
-            events.map((e) => (
-              <div key={e.id} className="event-item">
-                <div className="event-meta">
-                  <span className="badge badge-model" style={{ marginRight: 6 }}>{e.event_type}</span>
-                  <Link to={`/companies/${e.company_id}`} style={{ color: "#374151", fontWeight: 500 }}>
-                    {e.company_name}
-                    {e.company_ticker ? ` (${e.company_ticker})` : ""}
-                  </Link>
-                  {" · "}
-                  {e.event_date ?? "—"}
+            items.map((item) => {
+              const color = item.source ? (SOURCE_COLORS[item.source] ?? "#6b7280") : "#6b7280";
+              return (
+                <div key={item.id} className="news-item">
+                  <div className="news-meta">
+                    {item.source && (
+                      <span className="news-source-badge" style={{ background: color }}>
+                        {item.source}
+                      </span>
+                    )}
+                    <span className="news-time">{timeAgo(item.published_at)}</span>
+                    {item.company_ticker && (
+                      <Link
+                        to={`/company/${item.company_ticker}`}
+                        className="news-company-tag"
+                      >
+                        {item.company_ticker}
+                      </Link>
+                    )}
+                  </div>
+                  {item.source_url ? (
+                    <a
+                      href={item.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="news-headline"
+                    >
+                      {item.headline}
+                    </a>
+                  ) : (
+                    <div className="news-headline">{item.headline}</div>
+                  )}
                 </div>
-                {e.source_url
-                  ? <a href={e.source_url} target="_blank" rel="noopener noreferrer" className="event-title">{e.title}</a>
-                  : <div className="event-title">{e.title}</div>}
-                {e.summary && (
-                  <div className="event-summary">{e.summary.slice(0, 250)}{e.summary.length > 250 ? "…" : ""}</div>
-                )}
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>

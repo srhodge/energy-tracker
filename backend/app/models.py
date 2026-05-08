@@ -82,6 +82,7 @@ class Company(Base):
 
     financials: Mapped[list["Financial"]] = relationship(back_populates="company", cascade="all, delete-orphan")
     events: Mapped[list["Event"]] = relationship(back_populates="company", cascade="all, delete-orphan")
+    news_items: Mapped[list["NewsItem"]] = relationship(back_populates="company", cascade="all, delete-orphan")
 
 
 class Financial(Base):
@@ -110,3 +111,17 @@ class Event(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     company: Mapped["Company"] = relationship(back_populates="events")
+
+
+class NewsItem(Base):
+    __tablename__ = "news_items"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    company_id: Mapped[int | None] = mapped_column(ForeignKey("companies.id"), nullable=True, index=True)
+    headline: Mapped[str] = mapped_column(String(500), nullable=False)
+    source: Mapped[str | None] = mapped_column(String(100))
+    source_url: Mapped[str | None] = mapped_column(String(1000), unique=True)
+    published_at: Mapped[datetime | None] = mapped_column(DateTime, index=True)
+    fetched_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    company: Mapped["Company | None"] = relationship(back_populates="news_items")

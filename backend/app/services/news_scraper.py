@@ -1,101 +1,100 @@
-"""
-News scraper stub — fetches RSS feeds per company and stores events.
-
-Usage:
-    python -m app.services.news_scraper
-
-Extend RSS_FEEDS or the per-company website logic to add real feeds.
-"""
+import re
 import logging
-from datetime import date, datetime
-from typing import Optional
+from datetime import datetime
 
 import feedparser
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.database import SessionLocal
-from app.models import Company, Event, EventType
+from app.models import Company, NewsItem
 
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
-# Global feeds not tied to a single company (industry-wide)
-GLOBAL_FEEDS: list[str] = [
-    "https://feeds.reuters.com/reuters/businessNews",
-    "https://www.offshore-energy.biz/feed/",
-    "https://www.naturalgasintel.com/feed/",
+FEEDS = [
+    ("Reuters", "https://feeds.reuters.com/reuters/businessNews"),
+    ("OilPrice.com", "https://oilprice.com/rss/main"),
 ]
 
 
-def _parse_date(entry) -> Optional[date]:
-    for attr in ("published_parsed", "updated_parsed"):
-        t = getattr(entry, attr, None)
-        if t:
-            try:
-                return datetime(*t[:6]).date()
-            except Exception:
-                pass
-    return date.today()
+def _build_indexes(db: Session):
+    companies = db.scalars(select(Company)).all()
+
+    ticker_map: dict[str, Company] = {}
+    for c in companies:
+        if c.ticker:
+            ticker_map[c.ticker.upper()] = c
+            base = c.ticker.split(".")[0].upper()
+            ticker_map[base] = c
+
+    # Sorted longest-first so "ExxonMobil" matches before "Mobil"
+    name_list: list[tuple[str, Company]] = sorted(
+        [(c.name.lower(), c) for c in companies if len(c.name) >= 5],
+        key=lambda x: len(x[0]),
+        reverse=True,
+    )
+    return ticker_map, name_list
 
 
-def scrape_feed(url: str, db: Session, company: Optional[Company] = None, limit: int = 10) -> int:
-    try:
-        feed = feedparser.parse(url)
-    except Exception as exc:
-        logger.warning("Failed to parse feed %s: %s", url, exc)
-        return 0
+def _match(headline: str, ticker_map: dict, name_list: list) -> "Company | None":
+    # 1. Ticker in parentheses: (XOM), (SHEL.L)
+    for raw in re.findall(r"\(([A-Z]{1,6}(?:\.[A-Z]{1,2})?)\)", headline):
+        base = raw.split(".")[0]
+        if base in ticker_map:
+            return ticker_map[base]
 
-    stored = 0
-    for entry in feed.entries[:limit]:
-        title = getattr(entry, "title", "").strip()
-        summary = getattr(entry, "summary", "") or ""
-        link = getattr(entry, "link", None)
-        event_date = _parse_date(entry)
+    # 2. Standalone uppercase word matching a known ticker
+    for word in re.findall(r"\b([A-Z]{2,5})\b", headline):
+        if word in ticker_map:
+            return ticker_map[word]
 
-        if not title:
-            continue
+    # 3. Company name substring (case-insensitive)
+    hl = headline.lower()
+    for name, company in name_list:
+        if name in hl:
+            return company
 
-        event = Event(
-            company_id=company.id if company else None,
-            event_type=EventType.news,
-            title=title[:500],
-            summary=summary[:5000],
-            source_url=link,
-            event_date=event_date,
-        )
-        # Deduplicate by source_url
-        if link:
-            exists = db.scalar(select(Event).where(Event.source_url == link).limit(1))
-            if exists:
+    return None
+
+
+def scrape(db: Session) -> int:
+    ticker_map, name_list = _build_indexes(db)
+    total_added = 0
+
+    for source_name, url in FEEDS:
+        added = 0
+        try:
+            feed = feedparser.parse(url)
+            if feed.bozo and not feed.entries:
+                log.warning("[news] %s: feed error — %s", source_name, feed.bozo_exception)
                 continue
 
-        if company:
-            db.add(event)
-            stored += 1
+            for entry in feed.entries:
+                headline = (entry.get("title") or "").strip()
+                link = (entry.get("link") or "").strip()
+                if not headline or not link:
+                    continue
 
-    db.flush()
-    return stored
+                if db.scalar(select(NewsItem.id).where(NewsItem.source_url == link)):
+                    continue
 
+                pt = entry.get("published_parsed")
+                published_at = datetime(*pt[:6]) if pt else None
 
-def main():
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    with SessionLocal() as db:
-        companies = db.scalars(
-            select(Company).where(Company.website.isnot(None)).limit(100)
-        ).all()
+                company = _match(headline, ticker_map, name_list)
+                db.add(NewsItem(
+                    company_id=company.id if company else None,
+                    headline=headline,
+                    source=source_name,
+                    source_url=link,
+                    published_at=published_at,
+                ))
+                added += 1
 
-        total = 0
-        for company in companies:
-            # Attempt a generic RSS path — real feeds require per-company configuration
-            rss_url = company.website.rstrip("/") + "/feed/"
-            count = scrape_feed(rss_url, db, company=company)
-            if count:
-                logger.info("%s: %d new events", company.name, count)
-                total += count
+            db.commit()
+            log.info("[news] %s: +%d new items", source_name, added)
+            total_added += added
 
-        db.commit()
-        logger.info("News scrape complete. Total new events: %d", total)
+        except Exception:
+            log.exception("[news] %s: unexpected error", source_name)
 
-
-if __name__ == "__main__":
-    main()
+    return total_added

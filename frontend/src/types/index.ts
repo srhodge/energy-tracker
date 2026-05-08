@@ -75,6 +75,18 @@ export interface SupplyChainRollup {
   total_market_cap_usd?: number;
 }
 
+export interface NewsItem {
+  id: number;
+  company_id?: number;
+  company_name?: string;
+  company_ticker?: string;
+  headline: string;
+  source?: string;
+  source_url?: string;
+  published_at?: string;
+  fetched_at: string;
+}
+
 export interface PaginatedCompanies {
   total: number;
   page: number;

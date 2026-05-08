@@ -3,6 +3,7 @@ import type {
   CompanyDetail,
   TerritoryRollup,
   SupplyChainRollup,
+  NewsItem,
   EventWithCompany,
   FilterOptions,
   EnergySegment,
@@ -61,6 +62,14 @@ export function fetchTerritoryRollup(): Promise<TerritoryRollup[]> {
 
 export function fetchSupplyChainRollup(): Promise<SupplyChainRollup[]> {
   return get("/companies/supply-chain-rollup");
+}
+
+export function fetchNews(limit = 50): Promise<NewsItem[]> {
+  return get(`/news?limit=${limit}`);
+}
+
+export function fetchNewsByTicker(ticker: string, limit = 20): Promise<NewsItem[]> {
+  return get(`/news/${encodeURIComponent(ticker)}?limit=${limit}`);
 }
 
 export function fetchEvents(params: { event_type?: EventType; company_id?: number; limit?: number } = {}): Promise<EventWithCompany[]> {

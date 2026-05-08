@@ -66,6 +66,19 @@ class CompanyDetail(CompanyOut):
     events: list[EventOut] = []
 
 
+class NewsItemOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    company_id: Optional[int] = None
+    company_name: Optional[str] = None
+    company_ticker: Optional[str] = None
+    headline: str
+    source: Optional[str] = None
+    source_url: Optional[str] = None
+    published_at: Optional[datetime] = None
+    fetched_at: datetime
+
+
 class TerritoryRollup(BaseModel):
     wwt_territory: str
     company_count: int
