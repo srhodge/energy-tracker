@@ -81,4 +81,5 @@ export interface FilterOptions {
   countries: string[];
   energy_segments: EnergySegment[];
   value_chain_positions: ValueChainPosition[];
+  supply_chain_positions: string[];
 }

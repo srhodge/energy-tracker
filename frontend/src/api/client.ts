@@ -21,6 +21,7 @@ export interface CompanyListParams {
   wwt_territory?: string;
   energy_segment?: EnergySegment;
   value_chain_position?: ValueChainPosition;
+  supply_chain_position?: string;
   country?: string;
   search?: string;
   page?: number;
@@ -32,6 +33,7 @@ export function fetchCompanies(params: CompanyListParams = {}): Promise<Paginate
   if (params.wwt_territory) q.set("wwt_territory", params.wwt_territory);
   if (params.energy_segment) q.set("energy_segment", params.energy_segment);
   if (params.value_chain_position) q.set("value_chain_position", params.value_chain_position);
+  if (params.supply_chain_position) q.set("supply_chain_position", params.supply_chain_position);
   if (params.country) q.set("country", params.country);
   if (params.search) q.set("search", params.search);
   if (params.page) q.set("page", String(params.page));

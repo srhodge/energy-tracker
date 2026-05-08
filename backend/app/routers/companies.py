@@ -24,6 +24,7 @@ def list_companies(
     wwt_territory: Optional[str] = Query(None),
     energy_segment: Optional[EnergySegment] = Query(None),
     value_chain_position: Optional[ValueChainPosition] = Query(None),
+    supply_chain_position: Optional[str] = Query(None),
     country: Optional[str] = Query(None),
     search: Optional[str] = Query(None),
     page: int = Query(1, ge=1),
@@ -37,6 +38,8 @@ def list_companies(
         filters.append(Company.energy_segment == energy_segment)
     if value_chain_position:
         filters.append(Company.value_chain_position == value_chain_position)
+    if supply_chain_position:
+        filters.append(Company.supply_chain_position == supply_chain_position)
     if country:
         filters.append(Company.country == country)
     if search:
@@ -116,11 +119,17 @@ def filter_options(db: Session = Depends(get_db)):
     countries = db.scalars(
         select(Company.country).distinct().where(Company.country.isnot(None)).order_by(Company.country)
     ).all()
+    supply_chain_positions = db.scalars(
+        select(Company.supply_chain_position).distinct()
+        .where(Company.supply_chain_position.isnot(None))
+        .order_by(Company.supply_chain_position)
+    ).all()
     return {
         "wwt_territories": territories,
         "countries": countries,
         "energy_segments": [e.value for e in EnergySegment],
         "value_chain_positions": [v.value for v in ValueChainPosition],
+        "supply_chain_positions": supply_chain_positions,
     }
 
 
