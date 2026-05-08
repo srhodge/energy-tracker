@@ -6,6 +6,7 @@ import type {
   NewsItem,
   EventWithCompany,
   FilterOptions,
+  StatusSummary,
   EnergySegment,
   ValueChainPosition,
   EventType,
@@ -26,6 +27,7 @@ export interface CompanyListParams {
   supply_chain_position?: string;
   country?: string;
   search?: string;
+  include_inactive?: boolean;
   page?: number;
   page_size?: number;
 }
@@ -38,6 +40,7 @@ export function fetchCompanies(params: CompanyListParams = {}): Promise<Paginate
   if (params.supply_chain_position) q.set("supply_chain_position", params.supply_chain_position);
   if (params.country) q.set("country", params.country);
   if (params.search) q.set("search", params.search);
+  if (params.include_inactive) q.set("include_inactive", "true");
   if (params.page) q.set("page", String(params.page));
   if (params.page_size) q.set("page_size", String(params.page_size));
   const qs = q.toString();
@@ -62,6 +65,10 @@ export function fetchTerritoryRollup(): Promise<TerritoryRollup[]> {
 
 export function fetchSupplyChainRollup(): Promise<SupplyChainRollup[]> {
   return get("/companies/supply-chain-rollup");
+}
+
+export function fetchStatusSummary(): Promise<StatusSummary> {
+  return get("/companies/status-summary");
 }
 
 export function fetchNews(limit = 50): Promise<NewsItem[]> {

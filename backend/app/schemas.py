@@ -1,7 +1,7 @@
 from datetime import datetime, date
 from pydantic import BaseModel, ConfigDict
 from typing import Optional
-from app.models import EnergyMaturity, EnergyCategory, EnergySegment, ValueChainPosition, EventType
+from app.models import EnergyMaturity, EnergyCategory, EnergySegment, ValueChainPosition, EventType, CompanyStatus
 
 
 class FinancialBase(BaseModel):
@@ -51,6 +51,9 @@ class CompanyBase(BaseModel):
     energy_segment: Optional[EnergySegment] = None
     value_chain_position: Optional[ValueChainPosition] = None
     supply_chain_position: Optional[str] = None
+    status: Optional[CompanyStatus] = CompanyStatus.active
+    acquired_by: Optional[str] = None
+    acquisition_notes: Optional[str] = None
 
 
 class CompanyOut(CompanyBase):
@@ -83,6 +86,14 @@ class TerritoryRollup(BaseModel):
     wwt_territory: str
     company_count: int
     total_market_cap_usd: Optional[float] = None
+
+
+class StatusSummary(BaseModel):
+    Active: int = 0
+    Acquired: int = 0
+    Merged: int = 0
+    Delisted: int = 0
+    Unknown: int = 0
 
 
 class PaginatedCompanies(BaseModel):

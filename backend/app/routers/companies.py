@@ -4,14 +4,15 @@ from sqlalchemy.orm import Session, selectinload
 from typing import Optional
 
 from app.database import get_db
-from app.models import Company, Financial, EnergySegment, ValueChainPosition
-from app.schemas import CompanyOut, CompanyDetail, PaginatedCompanies, TerritoryRollup
+from app.models import Company, Financial, EnergySegment, ValueChainPosition, CompanyStatus
+from app.schemas import CompanyOut, CompanyDetail, PaginatedCompanies, TerritoryRollup, StatusSummary
 
 router = APIRouter(prefix="/companies", tags=["companies"])
 
+_INACTIVE = (CompanyStatus.acquired, CompanyStatus.merged, CompanyStatus.delisted, CompanyStatus.non_equity)
+
 
 def _latest_financial_subquery(db: Session):
-    """Subquery: most recent financial snapshot per company."""
     return (
         select(Financial.company_id, func.max(Financial.snapshot_date).label("max_date"))
         .group_by(Financial.company_id)
@@ -27,6 +28,7 @@ def list_companies(
     supply_chain_position: Optional[str] = Query(None),
     country: Optional[str] = Query(None),
     search: Optional[str] = Query(None),
+    include_inactive: bool = Query(False),
     page: int = Query(1, ge=1),
     page_size: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
@@ -44,15 +46,15 @@ def list_companies(
         filters.append(Company.country == country)
     if search:
         filters.append(Company.name.ilike(f"%{search}%"))
+    if not include_inactive:
+        filters.append(Company.status.notin_(_INACTIVE))
 
     base_q = select(Company).where(and_(*filters)) if filters else select(Company)
     total = db.scalar(select(func.count()).select_from(base_q.subquery()))
 
     latest_sq = _latest_financial_subquery(db)
     companies_q = (
-        base_q.outerjoin(
-            latest_sq, Company.id == latest_sq.c.company_id
-        )
+        base_q.outerjoin(latest_sq, Company.id == latest_sq.c.company_id)
         .outerjoin(
             Financial,
             and_(
@@ -76,6 +78,22 @@ def list_companies(
         items.append(out)
 
     return PaginatedCompanies(total=total, page=page, page_size=page_size, items=items)
+
+
+@router.get("/status-summary", response_model=StatusSummary)
+def status_summary(db: Session = Depends(get_db)):
+    rows = db.execute(
+        select(Company.status, func.count(Company.id).label("n"))
+        .group_by(Company.status)
+    ).all()
+    counts = {str(r.status): r.n for r in rows}
+    return StatusSummary(
+        Active=counts.get("Active", 0),
+        Acquired=counts.get("Acquired", 0),
+        Merged=counts.get("Merged", 0),
+        Delisted=counts.get("Delisted", 0),
+        Unknown=counts.get("Unknown", 0),
+    )
 
 
 @router.get("/territory-rollup", response_model=list[TerritoryRollup])
@@ -143,7 +161,6 @@ def supply_chain_rollup(db: Session = Depends(get_db)):
 
 @router.get("/filter-options")
 def filter_options(db: Session = Depends(get_db)):
-    """Return distinct values for filter dropdowns."""
     territories = db.scalars(
         select(Company.wwt_territory).distinct().where(Company.wwt_territory.isnot(None)).order_by(Company.wwt_territory)
     ).all()

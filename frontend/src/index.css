@@ -215,3 +215,50 @@ tr:hover td { background: #f8fafc; }
   display: block;
 }
 .news-headline:hover { color: #0057b8; text-decoration: underline; }
+
+/* Company status badges (inline in table + detail page) */
+.status-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 3px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Dimmed rows for inactive companies when shown */
+.row-inactive td { opacity: 0.5; }
+.row-inactive:hover td { opacity: 0.8; }
+
+/* Status summary bar above the company table */
+.status-summary-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 10px 14px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+.status-summary-item { display: flex; align-items: center; gap: 5px; color: #374151; }
+.status-summary-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* Inline toggle label in filter bar */
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #374151;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.toggle-label input[type="checkbox"] { cursor: pointer; }
+
+/* Acquisition banner on detail page */
+.acquisition-banner { padding: 14px 16px; }

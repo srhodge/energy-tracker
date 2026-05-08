@@ -78,6 +78,45 @@ export default function CompanyDetail() {
           </div>
         </div>
 
+        {company.status && company.status !== "Active" && company.status !== "Unknown" && (
+          <div className="card acquisition-banner" style={{
+            borderLeft: `4px solid ${
+              company.status === "Acquired" ? "#dc2626" :
+              company.status === "Merged" ? "#ea580c" :
+              company.status === "Sanctioned" ? "#7c3aed" :
+              "#6b7280"
+            }`,
+            marginBottom: 20,
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: company.acquired_by || company.acquisition_notes ? 8 : 0 }}>
+              <span className="status-badge" style={{
+                background: company.status === "Acquired" ? "#fef2f2" : company.status === "Merged" ? "#fff7ed" : company.status === "Sanctioned" ? "#f5f3ff" : "#f3f4f6",
+                color: company.status === "Acquired" ? "#dc2626" : company.status === "Merged" ? "#ea580c" : company.status === "Sanctioned" ? "#7c3aed" : "#6b7280",
+                fontSize: 11,
+              }}>
+                {company.status.toUpperCase()}
+              </span>
+              <span style={{ fontWeight: 600, fontSize: 14 }}>
+                {company.status === "Acquired" ? "This company has been acquired" :
+                 company.status === "Merged" ? "This company has merged" :
+                 company.status === "Delisted" ? "This company has been delisted" :
+                 company.status === "Sanctioned" ? "Trading sanctioned / suspended" :
+                 company.status}
+              </span>
+            </div>
+            {company.acquired_by && (
+              <div style={{ fontSize: 13, color: "#374151" }}>
+                <strong>Acquirer:</strong> {company.acquired_by}
+              </div>
+            )}
+            {company.acquisition_notes && (
+              <div style={{ fontSize: 13, color: "#6b7280", marginTop: 4 }}>
+                {company.acquisition_notes}
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="detail-grid">
           <div>
             <div className="detail-section card">

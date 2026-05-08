@@ -12,6 +12,7 @@ export type ValueChainPosition = "Upstream" | "Midstream" | "Downstream" | "Inte
 export type EnergyMaturity = "Mature" | "Developing";
 export type EnergyCategory = "Energy" | "Chemicals" | "Resources";
 export type EventType = "news" | "project" | "earnings" | "filing";
+export type CompanyStatus = "Active" | "Acquired" | "Merged" | "Delisted" | "Unknown" | "Sanctioned" | "Non-Equity";
 
 export interface Company {
   id: number;
@@ -28,9 +29,22 @@ export interface Company {
   energy_segment?: EnergySegment;
   value_chain_position?: ValueChainPosition;
   supply_chain_position?: string;
+  status?: CompanyStatus;
+  acquired_by?: string;
+  acquisition_notes?: string;
   latest_market_cap?: number;
   latest_price?: number;
   latest_revenue?: number;
+}
+
+export interface StatusSummary {
+  Active: number;
+  Acquired: number;
+  Merged: number;
+  Delisted: number;
+  Unknown: number;
+  Sanctioned: number;
+  "Non-Equity": number;
 }
 
 export interface Financial {

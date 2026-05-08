@@ -65,6 +65,16 @@ class EventType(str, enum.Enum):
     filing = "filing"
 
 
+class CompanyStatus(str, enum.Enum):
+    active = "Active"
+    acquired = "Acquired"
+    merged = "Merged"
+    delisted = "Delisted"
+    unknown = "Unknown"
+    sanctioned = "Sanctioned"
+    non_equity = "Non-Equity"
+
+
 class Company(Base):
     __tablename__ = "companies"
 
@@ -84,6 +94,11 @@ class Company(Base):
     energy_segment: Mapped[EnergySegment | None] = mapped_column(_enum(EnergySegment))
     value_chain_position: Mapped[ValueChainPosition | None] = mapped_column(_enum(ValueChainPosition))
     supply_chain_position: Mapped[str | None] = mapped_column(String(50), index=True)
+    status: Mapped[CompanyStatus] = mapped_column(
+        _enum(CompanyStatus), nullable=False, default=CompanyStatus.active, server_default="Active"
+    )
+    acquired_by: Mapped[str | None] = mapped_column(String(200))
+    acquisition_notes: Mapped[str | None] = mapped_column(String(500))
 
     financials: Mapped[list["Financial"]] = relationship(back_populates="company", cascade="all, delete-orphan")
     events: Mapped[list["Event"]] = relationship(back_populates="company", cascade="all, delete-orphan")

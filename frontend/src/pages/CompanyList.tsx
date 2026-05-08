@@ -1,11 +1,51 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { fetchCompanies, fetchFilterOptions } from "../api/client";
-import type { Company, FilterOptions, EnergySegment, ValueChainPosition } from "../types";
+import { fetchCompanies, fetchFilterOptions, fetchStatusSummary } from "../api/client";
+import type { Company, FilterOptions, StatusSummary, EnergySegment, ValueChainPosition, CompanyStatus } from "../types";
 import { formatCap, formatPrice } from "../components/FormatCap";
 import SupplyChainChart from "../components/SupplyChainChart";
 
 const PAGE_SIZE = 50;
+
+const STATUS_BADGE_STYLE: Record<string, { background: string; color: string }> = {
+  Acquired:    { background: "#fef2f2", color: "#dc2626" },
+  Merged:      { background: "#fff7ed", color: "#ea580c" },
+  Delisted:    { background: "#f3f4f6", color: "#6b7280" },
+  Sanctioned:  { background: "#f5f3ff", color: "#7c3aed" },
+  "Non-Equity":{ background: "#f0fdf4", color: "#16a34a" },
+  Unknown:     { background: "#f3f4f6", color: "#9ca3af" },
+};
+
+function StatusBadge({ status }: { status?: CompanyStatus }) {
+  if (!status || status === "Active") return null;
+  const s = STATUS_BADGE_STYLE[status] ?? STATUS_BADGE_STYLE.Unknown;
+  return <span className="status-badge" style={s}>{status.toUpperCase()}</span>;
+}
+
+function StatusSummaryBar({ summary }: { summary: StatusSummary }) {
+  const items: { label: string; key: keyof StatusSummary; color: string }[] = [
+    { label: "Active",     key: "Active",     color: "#16a34a" },
+    { label: "Unknown",    key: "Unknown",    color: "#9ca3af" },
+    { label: "Sanctioned", key: "Sanctioned", color: "#7c3aed" },
+    { label: "Acquired",   key: "Acquired",   color: "#dc2626" },
+    { label: "Merged",     key: "Merged",     color: "#ea580c" },
+    { label: "Delisted",   key: "Delisted",   color: "#6b7280" },
+  ];
+  return (
+    <div className="status-summary-bar">
+      {items.map(({ label, key, color }) => (
+        summary[key] > 0 && (
+          <span key={key} className="status-summary-item" style={{ color }}>
+            <span className="status-summary-dot" style={{ background: color }} />
+            {label} <strong>{summary[key]}</strong>
+          </span>
+        )
+      ))}
+    </div>
+  );
+}
+
+const INACTIVE_STATUSES: CompanyStatus[] = ["Acquired", "Merged", "Delisted", "Non-Equity"];
 
 export default function CompanyList() {
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -14,6 +54,7 @@ export default function CompanyList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterOptions | null>(null);
+  const [statusSummary, setStatusSummary] = useState<StatusSummary | null>(null);
 
   // Filter state
   const [search, setSearch] = useState("");
@@ -22,9 +63,11 @@ export default function CompanyList() {
   const [chainPos, setChainPos] = useState("");
   const [supplyChain, setSupplyChain] = useState("");
   const [country, setCountry] = useState("");
+  const [includeInactive, setIncludeInactive] = useState(false);
 
   useEffect(() => {
     fetchFilterOptions().then(setFilters).catch(() => null);
+    fetchStatusSummary().then(setStatusSummary).catch(() => null);
   }, []);
 
   const load = useCallback(() => {
@@ -37,6 +80,7 @@ export default function CompanyList() {
       value_chain_position: (chainPos as ValueChainPosition) || undefined,
       supply_chain_position: supplyChain || undefined,
       country: country || undefined,
+      include_inactive: includeInactive || undefined,
       page,
       page_size: PAGE_SIZE,
     })
@@ -46,7 +90,7 @@ export default function CompanyList() {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [search, territory, segment, chainPos, supplyChain, country, page]);
+  }, [search, territory, segment, chainPos, supplyChain, country, includeInactive, page]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -67,6 +111,9 @@ export default function CompanyList() {
       </div>
       <div className="page-body">
         <SupplyChainChart />
+
+        {statusSummary && <StatusSummaryBar summary={statusSummary} />}
+
         <div className="filter-bar">
           <input
             type="search"
@@ -94,6 +141,14 @@ export default function CompanyList() {
             <option value="">All countries</option>
             {filters?.countries.map((c) => <option key={c}>{c}</option>)}
           </select>
+          <label className="toggle-label">
+            <input
+              type="checkbox"
+              checked={includeInactive}
+              onChange={(e) => { setIncludeInactive(e.target.checked); setPage(1); }}
+            />
+            Show acquired &amp; inactive
+          </label>
         </div>
 
         {error && <div className="error">{error}</div>}
@@ -118,21 +173,35 @@ export default function CompanyList() {
                 </thead>
                 <tbody>
                   {companies.length === 0 ? (
-                    <tr><td colSpan={8} style={{ textAlign: "center", padding: "32px", color: "#9ca3af" }}>No companies match the current filters.</td></tr>
-                  ) : companies.map((c) => (
-                    <tr key={c.id}>
-                      <td>
-                        <Link to={c.ticker ? `/company/${c.ticker}` : `/companies/${c.id}`} style={{ fontWeight: 500 }}>{c.name}</Link>
+                    <tr>
+                      <td colSpan={8} style={{ textAlign: "center", padding: "32px", color: "#9ca3af" }}>
+                        No companies match the current filters.
                       </td>
-                      <td style={{ fontFamily: "monospace", color: "#6b7280" }}>{c.ticker ?? "—"}</td>
-                      <td>{c.wwt_territory ? <span className="badge badge-territory">{c.wwt_territory}</span> : "—"}</td>
-                      <td>{c.energy_segment ? <span className="badge badge-segment">{c.energy_segment}</span> : "—"}</td>
-                      <td>{c.supply_chain_position ? <span className="badge badge-supply-chain">{c.supply_chain_position}</span> : "—"}</td>
-                      <td>{c.country ?? "—"}</td>
-                      <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{formatCap(c.latest_market_cap)}</td>
-                      <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{formatPrice(c.latest_price)}</td>
                     </tr>
-                  ))}
+                  ) : companies.map((c) => {
+                    const isInactive = INACTIVE_STATUSES.includes(c.status as CompanyStatus);
+                    return (
+                      <tr key={c.id} className={isInactive ? "row-inactive" : ""}>
+                        <td>
+                          <Link
+                            to={c.ticker ? `/company/${c.ticker}` : `/companies/${c.id}`}
+                            style={{ fontWeight: 500 }}
+                          >
+                            {c.name}
+                          </Link>
+                          {" "}
+                          <StatusBadge status={c.status} />
+                        </td>
+                        <td style={{ fontFamily: "monospace", color: "#6b7280" }}>{c.ticker ?? "—"}</td>
+                        <td>{c.wwt_territory ? <span className="badge badge-territory">{c.wwt_territory}</span> : "—"}</td>
+                        <td>{c.energy_segment ? <span className="badge badge-segment">{c.energy_segment}</span> : "—"}</td>
+                        <td>{c.supply_chain_position ? <span className="badge badge-supply-chain">{c.supply_chain_position}</span> : "—"}</td>
+                        <td>{c.country ?? "—"}</td>
+                        <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{formatCap(c.latest_market_cap)}</td>
+                        <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{formatPrice(c.latest_price)}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             )}
