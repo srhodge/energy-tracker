@@ -351,6 +351,20 @@ def poll_once(db: Session, batch_size: int = 50, company_ids: set[int] | None = 
         flush=True,
     )
 
+    # Fetch all exchange rates once per poll run — fresh at every scheduled execution,
+    # reused across batches so we don't re-request the same GBP/USD rate 10 times.
+    all_currencies = {_ticker_currency(c.ticker or "") for c in pollable} - {"USD"}
+    fx_rates: dict[str, float] = _fetch_fx_rates(all_currencies) if all_currencies else {}
+    if fx_rates:
+        # Display as USD-per-local-unit (inverted), parent currencies only
+        display = {
+            cur: round(1.0 / rate, 6)
+            for cur, rate in fx_rates.items()
+            if cur not in ("GBX", "ILA") and rate > 0
+        }
+        rate_str = ", ".join(f"{c}={v}" for c, v in sorted(display.items()))
+        print(f"[market-poll] Exchange rates fetched: {rate_str}", flush=True)
+
     existing_today: dict[int, Financial] = {
         f.company_id: f
         for f in db.scalars(
@@ -367,16 +381,6 @@ def poll_once(db: Session, batch_size: int = 50, company_ids: set[int] | None = 
             continue
 
         batch_results = _fetch_batch(tickers)
-
-        # Collect unique non-USD currencies in this batch and fetch rates once
-        currencies = {cur for _, _, cur in batch_results.values() if cur != "USD"}
-        fx_rates = _fetch_fx_rates(currencies) if currencies else {}
-        if fx_rates:
-            print(
-                f"    [market-poll] FX rates: "
-                f"{', '.join(f'{c}=>{r:.4f} local/USD' for c, r in sorted(fx_rates.items()))}",
-                flush=True,
-            )
 
         for company in batch:
             if not company.ticker:
