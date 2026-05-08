@@ -1,8 +1,178 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchCompany, fetchCompanyByTicker } from "../api/client";
-import type { CompanyDetail as CompanyDetailType } from "../types";
+import { fetchCompany, fetchCompanyByTicker, updateCompany, deleteCompany } from "../api/client";
+import type { CompanyDetail as CompanyDetailType, CompanyUpdateRequest, EnergySegment, ValueChainPosition, CompanyStatus } from "../types";
 import { formatCap, formatPrice } from "../components/FormatCap";
+
+const SUPPLY_CHAIN_OPTIONS = ["Upstream", "Midstream", "Downstream", "Integrated", "Petrochemicals", "Services"];
+const VALUE_CHAIN_OPTIONS: ValueChainPosition[] = ["Upstream", "Midstream", "Downstream", "Integrated", "Services"];
+const ENERGY_SEGMENTS: EnergySegment[] = [
+  "Integrated Gas", "Onshore", "Offshore", "Combustion Energy", "Midstream Infrastructure",
+  "Petrochemicals", "Chemicals", "Refined Fuels", "Specialty Chemicals", "Fuel Transport",
+  "Bulk Minerals", "Agriculture Plants", "Resource Infrastructure", "Metals",
+  "Low Carbon Hydrogen", "Renewable Energy", "Energy Storage", "Nuclear SMR", "Power to X",
+  "Low Carbon Fuels", "Direct Air Capture", "Ammonia/Methanol", "Plastics Recovery",
+  "Energy Transition Materials", "Battery Materials", "Water Recycling",
+];
+const STATUS_OPTIONS: CompanyStatus[] = ["Active", "Acquired", "Merged", "Delisted", "Unknown", "Sanctioned", "Non-Equity"];
+const WWT_MODELS = ["Chemicals", "Services", "EPC", "Refining", "LNG", "Retail"];
+
+interface EditModalProps {
+  company: CompanyDetailType;
+  onClose: () => void;
+  onSaved: () => void;
+}
+
+function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
+  const [form, setForm] = useState<CompanyUpdateRequest>({
+    name: company.name,
+    ticker: company.ticker ?? "",
+    exchange: company.exchange ?? "",
+    country: company.country ?? "",
+    website: company.website ?? "",
+    description: company.description ?? "",
+    wwt_territory: company.wwt_territory ?? "",
+    wwt_model: company.wwt_model ?? "",
+    energy_segment: company.energy_segment,
+    value_chain_position: company.value_chain_position,
+    supply_chain_position: company.supply_chain_position ?? "",
+    status: company.status,
+    acquired_by: company.acquired_by ?? "",
+    acquisition_notes: company.acquisition_notes ?? "",
+  });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  function field(key: keyof CompanyUpdateRequest) {
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+      setForm(prev => ({ ...prev, [key]: e.target.value || undefined }));
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.name?.trim()) { setError("Name is required"); return; }
+    setSaving(true);
+    setError(null);
+    try {
+      // Send undefined instead of empty strings so backend ignores blank optionals
+      const payload: CompanyUpdateRequest = {};
+      for (const [k, v] of Object.entries(form)) {
+        (payload as Record<string, unknown>)[k] = typeof v === "string" ? (v.trim() || undefined) : v;
+      }
+      payload.name = form.name!.trim();
+      await updateCompany(company.id, payload);
+      onSaved();
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Save failed");
+      setSaving(false);
+    }
+  }
+
+  const inputStyle: React.CSSProperties = { width: "100%", padding: "6px 8px", borderRadius: 6, border: "1px solid #d1d5db", fontSize: 13, boxSizing: "border-box" };
+  const labelStyle: React.CSSProperties = { display: "block", fontSize: 12, fontWeight: 600, color: "#374151", marginBottom: 3 };
+  const rowStyle: React.CSSProperties = { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 };
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div style={{ background: "#fff", borderRadius: 12, width: "min(580px, 96vw)", maxHeight: "90vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.25)" }}>
+        <div style={{ padding: "18px 24px", borderBottom: "1px solid #e5e7eb", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h2 style={{ margin: 0, fontSize: 17, fontWeight: 700 }}>Edit Company</h2>
+          <button onClick={onClose} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#6b7280", lineHeight: 1 }}>×</button>
+        </div>
+        <form onSubmit={handleSubmit} style={{ padding: "20px 24px", display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={rowStyle}>
+            <div>
+              <label style={labelStyle}>Company Name *</label>
+              <input style={inputStyle} value={form.name ?? ""} onChange={field("name")} required />
+            </div>
+            <div>
+              <label style={labelStyle}>Ticker</label>
+              <input style={{ ...inputStyle, fontFamily: "monospace", textTransform: "uppercase" }} value={form.ticker ?? ""} onChange={field("ticker")} placeholder="e.g. XOM" />
+            </div>
+          </div>
+          <div style={rowStyle}>
+            <div>
+              <label style={labelStyle}>Country</label>
+              <input style={inputStyle} value={form.country ?? ""} onChange={field("country")} />
+            </div>
+            <div>
+              <label style={labelStyle}>Exchange</label>
+              <input style={inputStyle} value={form.exchange ?? ""} onChange={field("exchange")} />
+            </div>
+          </div>
+          <div>
+            <label style={labelStyle}>Website</label>
+            <input style={inputStyle} value={form.website ?? ""} onChange={field("website")} placeholder="https://…" />
+          </div>
+          <div>
+            <label style={labelStyle}>Description</label>
+            <textarea style={{ ...inputStyle, resize: "vertical", minHeight: 60 }} value={form.description ?? ""} onChange={field("description")} />
+          </div>
+          <div style={rowStyle}>
+            <div>
+              <label style={labelStyle}>WWT Territory</label>
+              <input style={inputStyle} value={form.wwt_territory ?? ""} onChange={field("wwt_territory")} placeholder="e.g. Americas" />
+            </div>
+            <div>
+              <label style={labelStyle}>WWT Model</label>
+              <select style={inputStyle} value={form.wwt_model ?? ""} onChange={field("wwt_model")}>
+                <option value="">— Select —</option>
+                {WWT_MODELS.map(m => <option key={m}>{m}</option>)}
+              </select>
+            </div>
+          </div>
+          <div style={rowStyle}>
+            <div>
+              <label style={labelStyle}>Supply Chain Position</label>
+              <select style={inputStyle} value={form.supply_chain_position ?? ""} onChange={field("supply_chain_position")}>
+                <option value="">— Select —</option>
+                {SUPPLY_CHAIN_OPTIONS.map(p => <option key={p}>{p}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={labelStyle}>Value Chain Position</label>
+              <select style={inputStyle} value={form.value_chain_position ?? ""} onChange={field("value_chain_position")}>
+                <option value="">— Select —</option>
+                {VALUE_CHAIN_OPTIONS.map(p => <option key={p}>{p}</option>)}
+              </select>
+            </div>
+          </div>
+          <div>
+            <label style={labelStyle}>Energy Segment</label>
+            <select style={inputStyle} value={form.energy_segment ?? ""} onChange={field("energy_segment")}>
+              <option value="">— Select —</option>
+              {ENERGY_SEGMENTS.map(s => <option key={s}>{s}</option>)}
+            </select>
+          </div>
+          <div style={rowStyle}>
+            <div>
+              <label style={labelStyle}>Status</label>
+              <select style={inputStyle} value={form.status ?? ""} onChange={field("status")}>
+                {STATUS_OPTIONS.map(s => <option key={s}>{s}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={labelStyle}>Acquired By</label>
+              <input style={inputStyle} value={form.acquired_by ?? ""} onChange={field("acquired_by")} placeholder="Acquiring company name" />
+            </div>
+          </div>
+          <div>
+            <label style={labelStyle}>Notes</label>
+            <input style={inputStyle} value={form.acquisition_notes ?? ""} onChange={field("acquisition_notes")} placeholder="e.g. Acquired Q2 2024" />
+          </div>
+          {error && <p style={{ margin: 0, fontSize: 13, color: "#dc2626", background: "#fef2f2", padding: "8px 12px", borderRadius: 6 }}>{error}</p>}
+          <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", paddingTop: 4 }}>
+            <button type="button" onClick={onClose} style={{ padding: "8px 18px", borderRadius: 6, border: "1px solid #d1d5db", background: "#fff", cursor: "pointer", fontSize: 13 }}>Cancel</button>
+            <button type="submit" disabled={saving} style={{ padding: "8px 20px", borderRadius: 6, border: "none", background: "#2563eb", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer", opacity: saving ? 0.7 : 1 }}>
+              {saving ? "Saving…" : "Save Changes"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
 
 export default function CompanyDetail() {
   const { id, ticker } = useParams<{ id?: string; ticker?: string }>();
@@ -10,6 +180,19 @@ export default function CompanyDetail() {
   const [company, setCompany] = useState<CompanyDetailType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showEdit, setShowEdit] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
+  function reload() {
+    if (!company) return;
+    const req = company.ticker
+      ? fetchCompanyByTicker(company.ticker)
+      : fetchCompany(company.id);
+    req.then(setCompany).catch(() => null);
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -25,6 +208,26 @@ export default function CompanyDetail() {
       .finally(() => setLoading(false));
   }, [id, ticker]);
 
+  async function handleDelete() {
+    if (!company) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await deleteCompany(company.id);
+      navigate("/companies");
+    } catch (e: unknown) {
+      setDeleteError(e instanceof Error ? e.message : "Delete failed");
+      setDeleting(false);
+    }
+  }
+
+  function handleSaved() {
+    setShowEdit(false);
+    setToast("Changes saved");
+    setTimeout(() => setToast(null), 3500);
+    reload();
+  }
+
   if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="page-body"><div className="error">{error}</div></div>;
   if (!company) return null;
@@ -39,6 +242,14 @@ export default function CompanyDetail() {
 
   return (
     <>
+      {toast && (
+        <div style={{ position: "fixed", bottom: 24, right: 24, background: "#16a34a", color: "#fff", padding: "12px 20px", borderRadius: 8, fontSize: 14, fontWeight: 600, boxShadow: "0 4px 16px rgba(0,0,0,0.2)", zIndex: 2000 }}>
+          {toast}
+        </div>
+      )}
+      {showEdit && (
+        <EditCompanyModal company={company} onClose={() => setShowEdit(false)} onSaved={handleSaved} />
+      )}
       <div className="page-header">
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
@@ -47,15 +258,32 @@ export default function CompanyDetail() {
             <span className="ticker-badge">{company.ticker}</span>
           )}
         </div>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
           {company.supply_chain_position && (
             <span className="badge badge-supply-chain">{company.supply_chain_position}</span>
           )}
           {company.energy_segment && (
             <span className="badge badge-segment">{company.energy_segment}</span>
           )}
+          <button onClick={() => setShowEdit(true)} style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #d1d5db", background: "#fff", fontSize: 13, cursor: "pointer", fontWeight: 500 }}>
+            Edit
+          </button>
+          {!confirmDelete ? (
+            <button onClick={() => setConfirmDelete(true)} style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #fca5a5", background: "#fef2f2", color: "#dc2626", fontSize: 13, cursor: "pointer", fontWeight: 500 }}>
+              Delete
+            </button>
+          ) : (
+            <span style={{ display: "flex", alignItems: "center", gap: 6, background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 6, padding: "4px 10px" }}>
+              <span style={{ fontSize: 13, color: "#991b1b", fontWeight: 600 }}>Delete {company.name}?</span>
+              <button onClick={handleDelete} disabled={deleting} style={{ padding: "4px 10px", borderRadius: 5, border: "none", background: "#dc2626", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                {deleting ? "Deleting…" : "Confirm"}
+              </button>
+              <button onClick={() => { setConfirmDelete(false); setDeleteError(null); }} style={{ padding: "4px 8px", borderRadius: 5, border: "none", background: "transparent", fontSize: 13, cursor: "pointer", color: "#6b7280" }}>✕</button>
+            </span>
+          )}
         </div>
       </div>
+      {deleteError && <div className="page-body" style={{ paddingBottom: 0 }}><div className="error">{deleteError}</div></div>}
 
       <div className="page-body">
         <div className="stat-grid">

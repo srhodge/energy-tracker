@@ -7,7 +7,7 @@ from app.database import get_db
 from app.models import Company, Financial, EnergySegment, ValueChainPosition, CompanyStatus
 from app.schemas import (
     CompanyOut, CompanyDetail, PaginatedCompanies, TerritoryRollup, StatusSummary,
-    CompanyLookupResult, CompanyAddRequest, CompanyAddResponse,
+    CompanyLookupResult, CompanyAddRequest, CompanyAddResponse, CompanyUpdateRequest,
 )
 
 router = APIRouter(prefix="/companies", tags=["companies"])
@@ -375,6 +375,51 @@ def add_company(req: CompanyAddRequest, db: Session = Depends(get_db)):
             pass
 
     return CompanyAddResponse(id=company.id, name=company.name, ticker=company.ticker)
+
+
+@router.put("/{company_id}", response_model=CompanyOut)
+def update_company(company_id: int, req: CompanyUpdateRequest, db: Session = Depends(get_db)):
+    company = db.scalar(select(Company).where(Company.id == company_id))
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+
+    # Ticker uniqueness check if ticker is changing
+    if req.ticker is not None:
+        new_ticker = req.ticker.strip().upper() if req.ticker.strip() else None
+        if new_ticker and new_ticker != (company.ticker or "").upper():
+            conflict = db.scalar(
+                select(Company).where(func.upper(Company.ticker) == new_ticker, Company.id != company_id)
+            )
+            if conflict:
+                raise HTTPException(status_code=409, detail=f"Ticker {new_ticker} already used by company id={conflict.id}")
+        company.ticker = new_ticker
+        company.skip_market_poll = not new_ticker
+
+    for field in ("name", "exchange", "country", "website", "description",
+                  "wwt_territory", "wwt_model", "energy_maturity", "energy_segment",
+                  "value_chain_position", "supply_chain_position",
+                  "status", "acquired_by", "acquisition_notes"):
+        val = getattr(req, field)
+        if val is not None:
+            setattr(company, field, val)
+
+    if req.name is not None and not req.name.strip():
+        raise HTTPException(status_code=422, detail="Name cannot be blank")
+    if req.name is not None:
+        company.name = req.name.strip()
+
+    db.commit()
+    out = CompanyOut.model_validate(company)
+    return out
+
+
+@router.delete("/{company_id}", status_code=204)
+def delete_company(company_id: int, db: Session = Depends(get_db)):
+    company = db.scalar(select(Company).where(Company.id == company_id))
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+    db.delete(company)
+    db.commit()
 
 
 @router.get("/{company_id}", response_model=CompanyDetail)

@@ -160,3 +160,21 @@ export interface CompanyAddResponse {
   name: string;
   ticker?: string;
 }
+
+export interface CompanyUpdateRequest {
+  name?: string;
+  ticker?: string;
+  exchange?: string;
+  country?: string;
+  website?: string;
+  description?: string;
+  wwt_territory?: string;
+  wwt_model?: string;
+  energy_maturity?: EnergyMaturity;
+  energy_segment?: EnergySegment;
+  value_chain_position?: ValueChainPosition;
+  supply_chain_position?: string;
+  status?: CompanyStatus;
+  acquired_by?: string;
+  acquisition_notes?: string;
+}

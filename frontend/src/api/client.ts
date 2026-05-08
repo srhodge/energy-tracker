@@ -1,6 +1,7 @@
 import type {
   PaginatedCompanies,
   CompanyDetail,
+  Company,
   TerritoryRollup,
   SupplyChainRollup,
   NewsItem,
@@ -13,6 +14,7 @@ import type {
   CompanyLookupResult,
   CompanyAddRequest,
   CompanyAddResponse,
+  CompanyUpdateRequest,
 } from "../types";
 
 const BASE = "https://energy-tracker-production-39a1.up.railway.app";
@@ -80,6 +82,27 @@ export function fetchNews(limit = 50): Promise<NewsItem[]> {
 
 export function fetchNewsByTicker(ticker: string, limit = 20): Promise<NewsItem[]> {
   return get(`/news/${encodeURIComponent(ticker)}?limit=${limit}`);
+}
+
+export async function updateCompany(id: number, req: CompanyUpdateRequest): Promise<Company> {
+  const res = await fetch(`${BASE}/companies/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(req),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.detail ?? `API error ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function deleteCompany(id: number): Promise<void> {
+  const res = await fetch(`${BASE}/companies/${id}`, { method: "DELETE" });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.detail ?? `API error ${res.status}`);
+  }
 }
 
 export function lookupCompany(ticker: string): Promise<CompanyLookupResult> {

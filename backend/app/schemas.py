@@ -146,3 +146,21 @@ class CompanyAddResponse(BaseModel):
     id: int
     name: str
     ticker: Optional[str] = None
+
+
+class CompanyUpdateRequest(BaseModel):
+    name: Optional[str] = None
+    ticker: Optional[str] = None
+    exchange: Optional[str] = None
+    country: Optional[str] = None
+    website: Optional[str] = None
+    description: Optional[str] = None
+    wwt_territory: Optional[str] = None
+    wwt_model: Optional[str] = None
+    energy_maturity: Optional[EnergyMaturity] = None
+    energy_segment: Optional[EnergySegment] = None
+    value_chain_position: Optional[ValueChainPosition] = None
+    supply_chain_position: Optional[str] = None
+    status: Optional[CompanyStatus] = None
+    acquired_by: Optional[str] = None
+    acquisition_notes: Optional[str] = None
