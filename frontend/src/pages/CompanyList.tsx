@@ -358,7 +358,7 @@ export default function CompanyList() {
   const [segment, setSegment] = useState("");
   const [supplyChain, setSupplyChain] = useState("");
   const [country, setCountry] = useState("");
-  const [includeInactive, setIncludeInactive] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("");
 
   // Sort state
   const [sortBy, setSortBy] = useState("market_cap");
@@ -408,7 +408,7 @@ export default function CompanyList() {
       energy_segment: (segment as EnergySegment) || undefined,
       supply_chain_position: supplyChain || undefined,
       country: country || undefined,
-      include_inactive: includeInactive || undefined,
+      status: statusFilter || undefined,
       sort_by: sortBy,
       sort_dir: sortDir,
       page,
@@ -420,7 +420,7 @@ export default function CompanyList() {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [search, territory, segment, supplyChain, country, includeInactive, sortBy, sortDir, page]);
+  }, [search, territory, segment, supplyChain, country, statusFilter, sortBy, sortDir, page]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -508,14 +508,17 @@ export default function CompanyList() {
             <option value="">All countries</option>
             {filters?.countries.map((c) => <option key={c}>{c}</option>)}
           </select>
-          <label className="toggle-label">
-            <input
-              type="checkbox"
-              checked={includeInactive}
-              onChange={(e) => { setIncludeInactive(e.target.checked); setPage(1); }}
-            />
-            Show acquired &amp; inactive
-          </label>
+          <select value={statusFilter} onChange={handleFilterChange(setStatusFilter)}>
+            <option value="">Active only</option>
+            <option value="all">All statuses</option>
+            <option value="Active">Active</option>
+            <option value="Acquired">Acquired</option>
+            <option value="Merged">Merged</option>
+            <option value="Delisted">Delisted</option>
+            <option value="Unknown">Unknown</option>
+            <option value="Sanctioned">Sanctioned</option>
+            <option value="Non-Equity">Non-Equity</option>
+          </select>
         </div>
 
         {error && <div className="error">{error}</div>}

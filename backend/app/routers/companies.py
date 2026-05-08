@@ -54,6 +54,7 @@ def list_companies(
     country: Optional[str] = Query(None),
     search: Optional[str] = Query(None),
     include_inactive: bool = Query(False),
+    status: Optional[str] = Query(None),
     sort_by: Optional[str] = Query("market_cap"),
     sort_dir: Optional[str] = Query("desc"),
     page: int = Query(1, ge=1),
@@ -73,7 +74,9 @@ def list_companies(
         filters.append(Company.country == country)
     if search:
         filters.append(Company.name.ilike(f"%{search}%"))
-    if not include_inactive:
+    if status and status != "all":
+        filters.append(Company.status == status)
+    elif not status and not include_inactive:
         filters.append(Company.status.notin_(_INACTIVE))
 
     base_q = select(Company).where(and_(*filters)) if filters else select(Company)
