@@ -9,7 +9,7 @@ import type {
   EventType,
 } from "../types";
 
-const BASE = import.meta.env.VITE_API_URL ?? "";
+const BASE = "https://energy-tracker-production-39a1.up.railway.app";
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`);
