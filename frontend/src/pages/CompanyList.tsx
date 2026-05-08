@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { fetchCompanies, fetchFilterOptions } from "../api/client";
 import type { Company, FilterOptions, EnergySegment, ValueChainPosition } from "../types";
 import { formatCap, formatPrice } from "../components/FormatCap";
+import SupplyChainChart from "../components/SupplyChainChart";
 
 const PAGE_SIZE = 50;
 
@@ -65,6 +66,7 @@ export default function CompanyList() {
         <span style={{ color: "#6b7280", fontSize: 13 }}>{total.toLocaleString()} companies</span>
       </div>
       <div className="page-body">
+        <SupplyChainChart />
         <div className="filter-bar">
           <input
             type="search"

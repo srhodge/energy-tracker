@@ -110,6 +110,37 @@ def territory_rollup(db: Session = Depends(get_db)):
     ]
 
 
+@router.get("/supply-chain-rollup")
+def supply_chain_rollup(db: Session = Depends(get_db)):
+    latest_sq = _latest_financial_subquery(db)
+    rows = db.execute(
+        select(
+            Company.supply_chain_position,
+            func.count(Company.id).label("company_count"),
+            func.sum(Financial.market_cap_usd).label("total_market_cap_usd"),
+        )
+        .outerjoin(latest_sq, Company.id == latest_sq.c.company_id)
+        .outerjoin(
+            Financial,
+            and_(
+                Financial.company_id == Company.id,
+                Financial.snapshot_date == latest_sq.c.max_date,
+            ),
+        )
+        .where(Company.supply_chain_position.isnot(None))
+        .group_by(Company.supply_chain_position)
+        .order_by(func.sum(Financial.market_cap_usd).desc().nullslast())
+    ).all()
+    return [
+        {
+            "supply_chain_position": r.supply_chain_position,
+            "company_count": r.company_count,
+            "total_market_cap_usd": r.total_market_cap_usd,
+        }
+        for r in rows
+    ]
+
+
 @router.get("/filter-options")
 def filter_options(db: Session = Depends(get_db)):
     """Return distinct values for filter dropdowns."""

@@ -69,6 +69,12 @@ export interface TerritoryRollup {
   total_market_cap_usd?: number;
 }
 
+export interface SupplyChainRollup {
+  supply_chain_position: string;
+  company_count: number;
+  total_market_cap_usd?: number;
+}
+
 export interface PaginatedCompanies {
   total: number;
   page: number;
