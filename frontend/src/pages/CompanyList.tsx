@@ -295,7 +295,7 @@ function AddCompanyModal({ filterOptions, onClose, onAdded }: AddCompanyModalPro
           <div style={rowStyle}>
             {/* Supply Chain Position */}
             <div>
-              <label style={labelStyle}>Supply Chain Position</label>
+              <label style={labelStyle}>Energy Value Chain Position</label>
               <LowConfidenceField low={confidence.supply_chain_position === "low" && !!form.supply_chain_position}>
                 <select style={inputStyle} value={form.supply_chain_position || ""} onChange={field("supply_chain_position")}>
                   <option value="">— Select —</option>
@@ -465,7 +465,7 @@ export default function CompanyList() {
             {filters?.energy_segments.map((s) => <option key={s}>{s}</option>)}
           </select>
           <select value={supplyChain} onChange={handleFilterChange(setSupplyChain)}>
-            <option value="">All supply chain positions</option>
+            <option value="">All energy value chain positions</option>
             {filters?.supply_chain_positions.map((v) => <option key={v}>{v}</option>)}
           </select>
           <select value={country} onChange={handleFilterChange(setCountry)}>
@@ -496,7 +496,7 @@ export default function CompanyList() {
                     <th>Ticker</th>
                     <th>Territory</th>
                     <th>Segment</th>
-                    <th>Supply Chain</th>
+                    <th>Energy Value Chain</th>
                     <th>Country</th>
                     <th style={{ textAlign: "right" }}>Market Cap</th>
                     <th style={{ textAlign: "right" }}>Price</th>

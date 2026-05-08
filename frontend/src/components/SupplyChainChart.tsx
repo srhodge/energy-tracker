@@ -99,7 +99,7 @@ export default function SupplyChainChart({ selectedPosition, onSelect }: Props) 
   return (
     <div className="card" style={{ marginBottom: 18 }}>
       <div style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 12 }}>
-        Market Cap by Supply Chain Position
+        Market Cap by Energy Value Chain
         {hasSelection && (
           <span
             onClick={() => onSelect?.("")}
