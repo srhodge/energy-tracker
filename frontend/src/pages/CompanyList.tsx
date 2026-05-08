@@ -493,7 +493,7 @@ export default function CompanyList() {
             onChange={handleFilterChange(setSearch)}
           />
           <select value={territory} onChange={handleFilterChange(setTerritory)}>
-            <option value="">All territories</option>
+            <option value="">All WWT Territories</option>
             {filters?.wwt_territories.map((t) => <option key={t}>{t}</option>)}
           </select>
           <select value={segment} onChange={handleFilterChange(setSegment)}>
@@ -535,7 +535,7 @@ export default function CompanyList() {
                     <SortTh col="ticker">Ticker</SortTh>
                     <SortTh col="price" right>Price</SortTh>
                     <SortTh col="country">Country</SortTh>
-                    <SortTh col="territory">Territory</SortTh>
+                    <SortTh col="territory">WWT Territory</SortTh>
                     <SortTh col="supply_chain">Energy Value Chain</SortTh>
                     <SortTh col="segment">Segment</SortTh>
                     <SortTh col="q_rev" right>Q Rev</SortTh>
