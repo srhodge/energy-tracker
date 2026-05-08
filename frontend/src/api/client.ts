@@ -9,7 +9,7 @@ import type {
   EventType,
 } from "../types";
 
-const BASE = "/api";
+const BASE = import.meta.env.VITE_API_URL ?? "";
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`);
