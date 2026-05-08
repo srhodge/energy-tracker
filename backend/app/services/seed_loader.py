@@ -54,11 +54,26 @@ MODEL_DEFAULTS: dict[str, dict] = {
 }
 
 
+_X000D_RE = re.compile(r"_x000D_", re.IGNORECASE)
+
+
+def _fix_text(s: str | None) -> str | None:
+    """Fix UTF-8-as-Latin-1 mojibake, HTML entities, and Excel _x000D_ carriage-return artifacts."""
+    if not s:
+        return s
+    try:
+        s = s.encode("latin-1").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        pass
+    s = html.unescape(s)
+    s = _X000D_RE.sub("", s)
+    return s.strip() or None
+
+
 def _clean(val) -> str | None:
     if val is None:
         return None
-    s = html.unescape(str(val).strip())
-    return s if s else None
+    return _fix_text(str(val).strip())
 
 
 def _parse_market_cap(val) -> float | None:
@@ -175,6 +190,25 @@ def load_excel(path: str | Path, db: Session) -> int:
     db.commit()
     wb.close()
     return loaded
+
+
+def clean_company_names(db: Session) -> int:
+    """
+    One-time idempotent cleanup: fix UTF-8 mojibake and _x000D_ artifacts in all
+    company names already stored in the database. Safe to call on every startup —
+    only writes rows where the name actually changes.
+    """
+    from sqlalchemy import select as _select
+    companies = db.scalars(_select(Company)).all()
+    fixed = 0
+    for company in companies:
+        cleaned = _fix_text(company.name)
+        if cleaned and cleaned != company.name:
+            company.name = cleaned
+            fixed += 1
+    if fixed:
+        db.commit()
+    return fixed
 
 
 def main():

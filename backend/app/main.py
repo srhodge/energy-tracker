@@ -75,6 +75,11 @@ async def lifespan(app: FastAPI):
             loaded = load_excel(_SEED_FILE, db)
             print(f"[seed] Loaded {loaded} companies.")
 
+        from app.services.seed_loader import clean_company_names
+        fixed = clean_company_names(db)
+        if fixed:
+            print(f"[cleanup] Fixed encoding/artifacts in {fixed} company names.", flush=True)
+
         unclassified = db.scalar(
             select(func.count(Company.id)).where(Company.supply_chain_position.is_(None))
         )
