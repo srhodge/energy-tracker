@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session, selectinload
 from typing import Optional
 
 from app.database import get_db
-from app.models import Company, Financial, EnergySegment, ValueChainPosition, CompanyStatus
+from app.models import Company, Financial, ValueChainPosition, CompanyStatus
 from app.schemas import (
     CompanyOut, CompanyDetail, PaginatedCompanies, TerritoryRollup, StatusSummary,
     CompanyLookupResult, CompanyAddRequest, CompanyAddResponse, CompanyUpdateRequest,
@@ -38,7 +38,7 @@ _SORT_COLUMNS = {
     "country":      (Company.country,                       False),
     "territory":    (Company.wwt_territory,                 False),
     "supply_chain": (Company.supply_chain_position,         False),
-    "segment":      (Company.energy_segment,                False),
+    "segment":      (Company.industry,                      False),
     "q_rev":        (Financial.revenue_quarterly_usd,       True),
     "fy_rev":       (Financial.revenue_annual_usd,          True),
     "market_cap":   (Financial.market_cap_usd,              True),
@@ -48,7 +48,7 @@ _SORT_COLUMNS = {
 @router.get("", response_model=PaginatedCompanies)
 def list_companies(
     wwt_territory: Optional[str] = Query(None),
-    energy_segment: Optional[EnergySegment] = Query(None),
+    industry: Optional[str] = Query(None),
     value_chain_position: Optional[ValueChainPosition] = Query(None),
     supply_chain_position: Optional[str] = Query(None),
     country: Optional[str] = Query(None),
@@ -64,8 +64,8 @@ def list_companies(
     filters = []
     if wwt_territory:
         filters.append(Company.wwt_territory == wwt_territory)
-    if energy_segment:
-        filters.append(Company.energy_segment == energy_segment)
+    if industry:
+        filters.append(Company.industry == industry)
     if value_chain_position:
         filters.append(Company.value_chain_position == value_chain_position)
     if supply_chain_position:
@@ -210,10 +210,15 @@ def filter_options(db: Session = Depends(get_db)):
         .where(Company.supply_chain_position.isnot(None))
         .order_by(Company.supply_chain_position)
     ).all()
+    industries = db.scalars(
+        select(Company.industry).distinct()
+        .where(Company.industry.isnot(None))
+        .order_by(Company.industry)
+    ).all()
     return {
         "wwt_territories": territories,
         "countries": countries,
-        "energy_segments": [e.value for e in EnergySegment],
+        "industries": industries,
         "value_chain_positions": [v.value for v in ValueChainPosition],
         "supply_chain_positions": supply_chain_positions,
     }
@@ -338,6 +343,8 @@ def lookup_company(ticker: str = Query(..., min_length=1), db: Session = Depends
 
     wwt_territory = _infer_wwt_territory(country)
 
+    industry = info.get("industry") or None
+
     return CompanyLookupResult(
         name=name,
         ticker=ticker,
@@ -348,6 +355,7 @@ def lookup_company(ticker: str = Query(..., min_length=1), db: Session = Depends
         market_cap_usd=market_cap_usd,
         price_usd=price_usd,
         currency=currency,
+        industry=industry,
         supply_chain_position=supply_chain,
         wwt_territory=wwt_territory,
         supply_chain_confidence="low",
@@ -377,7 +385,7 @@ def add_company(req: CompanyAddRequest, db: Session = Depends(get_db)):
         wwt_territory=req.wwt_territory,
         wwt_model=req.wwt_model,
         energy_maturity=req.energy_maturity,
-        energy_segment=req.energy_segment,
+        industry=req.industry,
         value_chain_position=req.value_chain_position,
         supply_chain_position=req.supply_chain_position,
         status=CompanyStatus.active,
@@ -431,7 +439,7 @@ def update_company(company_id: int, req: CompanyUpdateRequest, db: Session = Dep
         company.skip_market_poll = not new_ticker
 
     for field in ("name", "exchange", "country", "website", "description",
-                  "wwt_territory", "wwt_model", "energy_maturity", "energy_segment",
+                  "wwt_territory", "wwt_model", "energy_maturity", "industry",
                   "value_chain_position", "supply_chain_position",
                   "status", "acquired_by", "acquisition_notes"):
         val = getattr(req, field)

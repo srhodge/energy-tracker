@@ -1,19 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchCompany, fetchCompanyByTicker, updateCompany, deleteCompany } from "../api/client";
-import type { CompanyDetail as CompanyDetailType, CompanyUpdateRequest, EnergySegment, ValueChainPosition, CompanyStatus } from "../types";
+import type { CompanyDetail as CompanyDetailType, CompanyUpdateRequest, ValueChainPosition, CompanyStatus } from "../types";
 import { formatCap, formatPrice } from "../components/FormatCap";
 
 const SUPPLY_CHAIN_OPTIONS = ["Upstream", "Midstream", "Downstream", "Integrated", "Petrochemicals", "Services"];
 const VALUE_CHAIN_OPTIONS: ValueChainPosition[] = ["Upstream", "Midstream", "Downstream", "Integrated", "Services"];
-const ENERGY_SEGMENTS: EnergySegment[] = [
-  "Integrated Gas", "Onshore", "Offshore", "Combustion Energy", "Midstream Infrastructure",
-  "Petrochemicals", "Chemicals", "Refined Fuels", "Specialty Chemicals", "Fuel Transport",
-  "Bulk Minerals", "Agriculture Plants", "Resource Infrastructure", "Metals",
-  "Low Carbon Hydrogen", "Renewable Energy", "Energy Storage", "Nuclear SMR", "Power to X",
-  "Low Carbon Fuels", "Direct Air Capture", "Ammonia/Methanol", "Plastics Recovery",
-  "Energy Transition Materials", "Battery Materials", "Water Recycling",
-];
 const STATUS_OPTIONS: CompanyStatus[] = ["Active", "Acquired", "Merged", "Delisted", "Unknown", "Sanctioned", "Non-Equity"];
 const WWT_MODELS = ["Chemicals", "Services", "EPC", "Refining", "LNG", "Retail"];
 
@@ -33,7 +25,7 @@ function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
     description: company.description ?? "",
     wwt_territory: company.wwt_territory ?? "",
     wwt_model: company.wwt_model ?? "",
-    energy_segment: company.energy_segment,
+    industry: company.industry ?? "",
     value_chain_position: company.value_chain_position,
     supply_chain_position: company.supply_chain_position ?? "",
     status: company.status,
@@ -139,11 +131,8 @@ function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
             </div>
           </div>
           <div>
-            <label style={labelStyle}>Energy Segment</label>
-            <select style={inputStyle} value={form.energy_segment ?? ""} onChange={field("energy_segment")}>
-              <option value="">— Select —</option>
-              {ENERGY_SEGMENTS.map(s => <option key={s}>{s}</option>)}
-            </select>
+            <label style={labelStyle}>Energy Industry</label>
+            <input style={inputStyle} value={form.industry ?? ""} onChange={field("industry")} placeholder="e.g. Oil & Gas E&P" />
           </div>
           <div style={rowStyle}>
             <div>
@@ -355,8 +344,8 @@ export default function CompanyDetail() {
                     ? <span className="badge badge-supply-chain">{company.supply_chain_position}</span>
                     : "—"}
                 </dd>
-                <dt>Sector</dt>
-                <dd>{company.energy_segment ?? "—"}</dd>
+                <dt>Energy Industry</dt>
+                <dd>{company.industry ?? "—"}</dd>
                 <dt>Country</dt>
                 <dd>{company.country ?? "—"}</dd>
                 <dt>Exchange</dt>

@@ -92,6 +92,7 @@ class Company(Base):
     energy_maturity: Mapped[EnergyMaturity | None] = mapped_column(_enum(EnergyMaturity))
     energy_category: Mapped[EnergyCategory | None] = mapped_column(_enum(EnergyCategory))
     energy_segment: Mapped[EnergySegment | None] = mapped_column(_enum(EnergySegment))
+    industry: Mapped[str | None] = mapped_column(String(150))
     value_chain_position: Mapped[ValueChainPosition | None] = mapped_column(_enum(ValueChainPosition))
     supply_chain_position: Mapped[str | None] = mapped_column(String(50), index=True)
     skip_market_poll: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")

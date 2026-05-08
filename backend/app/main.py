@@ -108,11 +108,11 @@ async def lifespan(app: FastAPI):
             print(f"[status] Done — {changed} companies enriched beyond Unknown.")
 
         # Classify skip_market_poll flags (fast — DB queries only, no external calls)
-        from app.services.market_poller import classify_skip_flags, is_poll_stale, is_trading_day, needs_initial_fundamentals
+        from app.services.market_poller import classify_skip_flags, is_poll_stale, is_trading_day, needs_initial_fundamentals, needs_industry_population
         skip, active = classify_skip_flags(db)
         print(f"[market-poll] Skip flags set: {skip} skipped, {active} pollable", flush=True)
         startup_poll_needed = is_poll_stale(db) and is_trading_day()
-        fundamentals_needed = needs_initial_fundamentals(db)
+        fundamentals_needed = needs_initial_fundamentals(db) or needs_industry_population(db)
 
     # News scraper: immediately on startup, then every 6 hours
     _scheduler.add_job(_run_scraper, "interval", hours=6, next_run_time=datetime.utcnow())

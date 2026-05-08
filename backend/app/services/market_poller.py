@@ -11,7 +11,7 @@ import time
 from datetime import date, datetime, timedelta
 
 import yfinance as yf
-from sqlalchemy import select, func, and_
+from sqlalchemy import select, func, and_, or_
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
@@ -260,15 +260,17 @@ def _revenue_currency(ticker_currency: str) -> str:
 
 
 def _fetch_revenue(
-    ticker: str, currency: str, fx_rates: dict[str, float]
+    ticker: str, currency: str, fx_rates: dict[str, float], t=None
 ) -> tuple[float | None, float | None, str | None, str | None]:
     """
     Fetch quarterly and annual total revenue from yfinance income statements.
     Returns (quarterly_usd, annual_usd, q_label, fy_label).
     currency should be the major currency (GBP not GBX, ILS not ILA).
+    Pass t to reuse an existing yf.Ticker object.
     """
     try:
-        t = yf.Ticker(ticker)
+        if t is None:
+            t = yf.Ticker(ticker)
         q_rev_usd = q_label = a_rev_usd = fy_label = None
 
         REV_NAMES = ("Total Revenue", "TotalRevenue", "totalRevenue")
@@ -369,6 +371,38 @@ def has_missing_revenue(db: Session) -> bool:
         )
     )
     return (filled or 0) < len(pollable_ids)
+
+
+# Values seeded by migration from energy_segment — not yet from yfinance
+_ENERGY_SEGMENT_VALUES: frozenset[str] = frozenset({
+    "Integrated Gas", "Onshore", "Offshore", "Combustion Energy",
+    "Midstream Infrastructure", "Petrochemicals", "Chemicals",
+    "Refined Fuels", "Specialty Chemicals", "Fuel Transport",
+    "Bulk Minerals", "Agriculture Plants", "Resource Infrastructure",
+    "Metals", "Low Carbon Hydrogen", "Renewable Energy", "Energy Storage",
+    "Nuclear SMR", "Power to X", "Low Carbon Fuels", "Direct Air Capture",
+    "Ammonia/Methanol", "Plastics Recovery", "Energy Transition Materials",
+    "Battery Materials", "Water Recycling",
+})
+
+
+def needs_industry_population(db: Session) -> bool:
+    """Return True if any pollable company has a null or migration-seeded industry value."""
+    pollable_ids = db.scalars(
+        select(Company.id).where(Company.skip_market_poll == False)
+    ).all()
+    if not pollable_ids:
+        return False
+    count = db.scalar(
+        select(func.count(Company.id)).where(
+            Company.id.in_(pollable_ids),
+            or_(
+                Company.industry.is_(None),
+                Company.industry.in_(_ENERGY_SEGMENT_VALUES),
+            ),
+        )
+    )
+    return (count or 0) > 0
 
 
 def needs_initial_fundamentals(db: Session) -> bool:
@@ -679,7 +713,7 @@ def poll_fundamentals(db: Session) -> dict:
     }
 
     today = _et_today()
-    updated = skipped = failed = 0
+    rev_updated = rev_failed = ind_updated = skipped = 0
 
     for i, company in enumerate(pollable):
         if not company.ticker:
@@ -688,8 +722,12 @@ def poll_fundamentals(db: Session) -> dict:
 
         rec = latest_records.get(company.id)
         q_label = rec.revenue_quarter_label if rec else None
+        needs_revenue = _is_stale(q_label)
+        needs_industry = (
+            company.industry is None or company.industry in _ENERGY_SEGMENT_VALUES
+        )
 
-        if not _is_stale(q_label):
+        if not needs_revenue and not needs_industry:
             skipped += 1
             continue
 
@@ -697,34 +735,48 @@ def poll_fundamentals(db: Session) -> dict:
         currency = _ticker_currency(ticker)
         rev_currency = _revenue_currency(currency)
 
-        if rev_currency != "USD" and rev_currency not in fx_rates:
-            extra = _fetch_fx_rates({rev_currency})
-            fx_rates.update(extra)
+        try:
+            t = yf.Ticker(ticker)
 
-        q_rev, a_rev, q_lbl, fy_lbl = _fetch_revenue(ticker, rev_currency, fx_rates)
+            if needs_industry:
+                try:
+                    info = t.info or {}
+                    ind = info.get("industry") or None
+                    if ind:
+                        company.industry = ind
+                        ind_updated += 1
+                except Exception:
+                    pass
 
-        if q_rev is None and a_rev is None:
-            failed += 1
-            time.sleep(0.4)
-            continue
+            if needs_revenue:
+                if rev_currency != "USD" and rev_currency not in fx_rates:
+                    extra = _fetch_fx_rates({rev_currency})
+                    fx_rates.update(extra)
 
-        if rec is None:
-            rec = Financial(
-                company_id=company.id,
-                snapshot_date=today,
-                revenue_quarterly_usd=q_rev,
-                revenue_annual_usd=a_rev,
-                revenue_quarter_label=q_lbl,
-                revenue_fiscal_year_label=fy_lbl,
-            )
-            db.add(rec)
-        else:
-            rec.revenue_quarterly_usd = q_rev
-            rec.revenue_annual_usd = a_rev
-            rec.revenue_quarter_label = q_lbl
-            rec.revenue_fiscal_year_label = fy_lbl
+                q_rev, a_rev, q_lbl, fy_lbl = _fetch_revenue(ticker, rev_currency, fx_rates, t)
 
-        updated += 1
+                if q_rev is not None or a_rev is not None:
+                    if rec is None:
+                        rec = Financial(
+                            company_id=company.id,
+                            snapshot_date=today,
+                            revenue_quarterly_usd=q_rev,
+                            revenue_annual_usd=a_rev,
+                            revenue_quarter_label=q_lbl,
+                            revenue_fiscal_year_label=fy_lbl,
+                        )
+                        db.add(rec)
+                        latest_records[company.id] = rec
+                    else:
+                        rec.revenue_quarterly_usd = q_rev
+                        rec.revenue_annual_usd = a_rev
+                        rec.revenue_quarter_label = q_lbl
+                        rec.revenue_fiscal_year_label = fy_lbl
+                    rev_updated += 1
+                else:
+                    rev_failed += 1
+        except Exception:
+            pass
 
         if (i + 1) % 10 == 0:
             print(f"[fundamentals] {i + 1}/{len(pollable)} processed ...", flush=True)
@@ -734,10 +786,11 @@ def poll_fundamentals(db: Session) -> dict:
 
     db.commit()
     print(
-        f"[fundamentals] Done — updated {updated}, skipped {skipped} (fresh), failed {failed}",
+        f"[fundamentals] Done — industry: {ind_updated} updated; "
+        f"revenue: {rev_updated} updated, {rev_failed} failed; {skipped} skipped",
         flush=True,
     )
-    return {"updated": updated, "skipped": skipped, "failed": failed}
+    return {"ind_updated": ind_updated, "rev_updated": rev_updated, "rev_failed": rev_failed, "skipped": skipped}
 
 
 # ---------------------------------------------------------------------------

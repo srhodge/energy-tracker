@@ -1,13 +1,3 @@
-export type EnergySegment =
-  | "Integrated Gas" | "Onshore" | "Offshore" | "Combustion Energy"
-  | "Midstream Infrastructure" | "Petrochemicals" | "Chemicals"
-  | "Refined Fuels" | "Specialty Chemicals" | "Fuel Transport"
-  | "Bulk Minerals" | "Agriculture Plants" | "Resource Infrastructure"
-  | "Metals" | "Low Carbon Hydrogen" | "Renewable Energy" | "Energy Storage"
-  | "Nuclear SMR" | "Power to X" | "Low Carbon Fuels" | "Direct Air Capture"
-  | "Ammonia/Methanol" | "Plastics Recovery" | "Energy Transition Materials"
-  | "Battery Materials" | "Water Recycling";
-
 export type ValueChainPosition = "Upstream" | "Midstream" | "Downstream" | "Integrated" | "Services";
 export type EnergyMaturity = "Mature" | "Developing";
 export type EnergyCategory = "Energy" | "Chemicals" | "Resources";
@@ -26,7 +16,7 @@ export interface Company {
   wwt_model?: string;
   energy_maturity?: EnergyMaturity;
   energy_category?: EnergyCategory;
-  energy_segment?: EnergySegment;
+  industry?: string;
   value_chain_position?: ValueChainPosition;
   supply_chain_position?: string;
   status?: CompanyStatus;
@@ -117,7 +107,7 @@ export interface PaginatedCompanies {
 export interface FilterOptions {
   wwt_territories: string[];
   countries: string[];
-  energy_segments: EnergySegment[];
+  industries: string[];
   value_chain_positions: ValueChainPosition[];
   supply_chain_positions: string[];
 }
@@ -132,7 +122,7 @@ export interface CompanyLookupResult {
   market_cap_usd?: number;
   price_usd?: number;
   currency?: string;
-  energy_segment?: EnergySegment;
+  industry?: string;
   value_chain_position?: ValueChainPosition;
   supply_chain_position?: string;
   wwt_territory?: string;
@@ -155,7 +145,7 @@ export interface CompanyAddRequest {
   wwt_territory?: string;
   wwt_model?: string;
   energy_maturity?: EnergyMaturity;
-  energy_segment?: EnergySegment;
+  industry?: string;
   value_chain_position?: ValueChainPosition;
   supply_chain_position?: string;
   is_public: boolean;
@@ -177,7 +167,7 @@ export interface CompanyUpdateRequest {
   wwt_territory?: string;
   wwt_model?: string;
   energy_maturity?: EnergyMaturity;
-  energy_segment?: EnergySegment;
+  industry?: string;
   value_chain_position?: ValueChainPosition;
   supply_chain_position?: string;
   status?: CompanyStatus;

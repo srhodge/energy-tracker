@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { fetchCompanies, fetchFilterOptions, fetchStatusSummary, lookupCompany, addCompany } from "../api/client";
 import type {
-  Company, FilterOptions, StatusSummary, EnergySegment, ValueChainPosition, CompanyStatus,
+  Company, FilterOptions, StatusSummary, ValueChainPosition, CompanyStatus,
   CompanyLookupResult, CompanyAddRequest,
 } from "../types";
 import { formatCap, formatPrice } from "../components/FormatCap";
@@ -52,14 +52,6 @@ const INACTIVE_STATUSES: CompanyStatus[] = ["Acquired", "Merged", "Delisted", "N
 
 const SUPPLY_CHAIN_OPTIONS = ["Upstream", "Midstream", "Downstream", "Integrated", "Petrochemicals", "Services"];
 const VALUE_CHAIN_OPTIONS: ValueChainPosition[] = ["Upstream", "Midstream", "Downstream", "Integrated", "Services"];
-const ENERGY_SEGMENTS: EnergySegment[] = [
-  "Integrated Gas", "Onshore", "Offshore", "Combustion Energy", "Midstream Infrastructure",
-  "Petrochemicals", "Chemicals", "Refined Fuels", "Specialty Chemicals", "Fuel Transport",
-  "Bulk Minerals", "Agriculture Plants", "Resource Infrastructure", "Metals",
-  "Low Carbon Hydrogen", "Renewable Energy", "Energy Storage", "Nuclear SMR", "Power to X",
-  "Low Carbon Fuels", "Direct Air Capture", "Ammonia/Methanol", "Plastics Recovery",
-  "Energy Transition Materials", "Battery Materials", "Water Recycling",
-];
 
 function LowConfidenceField({ low, children }: { low: boolean; children: React.ReactNode }) {
   if (!low) return <>{children}</>;
@@ -97,7 +89,7 @@ function AddCompanyModal({ filterOptions, onClose, onAdded }: AddCompanyModalPro
     description: "",
     wwt_territory: "",
     wwt_model: "",
-    energy_segment: undefined,
+    industry: "",
     value_chain_position: undefined,
     supply_chain_position: "",
   });
@@ -122,6 +114,7 @@ function AddCompanyModal({ filterOptions, onClose, onAdded }: AddCompanyModalPro
       country: r.country || prev.country || "",
       website: r.website || prev.website || "",
       description: r.description || prev.description || "",
+      industry: r.industry || prev.industry || "",
       supply_chain_position: r.supply_chain_position || prev.supply_chain_position || "",
       wwt_territory: r.wwt_territory || prev.wwt_territory || "",
     }));
@@ -313,13 +306,10 @@ function AddCompanyModal({ filterOptions, onClose, onAdded }: AddCompanyModalPro
             </div>
           </div>
 
-          {/* Energy Segment */}
+          {/* Energy Industry */}
           <div>
-            <label style={labelStyle}>Energy Segment</label>
-            <select style={inputStyle} value={form.energy_segment || ""} onChange={field("energy_segment")}>
-              <option value="">— Select —</option>
-              {ENERGY_SEGMENTS.map(s => <option key={s}>{s}</option>)}
-            </select>
+            <label style={labelStyle}>Energy Industry</label>
+            <input style={inputStyle} value={form.industry || ""} onChange={field("industry")} placeholder="e.g. Oil & Gas E&P (auto-filled from yfinance)" />
           </div>
 
           {submitError && <p style={{ margin: 0, fontSize: 13, color: "#dc2626", background: "#fef2f2", padding: "8px 12px", borderRadius: 6 }}>{submitError}</p>}
@@ -355,7 +345,7 @@ export default function CompanyList() {
   // Filter state
   const [search, setSearch] = useState("");
   const [territory, setTerritory] = useState("");
-  const [segment, setSegment] = useState("");
+  const [industry, setIndustry] = useState("");
   const [supplyChain, setSupplyChain] = useState("");
   const [country, setCountry] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -405,7 +395,7 @@ export default function CompanyList() {
     fetchCompanies({
       search: search || undefined,
       wwt_territory: territory || undefined,
-      energy_segment: (segment as EnergySegment) || undefined,
+      industry: industry || undefined,
       supply_chain_position: supplyChain || undefined,
       country: country || undefined,
       status: statusFilter || undefined,
@@ -420,7 +410,7 @@ export default function CompanyList() {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [search, territory, segment, supplyChain, country, statusFilter, sortBy, sortDir, page]);
+  }, [search, territory, industry, supplyChain, country, statusFilter, sortBy, sortDir, page]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -496,9 +486,9 @@ export default function CompanyList() {
             <option value="">All WWT Territories</option>
             {filters?.wwt_territories.map((t) => <option key={t}>{t}</option>)}
           </select>
-          <select value={segment} onChange={handleFilterChange(setSegment)}>
-            <option value="">All Segments</option>
-            {filters?.energy_segments.map((s) => <option key={s}>{s}</option>)}
+          <select value={industry} onChange={handleFilterChange(setIndustry)}>
+            <option value="">All Energy Industries</option>
+            {filters?.industries.map((s) => <option key={s}>{s}</option>)}
           </select>
           <select value={supplyChain} onChange={handleFilterChange(setSupplyChain)}>
             <option value="">All Energy Value Chain Positions</option>
@@ -537,7 +527,7 @@ export default function CompanyList() {
                     <SortTh col="country">Country</SortTh>
                     <SortTh col="territory">WWT Territory</SortTh>
                     <SortTh col="supply_chain">Energy Value Chain</SortTh>
-                    <SortTh col="segment">Segment</SortTh>
+                    <SortTh col="segment">Energy Industry</SortTh>
                     <SortTh col="q_rev" right>Q Rev</SortTh>
                     <SortTh col="fy_rev" right>FY Rev</SortTh>
                     <SortTh col="market_cap" right>Market Cap</SortTh>
@@ -569,7 +559,7 @@ export default function CompanyList() {
                         <td>{c.country ?? "—"}</td>
                         <td>{c.wwt_territory ? <span className="badge badge-territory">{c.wwt_territory}</span> : "—"}</td>
                         <td>{c.supply_chain_position ? <span className="badge badge-supply-chain">{c.supply_chain_position}</span> : "—"}</td>
-                        <td>{c.energy_segment ? <span className="badge badge-segment">{c.energy_segment}</span> : "—"}</td>
+                        <td>{c.industry ? <span className="badge badge-segment">{c.industry}</span> : "—"}</td>
                         <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums", color: "#6b7280" }}>
                           {c.latest_quarterly_revenue ? `${formatCap(c.latest_quarterly_revenue)}${c.latest_quarter_label ? ` ${c.latest_quarter_label}` : ""}` : "—"}
                         </td>

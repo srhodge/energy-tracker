@@ -8,7 +8,6 @@ import type {
   EventWithCompany,
   FilterOptions,
   StatusSummary,
-  EnergySegment,
   ValueChainPosition,
   EventType,
   CompanyLookupResult,
@@ -27,7 +26,7 @@ async function get<T>(path: string): Promise<T> {
 
 export interface CompanyListParams {
   wwt_territory?: string;
-  energy_segment?: EnergySegment;
+  industry?: string;
   value_chain_position?: ValueChainPosition;
   supply_chain_position?: string;
   country?: string;
@@ -43,7 +42,7 @@ export interface CompanyListParams {
 export function fetchCompanies(params: CompanyListParams = {}): Promise<PaginatedCompanies> {
   const q = new URLSearchParams();
   if (params.wwt_territory) q.set("wwt_territory", params.wwt_territory);
-  if (params.energy_segment) q.set("energy_segment", params.energy_segment);
+  if (params.industry) q.set("industry", params.industry);
   if (params.value_chain_position) q.set("value_chain_position", params.value_chain_position);
   if (params.supply_chain_position) q.set("supply_chain_position", params.supply_chain_position);
   if (params.country) q.set("country", params.country);

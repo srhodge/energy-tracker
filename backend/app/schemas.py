@@ -1,7 +1,7 @@
 from datetime import datetime, date
 from pydantic import BaseModel, ConfigDict
 from typing import Optional
-from app.models import EnergyMaturity, EnergyCategory, EnergySegment, ValueChainPosition, EventType, CompanyStatus
+from app.models import EnergyMaturity, EnergyCategory, ValueChainPosition, EventType, CompanyStatus
 
 
 class FinancialBase(BaseModel):
@@ -51,7 +51,7 @@ class CompanyBase(BaseModel):
     wwt_model: Optional[str] = None
     energy_maturity: Optional[EnergyMaturity] = None
     energy_category: Optional[EnergyCategory] = None
-    energy_segment: Optional[EnergySegment] = None
+    industry: Optional[str] = None
     value_chain_position: Optional[ValueChainPosition] = None
     supply_chain_position: Optional[str] = None
     status: Optional[CompanyStatus] = CompanyStatus.active
@@ -119,7 +119,7 @@ class CompanyLookupResult(BaseModel):
     market_cap_usd: Optional[float] = None
     price_usd: Optional[float] = None
     currency: Optional[str] = None
-    energy_segment: Optional[EnergySegment] = None
+    industry: Optional[str] = None
     value_chain_position: Optional[ValueChainPosition] = None
     supply_chain_position: Optional[str] = None
     wwt_territory: Optional[str] = None
@@ -142,7 +142,7 @@ class CompanyAddRequest(BaseModel):
     wwt_territory: Optional[str] = None
     wwt_model: Optional[str] = None
     energy_maturity: Optional[EnergyMaturity] = None
-    energy_segment: Optional[EnergySegment] = None
+    industry: Optional[str] = None
     value_chain_position: Optional[ValueChainPosition] = None
     supply_chain_position: Optional[str] = None
     is_public: bool = True
@@ -164,7 +164,7 @@ class CompanyUpdateRequest(BaseModel):
     wwt_territory: Optional[str] = None
     wwt_model: Optional[str] = None
     energy_maturity: Optional[EnergyMaturity] = None
-    energy_segment: Optional[EnergySegment] = None
+    industry: Optional[str] = None
     value_chain_position: Optional[ValueChainPosition] = None
     supply_chain_position: Optional[str] = None
     status: Optional[CompanyStatus] = None
