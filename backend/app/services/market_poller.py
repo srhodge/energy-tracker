@@ -157,6 +157,24 @@ _EXCHANGE_CURRENCY: dict[str, str] = {
     ".HE":  "EUR",  # Finland (Nasdaq Helsinki)
     ".CO":  "DKK",  # Denmark (Nasdaq Copenhagen)
     ".IC":  "ISK",  # Iceland
+    ".VN":  "VND",  # Vietnam (HOSE/HNX)
+    ".BD":  "HUF",  # Hungary (Budapest Stock Exchange)
+    ".PR":  "CZK",  # Czech Republic (Prague Stock Exchange)
+    ".IS":  "TRY",  # Turkey (Borsa Istanbul)
+    ".WA":  "PLN",  # Poland (Warsaw Stock Exchange)
+    ".SR":  "SAR",  # Saudi Arabia (Tadawul)
+    ".QA":  "QAR",  # Qatar (QSE) — added for completeness
+    ".CA":  "CAD",  # Canada (alternate suffix)
+    ".ZA":  "ZAR",  # South Africa (JSE)
+    ".EG":  "EGP",  # Egypt (EGX)
+    ".JO":  "ZAR",  # Johannesburg (JSE alt)
+}
+
+# yfinance fast_info.currency values that need normalisation to our internal codes.
+# "GBp" is the most common: Yahoo returns lowercase 'p' for pence-denominated UK stocks.
+_YFINANCE_CURRENCY_NORM: dict[str, str] = {
+    "GBp": "GBX",  # British pence — same subunit as .L suffix
+    "ILA": "ILA",  # Israeli agorot — fast_info already returns the right code
 }
 
 
@@ -314,15 +332,30 @@ def _fetch_batch(tickers: list[str]) -> dict[str, tuple[float | None, float | No
         for t in tickers:
             results[t] = (None, None, _ticker_currency(t))
 
-    # Fetch market cap individually — fast_info.market_cap is in the native currency
+    # Fetch market cap and confirm currency via fast_info.
+    # fast_info.currency is the primary source; suffix map is the fallback.
+    # Subunit currencies (GBp → GBX, ILA) are normalised via _YFINANCE_CURRENCY_NORM.
     for t in list(results.keys()):
         if results[t][0] is not None:
+            price, _, suffix_currency = results[t]
+            mcap = None
+            currency = suffix_currency  # start with suffix map value
             try:
-                mcap = getattr(yf.Ticker(t).fast_info, "market_cap", None)
-                price, _, currency = results[t]
-                results[t] = (price, float(mcap) if mcap else None, currency)
+                fi = yf.Ticker(t).fast_info
+                mcap_raw = getattr(fi, "market_cap", None)
+                if mcap_raw:
+                    mcap = float(mcap_raw)
+                fi_cur = (getattr(fi, "currency", None) or "").strip()
+                if fi_cur:
+                    # Normalise known variants (GBp → GBX, etc.)
+                    fi_cur = _YFINANCE_CURRENCY_NORM.get(fi_cur, fi_cur.upper())
+                    # Trust fast_info when it returns a non-USD currency,
+                    # or when the suffix map defaulted to USD (unknown exchange).
+                    if fi_cur != "USD" or suffix_currency == "USD":
+                        currency = fi_cur
             except Exception:
                 pass
+            results[t] = (price, mcap, currency)
 
     return results
 
@@ -381,6 +414,18 @@ def poll_once(db: Session, batch_size: int = 50, company_ids: set[int] | None = 
             continue
 
         batch_results = _fetch_batch(tickers)
+
+        # Dynamically fetch rates for any currencies discovered via fast_info
+        # that weren't covered by the upfront suffix-map scan.
+        new_currencies = (
+            {cur for _, _, cur in batch_results.values() if cur != "USD"} - set(fx_rates)
+        )
+        if new_currencies:
+            new_rates = _fetch_fx_rates(new_currencies)
+            fx_rates.update(new_rates)
+            if new_rates:
+                extra = {c: round(1.0 / r, 6) for c, r in new_rates.items() if r > 0 and c not in ("GBX", "ILA")}
+                print(f"[market-poll] Additional FX rates: {', '.join(f'{c}={v}' for c, v in sorted(extra.items()))}", flush=True)
 
         for company in batch:
             if not company.ticker:

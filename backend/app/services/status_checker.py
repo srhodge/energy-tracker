@@ -11,6 +11,7 @@ CLI usage (run from backend/):
     python -m app.services.status_checker --phase 2
     python -m app.services.status_checker          # runs both
 """
+import html as _html
 import re
 import sys
 import time
@@ -141,6 +142,17 @@ def _match_name(name: str, ticker: str) -> dict | None:
     return None
 
 
+def _clean_text(s: str | None) -> str | None:
+    """Fix UTF-8-decoded-as-Latin-1 mojibake and HTML entities in yfinance text fields."""
+    if not s:
+        return s
+    try:
+        s = s.encode("latin-1").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        pass
+    return _html.unescape(s).strip()
+
+
 def _yf_info(ticker: str) -> dict:
     """Fetch yfinance .info safely, returning {} on any failure."""
     try:
@@ -191,8 +203,8 @@ def run_phase2_deep(db: Session) -> tuple[int, dict[str, str]]:
         info = _yf_info(ticker)
         qt = (info.get("quoteType") or "").upper()
         delisting = info.get("delistingDate")
-        long_name = info.get("longName") or ""
-        exchange = info.get("exchange") or ""
+        long_name = _clean_text(info.get("longName") or "") or ""
+        exchange = _clean_text(info.get("exchange") or "") or ""
 
         if qt in ("MUTUALFUND", "ETF", "INDEX", "CURRENCY", "FUTURE"):
             company.status = CompanyStatus.non_equity
