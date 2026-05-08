@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select, func, inspect as sa_inspect
 
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
 
 from app.config import settings
 from app.database import engine, SessionLocal
@@ -29,14 +30,20 @@ def _run_scraper():
             print(f"[news] +{n} new items", flush=True)
 
 
+def _run_market_poll():
+    from app.services.market_poller import poll_once, is_trading_day
+    if not is_trading_day():
+        return
+    with SessionLocal() as db:
+        poll_once(db)
+
+
 def _run_migrations():
     from alembic.config import Config
     from alembic import command
 
     alembic_cfg = Config(str(_ALEMBIC_INI))
 
-    # If tables exist but alembic_version doesn't (pre-alembic local SQLite),
-    # stamp as current rather than trying to re-create everything.
     with engine.connect() as conn:
         tables = sa_inspect(conn).get_table_names()
         if "companies" in tables and "alembic_version" not in tables:
@@ -74,16 +81,39 @@ async def lifespan(app: FastAPI):
         unknown = db.scalar(
             select(func.count(Company.id)).where(Company.status == CompanyStatus.unknown)
         )
-        # Run status enrichment if more than half the companies are still Unknown
         if total and unknown and unknown > total // 2:
-            print(f"[status] {unknown}/{total} companies are Unknown — running enrichment...")
+            print(f"[status] {unknown}/{total} companies Unknown — running enrichment...")
             from app.services.status_checker import run_phase1, run_phase2_deep
-            _, _, _ = run_phase1(db)
+            run_phase1(db)
             changed, _ = run_phase2_deep(db)
             print(f"[status] Done — {changed} companies enriched beyond Unknown.")
 
-    # Scrape immediately on startup, then every 6 hours
+        # Classify skip_market_poll flags (fast, idempotent)
+        from app.services.market_poller import classify_skip_flags, is_poll_stale, is_trading_day
+        skip, active = classify_skip_flags(db)
+        print(f"[market-poll] Skip flags set: {skip} skipped, {active} pollable", flush=True)
+
+        # Run an immediate poll if today's data is stale and markets are open
+        if is_poll_stale(db) and is_trading_day():
+            print("[market-poll] Stale data detected — running startup poll ...", flush=True)
+            from app.services.market_poller import poll_once
+            poll_once(db)
+
+    # News scraper: immediately on startup, then every 6 hours
     _scheduler.add_job(_run_scraper, "interval", hours=6, next_run_time=datetime.utcnow())
+
+    # Market poller: 9:30, 11:30, 13:30, 15:30, 16:35 ET — Mon–Fri
+    for hour, minute in [(9, 30), (11, 30), (13, 30), (15, 30), (16, 35)]:
+        _scheduler.add_job(
+            _run_market_poll,
+            CronTrigger(
+                day_of_week="mon-fri",
+                hour=hour,
+                minute=minute,
+                timezone="America/New_York",
+            ),
+        )
+
     _scheduler.start()
 
     yield

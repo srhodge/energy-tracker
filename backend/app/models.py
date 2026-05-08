@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from sqlalchemy import String, Integer, Float, Date, DateTime, ForeignKey, Enum as SAEnum
+from sqlalchemy import String, Integer, Float, Date, DateTime, Boolean, ForeignKey, Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 import enum
@@ -94,6 +94,7 @@ class Company(Base):
     energy_segment: Mapped[EnergySegment | None] = mapped_column(_enum(EnergySegment))
     value_chain_position: Mapped[ValueChainPosition | None] = mapped_column(_enum(ValueChainPosition))
     supply_chain_position: Mapped[str | None] = mapped_column(String(50), index=True)
+    skip_market_poll: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")
     status: Mapped[CompanyStatus] = mapped_column(
         _enum(CompanyStatus), nullable=False, default=CompanyStatus.active, server_default="Active"
     )
@@ -114,6 +115,7 @@ class Financial(Base):
     price_usd: Mapped[float | None] = mapped_column(Float)
     revenue_annual_usd: Mapped[float | None] = mapped_column(Float)
     snapshot_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
+    last_market_update: Mapped[datetime | None] = mapped_column(DateTime)
 
     company: Mapped["Company"] = relationship(back_populates="financials")
 
