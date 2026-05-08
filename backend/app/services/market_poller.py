@@ -121,7 +121,7 @@ _EXCHANGE_CURRENCY: dict[str, str] = {
     ".KQ":  "KRW",  # Korea (KOSDAQ)
     ".T":   "JPY",  # Japan (TSE)
     ".OS":  "JPY",  # Japan (OSE)
-    ".L":   "GBP",  # United Kingdom
+    ".L":   "GBX",  # United Kingdom — yfinance quotes .L prices in pence, not pounds
     ".PA":  "EUR",  # France (Euronext Paris)
     ".AS":  "EUR",  # Netherlands (Euronext Amsterdam)
     ".BR":  "EUR",  # Belgium
@@ -182,12 +182,19 @@ def _fetch_fx_rates(currencies: set[str]) -> dict[str, float]:
     Uses yf.download("USDIDR=X", ...) — the same batch-download mechanism
     used for stock prices, which is far more reliable than fast_info.last_price
     for FX tickers.
+
+    Special case: GBX (British pence) has no direct Yahoo pair — rate is
+    derived from USDGBP=X × 100 (100 pence = 1 pound).
     """
     target = {c for c in currencies if c and c != "USD"}
     if not target:
         return {}
 
-    pairs = [f"USD{c}=X" for c in sorted(target)]
+    # GBX (pence) has no USDGBX=X pair — substitute GBP in the download
+    needs_gbx = "GBX" in target
+    fetch_set = (target - {"GBX"}) | ({"GBP"} if needs_gbx else set())
+
+    pairs = [f"USD{c}=X" for c in sorted(fetch_set)]
     rates: dict[str, float] = {}
 
     try:
@@ -213,6 +220,10 @@ def _fetch_fx_rates(currencies: set[str]) -> dict[str, float]:
 
     except Exception as e:
         print(f"    [market-poll] FX batch download error: {e}", flush=True)
+
+    # Derive GBX rate: 100 pence per pound, so pence-per-USD = GBP-per-USD × 100
+    if needs_gbx and "GBP" in rates:
+        rates["GBX"] = rates["GBP"] * 100
 
     missing = target - set(rates)
     if missing:
