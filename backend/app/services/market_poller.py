@@ -150,7 +150,7 @@ _EXCHANGE_CURRENCY: dict[str, str] = {
     ".BK":  "THB",  # Thailand (SET)
     ".TW":  "TWD",  # Taiwan (TWSE)
     ".TWO": "TWD",  # Taiwan (TPEx)
-    ".TA":  "ILS",  # Israel (TASE)
+    ".TA":  "ILA",  # Israel (TASE) — quoted in agorot (1/100 shekel), not ILS
     ".AT":  "EUR",  # Greece (ATHEX)
     ".OL":  "NOK",  # Norway (Oslo Børs)
     ".ST":  "SEK",  # Sweden (Nasdaq Stockholm)
@@ -190,9 +190,10 @@ def _fetch_fx_rates(currencies: set[str]) -> dict[str, float]:
     if not target:
         return {}
 
-    # GBX (pence) has no USDGBX=X pair — substitute GBP in the download
+    # GBX (pence) and ILA (agorot) have no direct Yahoo FX pairs — substitute parent currencies
     needs_gbx = "GBX" in target
-    fetch_set = (target - {"GBX"}) | ({"GBP"} if needs_gbx else set())
+    needs_ila = "ILA" in target
+    fetch_set = (target - {"GBX", "ILA"}) | ({"GBP"} if needs_gbx else set()) | ({"ILS"} if needs_ila else set())
 
     pairs = [f"USD{c}=X" for c in sorted(fetch_set)]
     rates: dict[str, float] = {}
@@ -221,9 +222,11 @@ def _fetch_fx_rates(currencies: set[str]) -> dict[str, float]:
     except Exception as e:
         print(f"    [market-poll] FX batch download error: {e}", flush=True)
 
-    # Derive GBX rate: 100 pence per pound, so pence-per-USD = GBP-per-USD × 100
+    # Derive subunit rates: 100 pence per pound, 100 agorot per shekel
     if needs_gbx and "GBP" in rates:
         rates["GBX"] = rates["GBP"] * 100
+    if needs_ila and "ILS" in rates:
+        rates["ILA"] = rates["ILS"] * 100
 
     missing = target - set(rates)
     if missing:
