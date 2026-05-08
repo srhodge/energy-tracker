@@ -78,6 +78,7 @@ class Company(Base):
     energy_category: Mapped[EnergyCategory | None] = mapped_column(SAEnum(EnergyCategory))
     energy_segment: Mapped[EnergySegment | None] = mapped_column(SAEnum(EnergySegment))
     value_chain_position: Mapped[ValueChainPosition | None] = mapped_column(SAEnum(ValueChainPosition))
+    supply_chain_position: Mapped[str | None] = mapped_column(String(50), index=True)
 
     financials: Mapped[list["Financial"]] = relationship(back_populates="company", cascade="all, delete-orphan")
     events: Mapped[list["Event"]] = relationship(back_populates="company", cascade="all, delete-orphan")

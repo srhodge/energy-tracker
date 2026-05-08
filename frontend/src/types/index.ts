@@ -27,6 +27,7 @@ export interface Company {
   energy_category?: EnergyCategory;
   energy_segment?: EnergySegment;
   value_chain_position?: ValueChainPosition;
+  supply_chain_position?: string;
   latest_market_cap?: number;
   latest_price?: number;
   latest_revenue?: number;

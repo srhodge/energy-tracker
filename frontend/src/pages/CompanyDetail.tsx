@@ -47,9 +47,14 @@ export default function CompanyDetail() {
             <span className="ticker-badge">{company.ticker}</span>
           )}
         </div>
-        {company.energy_segment && (
-          <span className="badge badge-segment">{company.energy_segment}</span>
-        )}
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {company.supply_chain_position && (
+            <span className="badge badge-supply-chain">{company.supply_chain_position}</span>
+          )}
+          {company.energy_segment && (
+            <span className="badge badge-segment">{company.energy_segment}</span>
+          )}
+        </div>
       </div>
 
       <div className="page-body">
@@ -78,6 +83,12 @@ export default function CompanyDetail() {
             <div className="detail-section card">
               <h2>Company Info</h2>
               <dl className="detail-kv">
+                <dt>Supply Chain</dt>
+                <dd>
+                  {company.supply_chain_position
+                    ? <span className="badge badge-supply-chain">{company.supply_chain_position}</span>
+                    : "—"}
+                </dd>
                 <dt>Sector</dt>
                 <dd>{company.energy_segment ?? "—"}</dd>
                 <dt>Country</dt>

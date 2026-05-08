@@ -3,7 +3,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import select, func
+from sqlalchemy import select, func, text
 
 from app.config import settings
 from app.database import engine, SessionLocal
@@ -16,6 +16,20 @@ _SEED_FILE = Path(__file__).parent.parent / "data" / "companies.xlsx"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
+
+    # Add supply_chain_position column if this is an existing DB that pre-dates it
+    db_url = settings.database_url
+    if "postgresql" in db_url or "postgres" in db_url:
+        migration_sql = "ALTER TABLE companies ADD COLUMN IF NOT EXISTS supply_chain_position VARCHAR(50)"
+    else:
+        migration_sql = "ALTER TABLE companies ADD COLUMN supply_chain_position VARCHAR(50)"
+    with engine.connect() as conn:
+        try:
+            conn.execute(text(migration_sql))
+            conn.commit()
+        except Exception:
+            pass  # column already exists
+
     with SessionLocal() as db:
         count = db.scalar(select(func.count(Company.id)))
         if count == 0 and _SEED_FILE.exists():
@@ -23,6 +37,16 @@ async def lifespan(app: FastAPI):
             from app.services.seed_loader import load_excel
             loaded = load_excel(_SEED_FILE, db)
             print(f"[seed] Loaded {loaded} companies.")
+
+        unclassified = db.scalar(
+            select(func.count(Company.id)).where(Company.supply_chain_position.is_(None))
+        )
+        if unclassified > 0:
+            print(f"[classify] Classifying {unclassified} companies...")
+            from app.services.classify_supply_chain import classify_all
+            n = classify_all(db)
+            print(f"[classify] Done — {n} companies classified.")
+
     yield
 
 

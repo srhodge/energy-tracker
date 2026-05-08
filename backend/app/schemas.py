@@ -50,6 +50,7 @@ class CompanyBase(BaseModel):
     energy_category: Optional[EnergyCategory] = None
     energy_segment: Optional[EnergySegment] = None
     value_chain_position: Optional[ValueChainPosition] = None
+    supply_chain_position: Optional[str] = None
 
 
 class CompanyOut(CompanyBase):
