@@ -251,8 +251,8 @@ export default function CompanyDetail() {
           {company.supply_chain_position && (
             <span className="badge badge-supply-chain">{company.supply_chain_position}</span>
           )}
-          {company.energy_segment && (
-            <span className="badge badge-segment">{company.energy_segment}</span>
+          {company.industry && (
+            <span className="badge badge-segment">{company.industry}</span>
           )}
           <button onClick={() => setShowEdit(true)} style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #d1d5db", background: "#fff", fontSize: 13, cursor: "pointer", fontWeight: 500 }}>
             Edit
