@@ -4,6 +4,7 @@ One-time seed loader: reads both Excel sheets and normalizes into the companies 
 Usage:
     python -m app.services.seed_loader path/to/file.xlsx
 """
+import html
 import sys
 import re
 from pathlib import Path
@@ -56,7 +57,7 @@ MODEL_DEFAULTS: dict[str, dict] = {
 def _clean(val) -> str | None:
     if val is None:
         return None
-    s = str(val).strip()
+    s = html.unescape(str(val).strip())
     return s if s else None
 
 
