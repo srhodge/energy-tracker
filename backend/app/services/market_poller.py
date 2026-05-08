@@ -117,8 +117,14 @@ def classify_skip_flags(db: Session) -> tuple[int, int]:
 # Staleness check
 # ---------------------------------------------------------------------------
 
+_MAX_PLAUSIBLE_MARKET_CAP_USD = 20e12  # $20T — no company legitimately exceeds this
+
+
 def is_poll_stale(db: Session) -> bool:
-    """Return True if we haven't polled today (ET) yet."""
+    """
+    Return True if we haven't polled today (ET) yet, OR if today's data
+    contains obviously wrong values (non-USD currency stored without conversion).
+    """
     today = _et_today()
     start_of_today = datetime.combine(today, datetime.min.time())
     count = db.scalar(
@@ -126,22 +132,68 @@ def is_poll_stale(db: Session) -> bool:
             Financial.last_market_update >= start_of_today
         )
     )
-    return (count or 0) == 0
+    if (count or 0) == 0:
+        return True
+    # Detect bad data: any market_cap above $20T means a non-USD currency was stored raw
+    bad = db.scalar(
+        select(func.count(Financial.id)).where(
+            Financial.market_cap_usd > _MAX_PLAUSIBLE_MARKET_CAP_USD
+        )
+    )
+    if (bad or 0) > 0:
+        print(f"[market-poll] {bad} records with implausible market cap — forcing re-poll", flush=True)
+        return True
+    return False
 
 
 # ---------------------------------------------------------------------------
-# Core poll logic
+# Currency conversion helpers
 # ---------------------------------------------------------------------------
 
-def _fetch_batch(tickers: list[str]) -> dict[str, tuple[float | None, float | None]]:
+def _fetch_fx_rates(currencies: set[str]) -> dict[str, float]:
+    """
+    Fetch USD conversion rates for a set of non-USD currency codes.
+    Returns {CURRENCY_CODE: usd_per_one_unit}.
+    Uses {CUR}USD=X pairs; falls back to 1/USD{CUR}=X if the direct pair fails.
+    """
+    rates: dict[str, float] = {}
+    for cur in currencies:
+        if not cur or cur == "USD":
+            continue
+        try:
+            direct = getattr(yf.Ticker(f"{cur}USD=X").fast_info, "last_price", None)
+            if direct and float(direct) > 0:
+                rates[cur] = float(direct)
+                continue
+            inverse = getattr(yf.Ticker(f"USD{cur}=X").fast_info, "last_price", None)
+            if inverse and float(inverse) > 0:
+                rates[cur] = 1.0 / float(inverse)
+        except Exception:
+            pass
+    return rates
+
+
+def _to_usd(value: float | None, currency: str, fx_rates: dict[str, float]) -> float | None:
+    """Convert a value from its native currency to USD. Returns None if rate is unknown."""
+    if value is None:
+        return None
+    if currency == "USD":
+        return value
+    rate = fx_rates.get(currency)
+    if rate is None:
+        return None
+    return value * rate
+
+
+def _fetch_batch(tickers: list[str]) -> dict[str, tuple[float | None, float | None, str]]:
     """
     Download close price and market cap for a batch of tickers.
-    Returns {TICKER: (price, market_cap)}.
+    Returns {TICKER: (price, market_cap, currency)} — all values in the ticker's native currency.
     """
     if not tickers:
         return {}
 
-    results: dict[str, tuple[float | None, float | None]] = {}
+    results: dict[str, tuple[float | None, float | None, str]] = {}
 
     try:
         import pandas as pd
@@ -154,7 +206,7 @@ def _fetch_batch(tickers: list[str]) -> dict[str, tuple[float | None, float | No
                 price = float(close_series.iloc[-1]) if not close_series.empty else None
             except Exception:
                 price = None
-            results[t] = (price, None)
+            results[t] = (price, None, "USD")
         else:
             try:
                 close_df = raw["Close"]
@@ -166,20 +218,23 @@ def _fetch_batch(tickers: list[str]) -> dict[str, tuple[float | None, float | No
                     price = float(series.iloc[-1]) if not series.empty else None
                 except Exception:
                     price = None
-                results[t] = (price, None)
+                results[t] = (price, None, "USD")
     except Exception as e:
         print(f"    [market-poll] Batch download error: {e}", flush=True)
         for t in tickers:
-            results[t] = (None, None)
+            results[t] = (None, None, "USD")
 
-    # Fetch market caps individually (not in batch download)
+    # Fetch market cap and currency individually via fast_info
     for t in list(results.keys()):
-        if results[t][0] is not None:
+        price = results[t][0]
+        if price is not None:
             try:
-                mcap = getattr(yf.Ticker(t).fast_info, "market_cap", None)
-                results[t] = (results[t][0], float(mcap) if mcap else None)
+                fi = yf.Ticker(t).fast_info
+                mcap = getattr(fi, "market_cap", None)
+                currency = (getattr(fi, "currency", None) or "USD").upper().strip()
+                results[t] = (price, float(mcap) if mcap else None, currency)
             except Exception:
-                pass
+                pass  # leave currency as "USD" placeholder — will fail conversion safely
 
     return results
 
@@ -223,10 +278,21 @@ def poll_once(db: Session, batch_size: int = 50) -> dict:
 
         batch_results = _fetch_batch(tickers)
 
+        # Convert non-USD prices to USD
+        currencies = {cur for _, _, cur in batch_results.values() if cur != "USD"}
+        fx_rates = _fetch_fx_rates(currencies) if currencies else {}
+        if fx_rates:
+            print(f"    [market-poll] FX: {', '.join(f'{c}→USD @{r:.6f}' for c, r in fx_rates.items())}", flush=True)
+        missing_rates = currencies - set(fx_rates)
+        if missing_rates:
+            print(f"    [market-poll] No FX rate for: {missing_rates} — those tickers will be skipped", flush=True)
+
         for company in batch:
             if not company.ticker:
                 continue
-            price, market_cap = batch_results.get(company.ticker.upper(), (None, None))
+            price_local, mcap_local, currency = batch_results.get(company.ticker.upper(), (None, None, "USD"))
+            price = _to_usd(price_local, currency, fx_rates)
+            market_cap = _to_usd(mcap_local, currency, fx_rates)
             if price is None:
                 failed += 1
                 continue
