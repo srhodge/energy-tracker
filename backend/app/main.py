@@ -212,12 +212,60 @@ def admin_status():
     }
 
 
+_fundamentals_run_result: dict = {}
+
+
 @app.post("/admin/trigger-fundamentals")
 def admin_trigger_fundamentals():
     import threading
+    global _fundamentals_run_result
+    _fundamentals_run_result = {"status": "running"}
+
     def _run():
-        from app.services.market_poller import poll_fundamentals
-        with SessionLocal() as db:
-            poll_fundamentals(db)
+        global _fundamentals_run_result
+        try:
+            from app.services.market_poller import poll_fundamentals
+            with SessionLocal() as db:
+                result = poll_fundamentals(db)
+            _fundamentals_run_result = {"status": "complete", **result}
+            print(f"[admin] fundamentals poll complete: {result}", flush=True)
+        except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
+            _fundamentals_run_result = {"status": "error", "error": str(e), "traceback": tb}
+            print(f"[admin] fundamentals poll FAILED: {e}\n{tb}", flush=True)
+
     threading.Thread(target=_run, daemon=True).start()
     return {"status": "fundamentals poll started in background"}
+
+
+@app.get("/admin/fundamentals-result")
+def admin_fundamentals_result():
+    return _fundamentals_run_result
+
+
+@app.get("/admin/test-industry")
+def admin_test_industry():
+    """Synchronously test yfinance industry fetch on the first 5 pollable companies."""
+    import yfinance as yf
+    from sqlalchemy import select
+    with SessionLocal() as db:
+        companies = db.scalars(
+            select(Company).where(
+                Company.skip_market_poll == False,
+                Company.ticker.isnot(None),
+            ).limit(5)
+        ).all()
+        results = []
+        for c in companies:
+            try:
+                info = yf.Ticker(c.ticker).info or {}
+                results.append({
+                    "ticker": c.ticker,
+                    "current_industry": c.industry,
+                    "yf_industry": info.get("industry"),
+                    "yf_keys_count": len(info),
+                })
+            except Exception as e:
+                results.append({"ticker": c.ticker, "current_industry": c.industry, "error": str(e)})
+    return {"results": results}
