@@ -101,3 +101,48 @@ class PaginatedCompanies(BaseModel):
     page: int
     page_size: int
     items: list[CompanyOut]
+
+
+class CompanyLookupResult(BaseModel):
+    name: str
+    ticker: Optional[str] = None
+    exchange: Optional[str] = None
+    country: Optional[str] = None
+    website: Optional[str] = None
+    description: Optional[str] = None
+    market_cap_usd: Optional[float] = None
+    price_usd: Optional[float] = None
+    currency: Optional[str] = None
+    energy_segment: Optional[EnergySegment] = None
+    value_chain_position: Optional[ValueChainPosition] = None
+    supply_chain_position: Optional[str] = None
+    wwt_territory: Optional[str] = None
+    name_confidence: str = "high"
+    country_confidence: str = "high"
+    supply_chain_confidence: str = "low"
+    wwt_territory_confidence: str = "low"
+    already_exists: bool = False
+    existing_id: Optional[int] = None
+    error: Optional[str] = None
+
+
+class CompanyAddRequest(BaseModel):
+    ticker: Optional[str] = None
+    name: str
+    exchange: Optional[str] = None
+    country: Optional[str] = None
+    website: Optional[str] = None
+    description: Optional[str] = None
+    wwt_territory: Optional[str] = None
+    wwt_model: Optional[str] = None
+    energy_maturity: Optional[EnergyMaturity] = None
+    energy_segment: Optional[EnergySegment] = None
+    value_chain_position: Optional[ValueChainPosition] = None
+    supply_chain_position: Optional[str] = None
+    is_public: bool = True
+
+
+class CompanyAddResponse(BaseModel):
+    id: int
+    name: str
+    ticker: Optional[str] = None

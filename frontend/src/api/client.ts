@@ -10,6 +10,9 @@ import type {
   EnergySegment,
   ValueChainPosition,
   EventType,
+  CompanyLookupResult,
+  CompanyAddRequest,
+  CompanyAddResponse,
 } from "../types";
 
 const BASE = "https://energy-tracker-production-39a1.up.railway.app";
@@ -77,6 +80,23 @@ export function fetchNews(limit = 50): Promise<NewsItem[]> {
 
 export function fetchNewsByTicker(ticker: string, limit = 20): Promise<NewsItem[]> {
   return get(`/news/${encodeURIComponent(ticker)}?limit=${limit}`);
+}
+
+export function lookupCompany(ticker: string): Promise<CompanyLookupResult> {
+  return get(`/companies/lookup?ticker=${encodeURIComponent(ticker.trim().toUpperCase())}`);
+}
+
+export async function addCompany(req: CompanyAddRequest): Promise<CompanyAddResponse> {
+  const res = await fetch(`${BASE}/companies/add`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(req),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.detail ?? `API error ${res.status}`);
+  }
+  return res.json();
 }
 
 export function fetchEvents(params: { event_type?: EventType; company_id?: number; limit?: number } = {}): Promise<EventWithCompany[]> {

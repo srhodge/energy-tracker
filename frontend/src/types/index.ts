@@ -115,3 +115,48 @@ export interface FilterOptions {
   value_chain_positions: ValueChainPosition[];
   supply_chain_positions: string[];
 }
+
+export interface CompanyLookupResult {
+  name: string;
+  ticker?: string;
+  exchange?: string;
+  country?: string;
+  website?: string;
+  description?: string;
+  market_cap_usd?: number;
+  price_usd?: number;
+  currency?: string;
+  energy_segment?: EnergySegment;
+  value_chain_position?: ValueChainPosition;
+  supply_chain_position?: string;
+  wwt_territory?: string;
+  name_confidence: string;
+  country_confidence: string;
+  supply_chain_confidence: string;
+  wwt_territory_confidence: string;
+  already_exists: boolean;
+  existing_id?: number;
+  error?: string;
+}
+
+export interface CompanyAddRequest {
+  ticker?: string;
+  name: string;
+  exchange?: string;
+  country?: string;
+  website?: string;
+  description?: string;
+  wwt_territory?: string;
+  wwt_model?: string;
+  energy_maturity?: EnergyMaturity;
+  energy_segment?: EnergySegment;
+  value_chain_position?: ValueChainPosition;
+  supply_chain_position?: string;
+  is_public: boolean;
+}
+
+export interface CompanyAddResponse {
+  id: number;
+  name: string;
+  ticker?: string;
+}
