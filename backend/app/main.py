@@ -10,7 +10,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 from app.config import settings
 from app.database import engine, SessionLocal
-from app.models import Base, Company
+from app.models import Base, Company, CompanyStatus
 from app.routers import companies, events
 from app.routers import news as news_router
 
@@ -69,6 +69,18 @@ async def lifespan(app: FastAPI):
             from app.services.classify_supply_chain import classify_all
             n = classify_all(db)
             print(f"[classify] Done — {n} companies classified.")
+
+        total = db.scalar(select(func.count(Company.id)))
+        unknown = db.scalar(
+            select(func.count(Company.id)).where(Company.status == CompanyStatus.unknown)
+        )
+        # Run status enrichment if more than half the companies are still Unknown
+        if total and unknown and unknown > total // 2:
+            print(f"[status] {unknown}/{total} companies are Unknown — running enrichment...")
+            from app.services.status_checker import run_phase1, run_phase2_deep
+            _, _, _ = run_phase1(db)
+            changed, _ = run_phase2_deep(db)
+            print(f"[status] Done — {changed} companies enriched beyond Unknown.")
 
     # Scrape immediately on startup, then every 6 hours
     _scheduler.add_job(_run_scraper, "interval", hours=6, next_run_time=datetime.utcnow())
