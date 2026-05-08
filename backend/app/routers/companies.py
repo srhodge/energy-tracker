@@ -422,6 +422,43 @@ def delete_company(company_id: int, db: Session = Depends(get_db)):
     db.commit()
 
 
+@router.post("/{company_id}/repoll")
+def repoll_company(
+    company_id: int,
+    ticker: Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+):
+    """Set skip_market_poll=False (optionally update ticker) and immediately poll yfinance."""
+    company = db.scalar(select(Company).where(Company.id == company_id))
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+
+    if ticker is not None:
+        new_ticker = ticker.strip().upper() if ticker.strip() else None
+        if new_ticker and new_ticker != (company.ticker or "").upper():
+            conflict = db.scalar(
+                select(Company).where(func.upper(Company.ticker) == new_ticker, Company.id != company_id)
+            )
+            if conflict:
+                raise HTTPException(status_code=409, detail=f"Ticker {new_ticker} already used by id={conflict.id}")
+        company.ticker = new_ticker
+
+    company.skip_market_poll = False
+    db.commit()
+
+    import threading
+    from app.services.market_poller import poll_once
+    from app.database import SessionLocal
+
+    def _bg():
+        with SessionLocal() as s:
+            poll_once(s, company_ids={company_id})
+
+    threading.Thread(target=_bg, daemon=True).start()
+
+    return {"id": company.id, "name": company.name, "ticker": company.ticker, "poll_scheduled": True}
+
+
 @router.get("/{company_id}", response_model=CompanyDetail)
 def get_company(company_id: int, db: Session = Depends(get_db)):
     company = db.scalar(
