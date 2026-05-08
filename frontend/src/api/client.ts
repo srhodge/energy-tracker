@@ -33,6 +33,8 @@ export interface CompanyListParams {
   country?: string;
   search?: string;
   include_inactive?: boolean;
+  sort_by?: string;
+  sort_dir?: "asc" | "desc";
   page?: number;
   page_size?: number;
 }
@@ -46,6 +48,8 @@ export function fetchCompanies(params: CompanyListParams = {}): Promise<Paginate
   if (params.country) q.set("country", params.country);
   if (params.search) q.set("search", params.search);
   if (params.include_inactive) q.set("include_inactive", "true");
+  if (params.sort_by) q.set("sort_by", params.sort_by);
+  if (params.sort_dir) q.set("sort_dir", params.sort_dir);
   if (params.page) q.set("page", String(params.page));
   if (params.page_size) q.set("page_size", String(params.page_size));
   const qs = q.toString();

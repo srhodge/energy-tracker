@@ -360,10 +360,43 @@ export default function CompanyList() {
   const [country, setCountry] = useState("");
   const [includeInactive, setIncludeInactive] = useState(false);
 
+  // Sort state
+  const [sortBy, setSortBy] = useState("market_cap");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+
   useEffect(() => {
     fetchFilterOptions().then(setFilters).catch(() => null);
     fetchStatusSummary().then(setStatusSummary).catch(() => null);
   }, []);
+
+  function handleSort(col: string) {
+    if (col === sortBy) {
+      setSortDir(d => d === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(col);
+      // numeric cols default desc, text cols default asc
+      setSortDir(["price", "market_cap", "q_rev", "fy_rev"].includes(col) ? "desc" : "asc");
+    }
+    setPage(1);
+  }
+
+  function SortTh({ col, children, right }: { col: string; children: React.ReactNode; right?: boolean }) {
+    const active = sortBy === col;
+    return (
+      <th
+        onClick={() => handleSort(col)}
+        style={{
+          cursor: "pointer", userSelect: "none", whiteSpace: "nowrap",
+          textAlign: right ? "right" : "left",
+        }}
+      >
+        {children}
+        <span style={{ marginLeft: 4, opacity: active ? 1 : 0.25, fontSize: 10 }}>
+          {active ? (sortDir === "asc" ? "▲" : "▼") : "▼"}
+        </span>
+      </th>
+    );
+  }
 
   const load = useCallback(() => {
     setLoading(true);
@@ -375,6 +408,8 @@ export default function CompanyList() {
       supply_chain_position: supplyChain || undefined,
       country: country || undefined,
       include_inactive: includeInactive || undefined,
+      sort_by: sortBy,
+      sort_dir: sortDir,
       page,
       page_size: PAGE_SIZE,
     })
@@ -384,7 +419,7 @@ export default function CompanyList() {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [search, territory, segment, supplyChain, country, includeInactive, page]);
+  }, [search, territory, segment, supplyChain, country, includeInactive, sortBy, sortDir, page]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -492,16 +527,16 @@ export default function CompanyList() {
               <table>
                 <thead>
                   <tr>
-                    <th>Company</th>
-                    <th>Ticker</th>
-                    <th style={{ textAlign: "right" }}>Price</th>
-                    <th>Country</th>
-                    <th>Territory</th>
-                    <th>Energy Value Chain</th>
-                    <th>Segment</th>
-                    <th style={{ textAlign: "right" }}>Q Rev</th>
-                    <th style={{ textAlign: "right" }}>FY Rev</th>
-                    <th style={{ textAlign: "right" }}>Market Cap</th>
+                    <SortTh col="name">Company</SortTh>
+                    <SortTh col="ticker">Ticker</SortTh>
+                    <SortTh col="price" right>Price</SortTh>
+                    <SortTh col="country">Country</SortTh>
+                    <SortTh col="territory">Territory</SortTh>
+                    <SortTh col="supply_chain">Energy Value Chain</SortTh>
+                    <SortTh col="segment">Segment</SortTh>
+                    <SortTh col="q_rev" right>Q Rev</SortTh>
+                    <SortTh col="fy_rev" right>FY Rev</SortTh>
+                    <SortTh col="market_cap" right>Market Cap</SortTh>
                   </tr>
                 </thead>
                 <tbody>

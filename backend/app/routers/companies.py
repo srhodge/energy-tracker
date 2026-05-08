@@ -23,6 +23,28 @@ def _latest_financial_subquery(db: Session):
     )
 
 
+def _build_order(sort_by: Optional[str], sort_dir: Optional[str]) -> list:
+    col, nullable = _SORT_COLUMNS.get(sort_by or "market_cap", _SORT_COLUMNS["market_cap"])
+    desc = (sort_dir or "desc").lower() == "desc"
+    primary = (col.desc().nullslast() if desc else col.asc().nullsfirst()) if nullable else (col.desc() if desc else col.asc())
+    secondary = Company.name if col is not Company.name else Company.id
+    return [primary, secondary]
+
+
+_SORT_COLUMNS = {
+    "name":         (Company.name,                          False),
+    "ticker":       (Company.ticker,                        False),
+    "price":        (Financial.price_usd,                   True),
+    "country":      (Company.country,                       False),
+    "territory":    (Company.wwt_territory,                 False),
+    "supply_chain": (Company.supply_chain_position,         False),
+    "segment":      (Company.energy_segment,                False),
+    "q_rev":        (Financial.revenue_quarterly_usd,       True),
+    "fy_rev":       (Financial.revenue_annual_usd,          True),
+    "market_cap":   (Financial.market_cap_usd,              True),
+}
+
+
 @router.get("", response_model=PaginatedCompanies)
 def list_companies(
     wwt_territory: Optional[str] = Query(None),
@@ -32,6 +54,8 @@ def list_companies(
     country: Optional[str] = Query(None),
     search: Optional[str] = Query(None),
     include_inactive: bool = Query(False),
+    sort_by: Optional[str] = Query("market_cap"),
+    sort_dir: Optional[str] = Query("desc"),
     page: int = Query(1, ge=1),
     page_size: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
@@ -70,7 +94,7 @@ def list_companies(
             Financial.revenue_quarterly_usd, Financial.revenue_annual_usd,
             Financial.revenue_quarter_label, Financial.revenue_fiscal_year_label,
         )
-        .order_by(Financial.market_cap_usd.desc().nullslast(), Company.name)
+        .order_by(*_build_order(sort_by, sort_dir))
         .offset((page - 1) * page_size)
         .limit(page_size)
     )
