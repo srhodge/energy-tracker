@@ -38,6 +38,13 @@ def _run_market_poll():
         poll_once(db)
 
 
+def _run_non_usd_poll():
+    """Re-poll non-USD tickers to apply currency conversion — runs once on startup."""
+    from app.services.market_poller import poll_non_usd_companies
+    with SessionLocal() as db:
+        poll_non_usd_companies(db)
+
+
 def _run_migrations():
     from alembic.config import Config
     from alembic import command
@@ -109,10 +116,14 @@ async def lifespan(app: FastAPI):
             ),
         )
 
-    # If today's data is stale, fire a poll in the background immediately after startup
-    # (scheduled job runs in a thread — does NOT block uvicorn from binding)
+    # Always re-poll non-USD tickers on startup to correct any pre-fix currency data.
+    # Runs in a background thread; only covers ~100 non-USD companies so takes ~2 min.
+    print("[market-poll] Scheduling startup non-USD currency correction poll ...", flush=True)
+    _scheduler.add_job(_run_non_usd_poll, "date", run_date=datetime.utcnow())
+
+    # If today's full data is stale, fire a complete poll (runs concurrently with non-USD poll)
     if startup_poll_needed:
-        print("[market-poll] Stale data — scheduling immediate background poll ...", flush=True)
+        print("[market-poll] Stale data — scheduling full background poll ...", flush=True)
         _scheduler.add_job(_run_market_poll, "date", run_date=datetime.utcnow())
 
     _scheduler.start()
