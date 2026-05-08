@@ -88,16 +88,11 @@ async def lifespan(app: FastAPI):
             changed, _ = run_phase2_deep(db)
             print(f"[status] Done — {changed} companies enriched beyond Unknown.")
 
-        # Classify skip_market_poll flags (fast, idempotent)
+        # Classify skip_market_poll flags (fast — DB queries only, no external calls)
         from app.services.market_poller import classify_skip_flags, is_poll_stale, is_trading_day
         skip, active = classify_skip_flags(db)
         print(f"[market-poll] Skip flags set: {skip} skipped, {active} pollable", flush=True)
-
-        # Run an immediate poll if today's data is stale and markets are open
-        if is_poll_stale(db) and is_trading_day():
-            print("[market-poll] Stale data detected — running startup poll ...", flush=True)
-            from app.services.market_poller import poll_once
-            poll_once(db)
+        startup_poll_needed = is_poll_stale(db) and is_trading_day()
 
     # News scraper: immediately on startup, then every 6 hours
     _scheduler.add_job(_run_scraper, "interval", hours=6, next_run_time=datetime.utcnow())
@@ -113,6 +108,12 @@ async def lifespan(app: FastAPI):
                 timezone="America/New_York",
             ),
         )
+
+    # If today's data is stale, fire a poll in the background immediately after startup
+    # (scheduled job runs in a thread — does NOT block uvicorn from binding)
+    if startup_poll_needed:
+        print("[market-poll] Stale data — scheduling immediate background poll ...", flush=True)
+        _scheduler.add_job(_run_market_poll, "date", run_date=datetime.utcnow())
 
     _scheduler.start()
 
