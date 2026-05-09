@@ -181,6 +181,40 @@ export async function setRevenue(
   if (!res.ok) throw new Error(`API error ${res.status}`);
 }
 
+// ── CRM ───────────────────────────────────────────────────────────────────────
+
+export function fetchCrmSummary(): Promise<any> {
+  return get("/api/crm/summary");
+}
+
+export function fetchCrmCompanies(): Promise<any[]> {
+  return get("/api/crm/companies");
+}
+
+export function fetchCrmCompany(id: number): Promise<any> {
+  return get(`/api/crm/companies/${id}`);
+}
+
+export function fetchCrmOpportunities(params: {
+  stage?: string; owner?: string; fiscal_period?: string;
+  account_id?: number; lead_source?: string; page?: number; page_size?: number;
+} = {}): Promise<any> {
+  const q = new URLSearchParams();
+  if (params.stage)         q.set("stage",         params.stage);
+  if (params.owner)         q.set("owner",          params.owner);
+  if (params.fiscal_period) q.set("fiscal_period",  params.fiscal_period);
+  if (params.account_id)    q.set("account_id",     String(params.account_id));
+  if (params.lead_source)   q.set("lead_source",    params.lead_source);
+  if (params.page)          q.set("page",           String(params.page));
+  if (params.page_size)     q.set("page_size",      String(params.page_size));
+  const qs = q.toString();
+  return get(`/api/crm/opportunities${qs ? `?${qs}` : ""}`);
+}
+
+export function fetchCrmOwners(): Promise<any[]> {
+  return get("/api/crm/owners");
+}
+
 export function fetchEvents(params: { event_type?: EventType; company_id?: number; limit?: number } = {}): Promise<EventWithCompany[]> {
   const q = new URLSearchParams();
   if (params.event_type) q.set("event_type", params.event_type);
