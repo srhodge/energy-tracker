@@ -405,6 +405,23 @@ def needs_industry_population(db: Session) -> bool:
     return (count or 0) > 0
 
 
+def needs_website_population(db: Session) -> bool:
+    """Return True if more than half of pollable companies have no website."""
+    pollable_ids = db.scalars(
+        select(Company.id).where(Company.skip_market_poll == False)
+    ).all()
+    if not pollable_ids:
+        return False
+    filled = db.scalar(
+        select(func.count(Company.id)).where(
+            Company.id.in_(pollable_ids),
+            Company.website.isnot(None),
+            Company.website != "",
+        )
+    )
+    return (filled or 0) < len(pollable_ids) // 2
+
+
 def needs_initial_fundamentals(db: Session) -> bool:
     """Return True if more than half of pollable companies lack quarterly revenue data."""
     pollable_ids = db.scalars(
@@ -679,10 +696,29 @@ def _is_stale(label: str | None) -> bool:
         return True
 
 
+def _clean_website(url: str | None) -> str | None:
+    """Normalise a yfinance website URL: unescape, ensure https://, strip trailing slash."""
+    if not url:
+        return None
+    import html as _html
+    url = _html.unescape(url.strip())
+    try:
+        url = url.encode("utf-8").decode("utf-8")
+    except Exception:
+        pass
+    if url.startswith("http://"):
+        url = "https://" + url[7:]
+    elif not url.startswith("https://"):
+        url = "https://" + url
+    return url.rstrip("/") or None
+
+
 def poll_fundamentals(db: Session) -> dict:
     """
-    Fetch/refresh quarterly and annual revenue for all pollable companies.
-    Only re-fetches companies whose revenue_quarter_label is null or >4 months old.
+    Fetch/refresh revenue, industry, and website for all pollable companies.
+    Revenue: re-fetches when quarter label is null or >4 months old.
+    Industry: re-fetches when null or still carrying a migration-seeded segment value.
+    Website: fetches only when currently null (never overwrites manually entered values).
     """
     pollable = db.scalars(
         select(Company).where(Company.skip_market_poll == False)
@@ -713,7 +749,7 @@ def poll_fundamentals(db: Session) -> dict:
     }
 
     today = _et_today()
-    rev_updated = rev_failed = ind_updated = skipped = 0
+    rev_updated = rev_failed = ind_updated = web_updated = skipped = 0
 
     for i, company in enumerate(pollable):
         if not company.ticker:
@@ -726,8 +762,9 @@ def poll_fundamentals(db: Session) -> dict:
         needs_industry = (
             company.industry is None or company.industry in _ENERGY_SEGMENT_VALUES
         )
+        needs_website = not company.website
 
-        if not needs_revenue and not needs_industry:
+        if not needs_revenue and not needs_industry and not needs_website:
             skipped += 1
             continue
 
@@ -738,15 +775,21 @@ def poll_fundamentals(db: Session) -> dict:
         try:
             t = yf.Ticker(ticker)
 
-            if needs_industry:
+            if needs_industry or needs_website:
                 try:
                     info = t.info or {}
+                except Exception:
+                    info = {}
+                if needs_industry and info:
                     ind = info.get("industry") or None
                     if ind:
                         company.industry = ind
                         ind_updated += 1
-                except Exception:
-                    pass
+                if needs_website and info:
+                    cleaned = _clean_website(info.get("website"))
+                    if cleaned:
+                        company.website = cleaned
+                        web_updated += 1
 
             if needs_revenue:
                 if rev_currency != "USD" and rev_currency not in fx_rates:
@@ -778,19 +821,31 @@ def poll_fundamentals(db: Session) -> dict:
         except Exception:
             pass
 
-        if (i + 1) % 10 == 0:
-            print(f"[fundamentals] {i + 1}/{len(pollable)} processed ...", flush=True)
+        if (i + 1) % 50 == 0:
+            print(f"[website] {i + 1}/{len(pollable)} processed ...", flush=True)
             db.commit()
 
-        time.sleep(0.4)
+        time.sleep(0.5)
 
     db.commit()
+    web_empty = sum(1 for c in pollable if not c.website)
+    print(
+        f"[website] Done — populated {web_updated} websites, {web_empty} still empty",
+        flush=True,
+    )
     print(
         f"[fundamentals] Done — industry: {ind_updated} updated; "
         f"revenue: {rev_updated} updated, {rev_failed} failed; {skipped} skipped",
         flush=True,
     )
-    return {"ind_updated": ind_updated, "rev_updated": rev_updated, "rev_failed": rev_failed, "skipped": skipped}
+    return {
+        "ind_updated": ind_updated,
+        "rev_updated": rev_updated,
+        "rev_failed": rev_failed,
+        "web_updated": web_updated,
+        "web_empty": web_empty,
+        "skipped": skipped,
+    }
 
 
 # ---------------------------------------------------------------------------
