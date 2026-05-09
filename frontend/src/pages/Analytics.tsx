@@ -438,6 +438,18 @@ export default function Analytics() {
                   <option value="1to3">1x – 3x</option>
                   <option value="over3">Over 3x</option>
                 </select>
+                {(terrFilter !== "all" || countryFilter !== "all" || posFilter !== "all" || psFilter !== "all") && (
+                  <button
+                    onClick={() => { setTerrFilter("all"); setCountryFilter("all"); setPosFilter("all"); setPsFilter("all"); }}
+                    style={{
+                      padding: "7px 11px", border: "1px solid #d1d5db", borderRadius: 6,
+                      fontSize: 13, background: "#fff", color: "#6b7280", cursor: "pointer",
+                      display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap",
+                    }}
+                  >
+                    ↺ Reset
+                  </button>
+                )}
               </div>
 
               {/* Chart */}
