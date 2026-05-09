@@ -668,8 +668,18 @@ export default function Analytics() {
                 </div>
               </div>
 
-              {/* Shared filter bar */}
-              <div className="filter-bar" style={{ marginBottom: 16 }}>
+              {/* Shared filter bar — sticky so it stays visible while scrolling through charts */}
+              <div style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 100,
+                background: "#f4f6f9",
+                borderBottom: "1px solid #e0e4ea",
+                padding: "12px 28px",
+                margin: "0 -28px 16px",
+                transition: "box-shadow 0.2s ease",
+              }}>
+              <div className="filter-bar">
                 <select style={selectStyle} value={terrFilter} onChange={e => setTerrFilter(e.target.value)}>
                   <option value="all">All Territories</option>
                   {territories.map(t => <option key={t} value={t}>{t}</option>)}
@@ -700,6 +710,7 @@ export default function Analytics() {
                     ↺ Reset
                   </button>
                 )}
+              </div>
               </div>
 
               <div className="card" style={{ padding: 24 }}>
