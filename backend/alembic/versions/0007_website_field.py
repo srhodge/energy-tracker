@@ -15,7 +15,7 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.add_column("companies", sa.Column("website", sa.String(500), nullable=True))
+    op.execute(sa.text("ALTER TABLE companies ADD COLUMN IF NOT EXISTS website VARCHAR(500)"))
 
 
 def downgrade() -> None:
