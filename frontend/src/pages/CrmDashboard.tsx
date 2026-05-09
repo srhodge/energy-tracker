@@ -108,7 +108,9 @@ function CompaniesTab({ onDrillDown }: { onDrillDown: (id: number, name: string)
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchCrmCompanies().then(setRows).finally(() => setLoading(false));
+    fetchCrmCompanies()
+      .then(data => setRows([...data].sort((a, b) => (b.open_pipeline ?? 0) - (a.open_pipeline ?? 0))))
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) return <div className="loading">Loading…</div>;
