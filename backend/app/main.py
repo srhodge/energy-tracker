@@ -248,6 +248,34 @@ def admin_fundamentals_result():
     return _fundamentals_run_result
 
 
+@app.post("/admin/trigger-fundamentals-targeted")
+def admin_trigger_fundamentals_targeted(body: dict):
+    """Run fundamentals poll for a specific list of tickers (forced, ignores staleness)."""
+    import threading
+    tickers = set(body.get("tickers", []))
+    if not tickers:
+        return {"error": "No tickers provided"}
+    global _fundamentals_run_result
+    _fundamentals_run_result = {"status": "running", "tickers": list(tickers)}
+
+    def _run():
+        global _fundamentals_run_result
+        try:
+            from app.services.market_poller import poll_fundamentals
+            with SessionLocal() as db:
+                result = poll_fundamentals(db, ticker_filter=tickers)
+            _fundamentals_run_result = {"status": "complete", **result}
+            print(f"[admin] targeted fundamentals poll complete: {result}", flush=True)
+        except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
+            _fundamentals_run_result = {"status": "error", "error": str(e), "traceback": tb}
+            print(f"[admin] targeted fundamentals poll FAILED: {e}\n{tb}", flush=True)
+
+    threading.Thread(target=_run, daemon=True).start()
+    return {"status": f"targeted fundamentals poll started for {len(tickers)} tickers"}
+
+
 @app.get("/admin/test-industry")
 def admin_test_industry():
     """Synchronously test yfinance industry fetch on the first 5 pollable companies."""

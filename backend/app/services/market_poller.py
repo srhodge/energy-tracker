@@ -713,16 +713,20 @@ def _clean_website(url: str | None) -> str | None:
     return url.rstrip("/") or None
 
 
-def poll_fundamentals(db: Session) -> dict:
+def poll_fundamentals(db: Session, ticker_filter: set[str] | None = None) -> dict:
     """
     Fetch/refresh revenue, industry, and website for all pollable companies.
     Revenue: re-fetches when quarter label is null or >4 months old.
     Industry: re-fetches when null or still carrying a migration-seeded segment value.
     Website: fetches only when currently null (never overwrites manually entered values).
+    If ticker_filter is given, only those tickers are processed (forced regardless of staleness).
     """
     pollable = db.scalars(
         select(Company).where(Company.skip_market_poll == False)
     ).all()
+    if ticker_filter:
+        upper = {t.upper() for t in ticker_filter}
+        pollable = [c for c in pollable if (c.ticker or "").upper() in upper]
 
     if not pollable:
         print("[fundamentals] No pollable companies.", flush=True)
@@ -758,7 +762,7 @@ def poll_fundamentals(db: Session) -> dict:
 
         rec = latest_records.get(company.id)
         q_label = rec.revenue_quarter_label if rec else None
-        needs_revenue = _is_stale(q_label)
+        needs_revenue = True if ticker_filter else _is_stale(q_label)
         needs_industry = (
             company.industry is None or company.industry in _ENERGY_SEGMENT_VALUES
         )
