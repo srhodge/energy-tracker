@@ -245,7 +245,7 @@ export default function Analytics() {
               <div style={{ marginBottom: 16 }}>
                 <div style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e" }}>Revenue vs market cap</div>
                 <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>
-                  Bubble size = revenue. Dashed line = P/S ratio of 1x.
+                  Bubble size = revenue. Dashed line = P/S ratio of 1x. Coloured by energy value chain position.
                 </div>
               </div>
 
