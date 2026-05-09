@@ -14,6 +14,7 @@ from app.database import engine, SessionLocal
 from app.models import Base, Company, CompanyStatus
 from app.routers import companies, events
 from app.routers import news as news_router
+from app.routers import analytics as analytics_router
 
 
 _SEED_FILE = Path(__file__).parent.parent / "data" / "companies.xlsx"
@@ -205,6 +206,7 @@ app.add_middleware(
 app.include_router(companies.router)
 app.include_router(events.router)
 app.include_router(news_router.router)
+app.include_router(analytics_router.router)
 
 
 @app.get("/health")

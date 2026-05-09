@@ -5,6 +5,7 @@ import CompanyDetail from "./pages/CompanyDetail";
 import TerritoryDashboard from "./pages/TerritoryDashboard";
 import ActivityFeed from "./pages/ActivityFeed";
 import MissingData from "./pages/MissingData";
+import Analytics from "./pages/Analytics";
 import { fetchMissingData } from "./api/client";
 
 function AppLayout() {
@@ -32,6 +33,7 @@ function AppLayout() {
           <NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>Companies</NavLink>
           <NavLink to="/territories" className={({ isActive }) => isActive ? "active" : ""}>Territory Dashboard</NavLink>
           <NavLink to="/activity" className={({ isActive }) => isActive ? "active" : ""}>Activity Feed</NavLink>
+          <NavLink to="/analytics" className={({ isActive }) => isActive ? "active" : ""}>Analytics</NavLink>
           {missingCount !== null && missingCount > 0 && (
             <NavLink
               to="/admin/missing-data"
@@ -50,6 +52,7 @@ function AppLayout() {
           <Route path="/territories" element={<TerritoryDashboard />} />
           <Route path="/activity" element={<ActivityFeed />} />
           <Route path="/admin/missing-data" element={<MissingData />} />
+          <Route path="/analytics" element={<Analytics />} />
         </Routes>
       </main>
     </div>

@@ -158,6 +158,23 @@ export interface CompanyAddResponse {
   ticker?: string;
 }
 
+export interface ScatterPoint {
+  name: string;
+  ticker?: string;
+  supply_chain_position?: string;
+  country?: string;
+  territory?: string;
+  revenue_annual_usd: number;
+  revenue_fiscal_year_label?: string;
+  market_cap_usd: number;
+}
+
+export interface ScatterData {
+  total_companies: number;
+  included_count: number;
+  items: ScatterPoint[];
+}
+
 export interface CompanyUpdateRequest {
   name?: string;
   ticker?: string;

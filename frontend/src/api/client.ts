@@ -14,6 +14,7 @@ import type {
   CompanyAddRequest,
   CompanyAddResponse,
   CompanyUpdateRequest,
+  ScatterData,
 } from "../types";
 
 const BASE = "https://energy-tracker-production-39a1.up.railway.app";
@@ -143,6 +144,10 @@ export interface MissingDataResult {
 
 export function fetchMissingData(): Promise<MissingDataResult> {
   return get("/companies/missing-data");
+}
+
+export function fetchScatterData(): Promise<ScatterData> {
+  return get("/analytics/scatter");
 }
 
 export async function setRevenue(
