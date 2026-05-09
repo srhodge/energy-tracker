@@ -15,8 +15,8 @@ import {
   type BubbleDataPoint,
 } from "chart.js";
 import { Bubble, Bar } from "react-chartjs-2";
-import { fetchScatterData } from "../api/client";
-import type { ScatterPoint } from "../types";
+import { fetchScatterData, fetchChartsData } from "../api/client";
+import type { ScatterPoint, ChartsData } from "../types";
 
 ChartJS.register(LogarithmicScale, LinearScale, CategoryScale, BarElement, PointElement, Tooltip, Legend);
 
@@ -30,7 +30,12 @@ const COLORS: Record<string, string> = {
 };
 const DEFAULT_COLOR = "#94a3b8";
 
-// $10K … $1T at major (×10) and minor (×2.5, ×5) intervals
+const TERR_COLORS = [
+  "#3b82f6", "#f97316", "#22c55e", "#8b5cf6",
+  "#eab308", "#ef4444", "#06b6d4", "#ec4899",
+  "#84cc16", "#f59e0b",
+];
+
 const NICE_TICKS = [
   1e4, 2.5e4, 5e4,
   1e5, 2.5e5, 5e5,
@@ -43,9 +48,8 @@ const NICE_TICKS = [
   1e12,
 ];
 
-// Tooltip formatter — strips trailing .0 but keeps meaningful decimals
 function fmt(v: number): string {
-  const c = (n: number) => +n.toFixed(2); // removes trailing zeros
+  const c = (n: number) => +n.toFixed(2);
   if (v >= 1e12) return `$${c(v / 1e12)}T`;
   if (v >= 1e9)  return `$${c(v / 1e9)}B`;
   if (v >= 1e6)  return `$${+(v / 1e6).toFixed(1)}M`;
@@ -53,9 +57,8 @@ function fmt(v: number): string {
   return `$${v.toLocaleString()}`;
 }
 
-// Axis tick formatter — same but handles the ×2.5 and ×5 values cleanly
 function fmtTick(v: number): string {
-  const clean = (n: number) => +n.toFixed(3); // strips float noise (2.5000000001 → 2.5)
+  const clean = (n: number) => +n.toFixed(3);
   if (v >= 1e12) return `$${clean(v / 1e12)}T`;
   if (v >= 1e9)  return `$${clean(v / 1e9)}B`;
   if (v >= 1e6)  return `$${clean(v / 1e6)}M`;
@@ -65,6 +68,10 @@ function fmtTick(v: number): string {
 
 function bubbleR(revUsd: number): number {
   return Math.max(4, Math.min(20, Math.sqrt(revUsd / 1e9) * 1.8));
+}
+
+function capBubbleR(totalCap: number, maxCap: number): number {
+  return Math.max(6, Math.min(40, Math.sqrt(totalCap / maxCap) * 36));
 }
 
 function median(vals: number[]): number {
@@ -84,8 +91,12 @@ interface BubbleDatum extends BubbleDataPoint {
   ps: number;
 }
 
-// Draws P/S = 1x and P/S = 3x reference diagonals behind the bubbles.
-// On a log-log chart, y = k·x is a straight line, so two canvas points suffice.
+interface TerrBubbleDatum extends BubbleDataPoint {
+  territory: string;
+  company_count: number;
+  total_cap: number;
+}
+
 const psReferenceLinePlugin: Plugin<"bubble"> = {
   id: "psReferenceLine",
   beforeDatasetsDraw(chart) {
@@ -97,13 +108,11 @@ const psReferenceLinePlugin: Plugin<"bubble"> = {
     const { left, right, top, bottom } = chartArea;
 
     ctx.save();
-    // Clip so lines don't bleed into axis label margins
     ctx.beginPath();
     ctx.rect(left, top, right - left, bottom - top);
     ctx.clip();
 
     function drawLine(ps: number, color: string, label: string) {
-      // Span well beyond any realistic data range; clipping handles visibility
       ctx.beginPath();
       ctx.setLineDash([6, 4]);
       ctx.strokeStyle = color;
@@ -112,7 +121,6 @@ const psReferenceLinePlugin: Plugin<"bubble"> = {
       ctx.lineTo(xScale.getPixelForValue(1e13), yScale.getPixelForValue(1e13 * ps));
       ctx.stroke();
 
-      // Label anchored to the right edge of the chart area at the line's y-position
       const xAtRight = xScale.getValueForPixel(right) ?? 1e12;
       const labelY = Math.max(top + 12, Math.min(bottom - 6,
         yScale.getPixelForValue(xAtRight * ps) - 5));
@@ -130,10 +138,84 @@ const psReferenceLinePlugin: Plugin<"bubble"> = {
   },
 };
 
+// Plugin: median reference line on horizontal bar chart (Chart 2)
+function makeMedianPlugin(getMedian: () => number): Plugin<"bar"> {
+  return {
+    id: "medianRefLine",
+    afterDatasetsDraw(chart) {
+      const xScale = chart.scales["x"];
+      const { ctx, chartArea } = chart;
+      if (!xScale || !chartArea) return;
+      const m = getMedian();
+      if (!m) return;
+      const x = xScale.getPixelForValue(m);
+      ctx.save();
+      ctx.beginPath();
+      ctx.setLineDash([5, 4]);
+      ctx.strokeStyle = "rgba(100,116,139,0.7)";
+      ctx.lineWidth = 1.5;
+      ctx.moveTo(x, chartArea.top);
+      ctx.lineTo(x, chartArea.bottom);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font = "10px -apple-system, BlinkMacSystemFont, sans-serif";
+      ctx.fillStyle = "rgba(100,116,139,0.9)";
+      ctx.textAlign = "center";
+      ctx.fillText(`Median ${m.toFixed(1)}x`, x, chartArea.top - 4);
+      ctx.restore();
+    },
+  };
+}
+
+// Plugin: bar-end labels for chart 2 (horizontal bars)
+const barEndLabelPlugin: Plugin<"bar"> = {
+  id: "barEndLabel",
+  afterDatasetsDraw(chart) {
+    const { ctx, chartArea } = chart;
+    const dataset = chart.data.datasets[0];
+    if (!dataset) return;
+    const meta = chart.getDatasetMeta(0);
+    ctx.save();
+    ctx.font = "11px -apple-system, BlinkMacSystemFont, sans-serif";
+    ctx.fillStyle = "#374151";
+    meta.data.forEach((bar, i) => {
+      const val = (dataset.data[i] as number) ?? 0;
+      const extra = (dataset as any)._extraLabels?.[i] ?? "";
+      const x = Math.min((bar as any).x + 4, chartArea.right - 2);
+      ctx.textAlign = "left";
+      ctx.fillText(`${val.toFixed(1)}x ${extra}`, x, bar.y + 4);
+    });
+    ctx.restore();
+  },
+};
+
+// Plugin: territory name labels on bubble (Chart 4)
+const terrLabelPlugin: Plugin<"bubble"> = {
+  id: "terrLabel",
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    chart.data.datasets.forEach((ds, di) => {
+      const meta = chart.getDatasetMeta(di);
+      meta.data.forEach((el, i) => {
+        const d = ds.data[i] as TerrBubbleDatum;
+        if (!d?.territory) return;
+        ctx.save();
+        ctx.font = "bold 10px -apple-system, BlinkMacSystemFont, sans-serif";
+        ctx.fillStyle = "#1e293b";
+        ctx.textAlign = "center";
+        ctx.fillText(d.territory, el.x, el.y - (el as any).radius - 4);
+        ctx.restore();
+      });
+    });
+  },
+};
+
 export default function Analytics() {
   const navigate = useNavigate();
   const [data, setData] = useState<{ total: number; included: number; items: ScatterPoint[] } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [chartsData, setChartsData] = useState<ChartsData | null>(null);
+  const [chartsLoading, setChartsLoading] = useState(false);
   const [posFilter, setPosFilter] = useState("all");
   const [psFilter, setPsFilter] = useState<PSFilter>("all");
   const [terrFilter, setTerrFilter] = useState("all");
@@ -146,6 +228,21 @@ export default function Analytics() {
       .catch(() => null)
       .finally(() => setLoading(false));
   }, []);
+
+  // Fetch charts data whenever filters change
+  useEffect(() => {
+    setChartsLoading(true);
+    const params = {
+      territory: terrFilter !== "all" ? terrFilter : "",
+      country: countryFilter !== "all" ? countryFilter : "",
+      value_chain: posFilter !== "all" ? posFilter : "",
+      ps_filter: psFilter !== "all" ? psFilter : "",
+    };
+    fetchChartsData(params)
+      .then(d => setChartsData(d))
+      .catch(() => null)
+      .finally(() => setChartsLoading(false));
+  }, [terrFilter, countryFilter, posFilter, psFilter]);
 
   const positions = useMemo(() => {
     if (!data) return [];
@@ -194,7 +291,6 @@ export default function Analytics() {
     };
   }, [filtered]);
 
-  // Filtered by territory + country only — position is the grouping axis in chart 2
   const filteredForPos = useMemo(() => {
     if (!data) return [];
     return data.items.filter(c => {
@@ -265,6 +361,214 @@ export default function Analytics() {
     },
   }), [posGroups]);
 
+  // ── Chart 2: Median P/S by segment (horizontal bar) ──
+  const chart2Data = useMemo((): ChartData<"bar"> => {
+    if (!chartsData) return { labels: [], datasets: [] };
+    const sorted = [...chartsData.by_segment].sort((a, b) => b.median_ps - a.median_ps);
+    const extraLabels = sorted.map(s => `(${s.company_count})`);
+    const ds: any = {
+      label: "Median P/S",
+      data: sorted.map(s => s.median_ps),
+      backgroundColor: sorted.map(s => (COLORS[s.segment] ?? DEFAULT_COLOR) + "bb"),
+      borderColor: sorted.map(s => COLORS[s.segment] ?? DEFAULT_COLOR),
+      borderWidth: 1,
+      borderRadius: 4,
+      _extraLabels: extraLabels,
+    };
+    return {
+      labels: sorted.map(s => s.segment),
+      datasets: [ds],
+    };
+  }, [chartsData]);
+
+  const overallMedianPs = chartsData?.overall_median_ps ?? 0;
+  const medianPlugin = useMemo(() => makeMedianPlugin(() => overallMedianPs), [overallMedianPs]);
+
+  const chart2Options = useMemo((): ChartOptions<"bar"> => ({
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: "y" as const,
+    layout: { padding: { right: 100 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          title: (items) => items[0]?.label ?? "",
+          label: (ctx) => {
+            const seg = chartsData?.by_segment.find(s => s.segment === ctx.label);
+            const overall = chartsData?.overall_median_ps ?? 0;
+            const ps = ctx.parsed.x ?? 0;
+            const diff = overall ? ((ps - overall) / overall * 100) : 0;
+            const sign = diff >= 0 ? "↑" : "↓";
+            return [
+              `Median P/S: ${ps.toFixed(1)}x`,
+              `Companies: ${seg?.company_count ?? 0}`,
+              `${sign} ${Math.abs(diff).toFixed(0)}% vs overall median (${overall.toFixed(1)}x)`,
+            ];
+          },
+        },
+        backgroundColor: "#1e293b",
+        padding: 10,
+        cornerRadius: 8,
+        bodyFont: { size: 12 },
+        bodySpacing: 4,
+      },
+    },
+    scales: {
+      x: {
+        title: { display: true, text: "Median P/S Ratio", color: "#6b7280", font: { size: 12 } },
+        ticks: { color: "#6b7280", callback: (v) => `${Number(v).toFixed(1)}x` },
+        grid: { color: "#f0f2f5" },
+      },
+      y: {
+        grid: { display: false },
+        ticks: { color: "#374151", font: { size: 12 } },
+      },
+    },
+  }), [chartsData]);
+
+  // ── Chart 3: Revenue share vs Market cap share (grouped bar) ──
+  const chart3Data = useMemo((): ChartData<"bar"> => {
+    if (!chartsData) return { labels: [], datasets: [] };
+    // Already sorted by implied_ps desc from backend
+    const segs = chartsData.by_segment;
+    return {
+      labels: segs.map(s => `${s.segment} — ${s.implied_ps.toFixed(1)}x`),
+      datasets: [
+        {
+          label: "Revenue Share",
+          data: segs.map(s => s.revenue_share * 100),
+          backgroundColor: segs.map(s => (COLORS[s.segment] ?? DEFAULT_COLOR) + "cc"),
+          borderColor: segs.map(s => COLORS[s.segment] ?? DEFAULT_COLOR),
+          borderWidth: 1,
+          borderRadius: 4,
+        },
+        {
+          label: "Market Cap Share",
+          data: segs.map(s => s.cap_share * 100),
+          backgroundColor: segs.map(s => (COLORS[s.segment] ?? DEFAULT_COLOR) + "55"),
+          borderColor: segs.map(s => COLORS[s.segment] ?? DEFAULT_COLOR),
+          borderWidth: 1,
+          borderRadius: 4,
+        },
+      ],
+    };
+  }, [chartsData]);
+
+  const chart3Options = useMemo((): ChartOptions<"bar"> => ({
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          title: (items) => {
+            const label = items[0]?.label ?? "";
+            return label.split(" — ")[0];
+          },
+          label: (ctx) => {
+            const segLabel = (ctx.label ?? "").split(" — ")[0];
+            const seg = chartsData?.by_segment.find(s => s.segment === segLabel);
+            if (!seg) return "";
+            const isRev = ctx.datasetIndex === 0;
+            const pct = (isRev ? seg.revenue_share : seg.cap_share) * 100;
+            const label = isRev ? "Revenue share" : "Market cap share";
+            const premium = seg.implied_ps > (chartsData?.overall_median_ps ?? 0);
+            const indicator = isRev
+              ? ""
+              : ` ${premium ? "↑ premium" : "↓ discount"} (implied P/S ${seg.implied_ps.toFixed(1)}x)`;
+            return `${label}: ${pct.toFixed(1)}%${indicator}`;
+          },
+        },
+        backgroundColor: "#1e293b",
+        padding: 10,
+        cornerRadius: 8,
+        bodyFont: { size: 12 },
+        bodySpacing: 4,
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: "#374151", font: { size: 11 }, maxRotation: 20 },
+      },
+      y: {
+        title: { display: true, text: "Share of Total (%)", color: "#6b7280", font: { size: 12 } },
+        ticks: { color: "#6b7280", callback: (v) => `${v}%` },
+        grid: { color: "#f0f2f5" },
+      },
+    },
+  }), [chartsData]);
+
+  // ── Chart 4: Bubble — company count vs median market cap by territory ──
+  const chart4Data = useMemo((): ChartData<"bubble", TerrBubbleDatum[]> => {
+    if (!chartsData) return { datasets: [] };
+    const maxCap = Math.max(...chartsData.by_territory.map(t => t.total_cap), 1);
+    return {
+      datasets: chartsData.by_territory.map((t, i) => ({
+        label: t.territory,
+        data: [{
+          x: t.company_count,
+          y: t.median_cap,
+          r: capBubbleR(t.total_cap, maxCap),
+          territory: t.territory,
+          company_count: t.company_count,
+          total_cap: t.total_cap,
+        }],
+        backgroundColor: (TERR_COLORS[i % TERR_COLORS.length]) + "99",
+        borderColor: TERR_COLORS[i % TERR_COLORS.length],
+        borderWidth: terrFilter !== "all" && t.territory === terrFilter ? 3 : 1,
+      })),
+    };
+  }, [chartsData, terrFilter]);
+
+  const chart4Options = useMemo((): ChartOptions<"bubble"> => ({
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          title: () => "",
+          label: (ctx) => {
+            const d = ctx.raw as TerrBubbleDatum;
+            return [
+              d.territory,
+              `Companies: ${d.company_count}`,
+              `Median Market Cap: ${fmt(d.y as number)}`,
+              `Total Market Cap: ${fmt(d.total_cap)}`,
+            ];
+          },
+        },
+        backgroundColor: "#1e293b",
+        padding: 10,
+        cornerRadius: 8,
+        bodyFont: { size: 12 },
+        bodySpacing: 4,
+      },
+    },
+    scales: {
+      x: {
+        title: { display: true, text: "Number of Companies", color: "#6b7280", font: { size: 12 } },
+        ticks: { color: "#6b7280" },
+        grid: { color: "#f0f2f5" },
+      },
+      y: {
+        type: "logarithmic",
+        title: { display: true, text: "Median Market Cap (USD)", color: "#6b7280", font: { size: 12 } },
+        afterBuildTicks: (axis: any) => {
+          axis.ticks = NICE_TICKS.map(v => ({ value: v }));
+        },
+        ticks: {
+          color: "#6b7280",
+          callback: (v: number | string) => fmtTick(Number(v)),
+          font: { size: 9 },
+        },
+        grid: { color: "#f0f2f5" },
+      } as any,
+    },
+  }), []);
+
   const chartData = useMemo((): ChartData<"bubble", BubbleDatum[]> => {
     const groups: Record<string, BubbleDatum[]> = {};
     for (const c of filtered) {
@@ -309,7 +613,6 @@ export default function Analytics() {
       x: {
         type: "logarithmic",
         title: { display: true, text: "Annual Revenue (USD)", font: { size: 12 }, color: "#6b7280" },
-        // Inject dense custom ticks (powers of 10 plus ×2.5 and ×5 intermediates)
         afterBuildTicks: (axis: any) => {
           axis.ticks = NICE_TICKS.map(v => ({ value: v }));
         },
@@ -369,6 +672,8 @@ export default function Analytics() {
     fontSize: 13, background: "#fff", color: "#1a1a2e", cursor: "pointer",
   };
 
+  const anyFilterActive = terrFilter !== "all" || countryFilter !== "all" || posFilter !== "all" || psFilter !== "all";
+
   return (
     <>
       <div className="page-header" style={{ justifyContent: "space-between" }}>
@@ -396,7 +701,6 @@ export default function Analytics() {
                 </div>
               </div>
 
-              {/* Metric cards */}
               <div className="stat-grid" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: 20 }}>
                 <div className="stat-card">
                   <div className="label">Companies shown</div>
@@ -418,7 +722,7 @@ export default function Analytics() {
                 </div>
               </div>
 
-              {/* Filters */}
+              {/* Shared filter bar */}
               <div className="filter-bar" style={{ marginBottom: 16 }}>
                 <select style={selectStyle} value={terrFilter} onChange={e => setTerrFilter(e.target.value)}>
                   <option value="all">All Territories</option>
@@ -438,7 +742,7 @@ export default function Analytics() {
                   <option value="1to3">1x – 3x</option>
                   <option value="over3">Over 3x</option>
                 </select>
-                {(terrFilter !== "all" || countryFilter !== "all" || posFilter !== "all" || psFilter !== "all") && (
+                {anyFilterActive && (
                   <button
                     onClick={() => { setTerrFilter("all"); setCountryFilter("all"); setPosFilter("all"); setPsFilter("all"); }}
                     style={{
@@ -452,7 +756,6 @@ export default function Analytics() {
                 )}
               </div>
 
-              {/* Chart */}
               <div className="card" style={{ padding: 24 }}>
                 <div style={{ height: 520 }}>
                   {filtered.length > 0 ? (
@@ -493,6 +796,115 @@ export default function Analytics() {
                 <div style={{ height: 300 }}>
                   {posGroups.length > 0 ? (
                     <Bar data={posChartData} options={posOptions} />
+                  ) : (
+                    <div style={{
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      height: "100%", color: "#9ca3af", fontSize: 14,
+                    }}>
+                      No data available.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <hr style={{ margin: "32px 0", border: "none", borderTop: "1px solid #e0e4ea" }} />
+
+            {/* ── Section: Median P/S by segment ── */}
+            <div style={{ opacity: chartsLoading ? 0.4 : 1, transition: "opacity 0.2s" }}>
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e" }}>
+                  Median P/S ratio by value chain position
+                </div>
+                <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>
+                  Sorted by median P/S descending. Dashed line = overall median across all filtered companies.
+                </div>
+              </div>
+
+              <div className="card" style={{ padding: 24 }}>
+                <div style={{ height: 320 }}>
+                  {chartsData && chartsData.by_segment.length > 0 ? (
+                    <Bar
+                      data={chart2Data}
+                      options={chart2Options}
+                      plugins={[medianPlugin, barEndLabelPlugin]}
+                    />
+                  ) : (
+                    <div style={{
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      height: "100%", color: "#9ca3af", fontSize: 14,
+                    }}>
+                      No data available.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <hr style={{ margin: "32px 0", border: "none", borderTop: "1px solid #e0e4ea" }} />
+
+            {/* ── Section: Revenue share vs market cap share ── */}
+            <div style={{ opacity: chartsLoading ? 0.4 : 1, transition: "opacity 0.2s" }}>
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e" }}>
+                  Revenue share vs market cap share by segment
+                </div>
+                <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>
+                  Sorted by implied P/S (shown in axis labels). Solid = revenue share, faded = market cap share.
+                  When market cap share exceeds revenue share, the segment commands a valuation premium.
+                </div>
+              </div>
+
+              {/* Custom legend */}
+              <div style={{ display: "flex", gap: 20, marginBottom: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#374151" }}>
+                  <span style={{ width: 14, height: 14, background: "#3b82f6cc", borderRadius: 2, display: "inline-block" }} />
+                  Revenue share (solid)
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#374151" }}>
+                  <span style={{ width: 14, height: 14, background: "#3b82f655", border: "1px solid #3b82f6", borderRadius: 2, display: "inline-block" }} />
+                  Market cap share (faded)
+                </div>
+              </div>
+
+              <div className="card" style={{ padding: 24 }}>
+                <div style={{ height: 320 }}>
+                  {chartsData && chartsData.by_segment.length > 0 ? (
+                    <Bar data={chart3Data} options={chart3Options} />
+                  ) : (
+                    <div style={{
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      height: "100%", color: "#9ca3af", fontSize: 14,
+                    }}>
+                      No data available.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <hr style={{ margin: "32px 0", border: "none", borderTop: "1px solid #e0e4ea" }} />
+
+            {/* ── Section: Territory bubble chart ── */}
+            <div style={{ opacity: chartsLoading ? 0.4 : 1, transition: "opacity 0.2s" }}>
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e" }}>
+                  Company count vs median market cap by territory
+                </div>
+                <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>
+                  Bubble size = total market cap. Y axis = median market cap per company (log scale).
+                  {terrFilter !== "all" && ` Selected territory (${terrFilter}) shown with bold border.`}
+                </div>
+              </div>
+
+              <div className="card" style={{ padding: 24 }}>
+                <div style={{ height: 440 }}>
+                  {chartsData && chartsData.by_territory.length > 0 ? (
+                    <Bubble
+                      data={chart4Data}
+                      options={chart4Options}
+                      plugins={[terrLabelPlugin]}
+                    />
                   ) : (
                     <div style={{
                       display: "flex", alignItems: "center", justifyContent: "center",

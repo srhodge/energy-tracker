@@ -15,6 +15,7 @@ import type {
   CompanyAddResponse,
   CompanyUpdateRequest,
   ScatterData,
+  ChartsData,
 } from "../types";
 
 const BASE = "https://energy-tracker-production-39a1.up.railway.app";
@@ -148,6 +149,23 @@ export function fetchMissingData(): Promise<MissingDataResult> {
 
 export function fetchScatterData(): Promise<ScatterData> {
   return get("/analytics/scatter");
+}
+
+export interface ChartsParams {
+  territory?: string;
+  country?: string;
+  value_chain?: string;
+  ps_filter?: string;
+}
+
+export function fetchChartsData(params: ChartsParams = {}): Promise<ChartsData> {
+  const q = new URLSearchParams();
+  if (params.territory) q.set("territory", params.territory);
+  if (params.country) q.set("country", params.country);
+  if (params.value_chain) q.set("value_chain", params.value_chain);
+  if (params.ps_filter) q.set("ps_filter", params.ps_filter);
+  const qs = q.toString();
+  return get(`/analytics/charts${qs ? `?${qs}` : ""}`);
 }
 
 export async function setRevenue(

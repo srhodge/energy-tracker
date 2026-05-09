@@ -177,6 +177,36 @@ export interface ScatterData {
   items: ScatterPoint[];
 }
 
+export interface SegmentChartRow {
+  segment: string;
+  company_count: number;
+  median_ps: number;
+  revenue_share: number;
+  cap_share: number;
+  total_revenue: number;
+  total_cap: number;
+  implied_ps: number;
+}
+
+export interface TerritoryChartRow {
+  territory: string;
+  company_count: number;
+  median_cap: number;
+  total_cap: number;
+}
+
+export interface ChartsData {
+  by_segment: SegmentChartRow[];
+  by_territory: TerritoryChartRow[];
+  overall_median_ps: number;
+  filters_applied: {
+    territory: string;
+    country: string;
+    value_chain: string;
+    ps_filter: string;
+  };
+}
+
 export interface CompanyUpdateRequest {
   name?: string;
   ticker?: string;
