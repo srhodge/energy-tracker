@@ -163,9 +163,11 @@ export default function Analytics() {
 
   const countries = useMemo(() => {
     if (!data) return [];
-    return Array.from(
+    const all = Array.from(
       new Set(data.items.map(c => c.country).filter((c): c is string => !!c))
     ).sort();
+    const rest = all.filter(c => c !== "United States");
+    return all.includes("United States") ? ["United States", ...rest] : rest;
   }, [data]);
 
   const filtered = useMemo(() => {
@@ -419,19 +421,19 @@ export default function Analytics() {
               {/* Filters */}
               <div className="filter-bar" style={{ marginBottom: 16 }}>
                 <select style={selectStyle} value={terrFilter} onChange={e => setTerrFilter(e.target.value)}>
-                  <option value="all">All territories</option>
+                  <option value="all">All Territories</option>
                   {territories.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
                 <select style={selectStyle} value={countryFilter} onChange={e => setCountryFilter(e.target.value)}>
-                  <option value="all">All countries</option>
+                  <option value="all">All Countries</option>
                   {countries.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
                 <select style={selectStyle} value={posFilter} onChange={e => setPosFilter(e.target.value)}>
-                  <option value="all">All energy value chain positions</option>
+                  <option value="all">All Energy Value Chain Positions</option>
                   {positions.map(p => <option key={p} value={p}>{p}</option>)}
                 </select>
                 <select style={selectStyle} value={psFilter} onChange={e => setPsFilter(e.target.value as PSFilter)}>
-                  <option value="all">All P/S ratios</option>
+                  <option value="all">All P/S Ratios</option>
                   <option value="under1">Under 1x</option>
                   <option value="1to3">1x – 3x</option>
                   <option value="over3">Over 3x</option>
