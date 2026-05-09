@@ -50,6 +50,7 @@ function AppLayout() {
           <Route path="/companies/:id" element={<CompanyDetail />} />
           <Route path="/company/:ticker" element={<CompanyDetail />} />
           <Route path="/territories" element={<TerritoryDashboard />} />
+          <Route path="/territories/:name" element={<TerritoryDashboard />} />
           <Route path="/activity" element={<ActivityFeed />} />
           <Route path="/admin/missing-data" element={<MissingData />} />
           <Route path="/analytics" element={<Analytics />} />

@@ -58,7 +58,7 @@ def list_companies(
     sort_by: Optional[str] = Query("market_cap"),
     sort_dir: Optional[str] = Query("desc"),
     page: int = Query(1, ge=1),
-    page_size: int = Query(50, ge=1, le=200),
+    page_size: int = Query(50, ge=1, le=500),
     db: Session = Depends(get_db),
 ):
     filters = []
@@ -142,6 +142,7 @@ def territory_rollup(db: Session = Depends(get_db)):
             Company.wwt_territory,
             func.count(Company.id).label("company_count"),
             func.sum(Financial.market_cap_usd).label("total_market_cap_usd"),
+            func.sum(Financial.revenue_annual_usd).label("total_revenue_usd"),
         )
         .outerjoin(latest_sq, Company.id == latest_sq.c.company_id)
         .outerjoin(
@@ -161,6 +162,7 @@ def territory_rollup(db: Session = Depends(get_db)):
             wwt_territory=r.wwt_territory,
             company_count=r.company_count,
             total_market_cap_usd=r.total_market_cap_usd,
+            total_revenue_usd=r.total_revenue_usd,
         )
         for r in rows
     ]

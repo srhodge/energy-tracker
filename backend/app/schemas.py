@@ -93,6 +93,7 @@ class TerritoryRollup(BaseModel):
     wwt_territory: str
     company_count: int
     total_market_cap_usd: Optional[float] = None
+    total_revenue_usd: Optional[float] = None
 
 
 class StatusSummary(BaseModel):

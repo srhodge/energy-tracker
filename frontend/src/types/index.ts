@@ -78,6 +78,7 @@ export interface TerritoryRollup {
   wwt_territory: string;
   company_count: number;
   total_market_cap_usd?: number;
+  total_revenue_usd?: number;
 }
 
 export interface SupplyChainRollup {
