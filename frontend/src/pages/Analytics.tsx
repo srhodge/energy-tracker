@@ -26,11 +26,37 @@ const COLORS: Record<string, string> = {
 };
 const DEFAULT_COLOR = "#94a3b8";
 
+// $10K … $1T at major (×10) and minor (×2.5, ×5) intervals
+const NICE_TICKS = [
+  1e4, 2.5e4, 5e4,
+  1e5, 2.5e5, 5e5,
+  1e6, 2.5e6, 5e6,
+  1e7, 2.5e7, 5e7,
+  1e8, 2.5e8, 5e8,
+  1e9, 2.5e9, 5e9,
+  1e10, 2.5e10, 5e10,
+  1e11, 2.5e11, 5e11,
+  1e12,
+];
+
+// Tooltip formatter — strips trailing .0 but keeps meaningful decimals
 function fmt(v: number): string {
-  if (v >= 1e12) return `$${(v / 1e12).toFixed(1)}T`;
-  if (v >= 1e9)  return `$${(v / 1e9).toFixed(1)}B`;
-  if (v >= 1e6)  return `$${(v / 1e6).toFixed(0)}M`;
+  const c = (n: number) => +n.toFixed(2); // removes trailing zeros
+  if (v >= 1e12) return `$${c(v / 1e12)}T`;
+  if (v >= 1e9)  return `$${c(v / 1e9)}B`;
+  if (v >= 1e6)  return `$${+(v / 1e6).toFixed(1)}M`;
+  if (v >= 1e3)  return `$${+(v / 1e3).toFixed(1)}K`;
   return `$${v.toLocaleString()}`;
+}
+
+// Axis tick formatter — same but handles the ×2.5 and ×5 values cleanly
+function fmtTick(v: number): string {
+  const clean = (n: number) => +n.toFixed(3); // strips float noise (2.5000000001 → 2.5)
+  if (v >= 1e12) return `$${clean(v / 1e12)}T`;
+  if (v >= 1e9)  return `$${clean(v / 1e9)}B`;
+  if (v >= 1e6)  return `$${clean(v / 1e6)}M`;
+  if (v >= 1e3)  return `$${clean(v / 1e3)}K`;
+  return `$${v}`;
 }
 
 function bubbleR(revUsd: number): number {
@@ -53,34 +79,48 @@ interface BubbleDatum extends BubbleDataPoint {
   ps: number;
 }
 
-// Custom plugin: draws the P/S = 1x dashed diagonal on the canvas
+// Draws P/S = 1x and P/S = 3x reference diagonals behind the bubbles.
+// On a log-log chart, y = k·x is a straight line, so two canvas points suffice.
 const psReferenceLinePlugin: Plugin<"bubble"> = {
   id: "psReferenceLine",
-  afterDatasetsDraw(chart) {
+  beforeDatasetsDraw(chart) {
     const xScale = chart.scales["x"];
     const yScale = chart.scales["y"];
     if (!xScale || !yScale) return;
-    const { ctx } = chart;
-
-    // Draw the line from ($10M, $10M) to ($1T, $1T)
-    const pts: [number, number][] = [
-      [1e7, 1e7], [1e8, 1e8], [1e9, 1e9], [1e10, 1e10], [1e11, 1e11], [1e12, 1e12],
-    ];
+    const { ctx, chartArea } = chart;
+    if (!chartArea) return;
+    const { left, right, top, bottom } = chartArea;
 
     ctx.save();
+    // Clip so lines don't bleed into axis label margins
     ctx.beginPath();
-    ctx.setLineDash([6, 4]);
-    ctx.strokeStyle = "rgba(100,116,139,0.5)";
-    ctx.lineWidth = 1.5;
+    ctx.rect(left, top, right - left, bottom - top);
+    ctx.clip();
 
-    let first = true;
-    for (const [x, y] of pts) {
-      const px = xScale.getPixelForValue(x);
-      const py = yScale.getPixelForValue(y);
-      if (first) { ctx.moveTo(px, py); first = false; }
-      else ctx.lineTo(px, py);
+    function drawLine(ps: number, color: string, label: string) {
+      // Span well beyond any realistic data range; clipping handles visibility
+      ctx.beginPath();
+      ctx.setLineDash([6, 4]);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.moveTo(xScale.getPixelForValue(1e4),  yScale.getPixelForValue(1e4 * ps));
+      ctx.lineTo(xScale.getPixelForValue(1e13), yScale.getPixelForValue(1e13 * ps));
+      ctx.stroke();
+
+      // Label anchored to the right edge of the chart area at the line's y-position
+      const xAtRight = xScale.getValueForPixel(right) ?? 1e12;
+      const labelY = Math.max(top + 12, Math.min(bottom - 6,
+        yScale.getPixelForValue(xAtRight * ps) - 5));
+      ctx.setLineDash([]);
+      ctx.font = "10px -apple-system, BlinkMacSystemFont, sans-serif";
+      ctx.fillStyle = color;
+      ctx.textAlign = "right";
+      ctx.fillText(label, right - 6, labelY);
     }
-    ctx.stroke();
+
+    drawLine(1, "rgba(100,116,139,0.6)",  "P/S = 1x");
+    drawLine(3, "rgba(100,116,139,0.35)", "P/S = 3x");
+
     ctx.restore();
   },
 };
@@ -179,15 +219,32 @@ export default function Analytics() {
       x: {
         type: "logarithmic",
         title: { display: true, text: "Annual Revenue (USD)", font: { size: 12 }, color: "#6b7280" },
-        ticks: { color: "#6b7280", callback: (v) => fmt(Number(v)) },
+        // Inject dense custom ticks (powers of 10 plus ×2.5 and ×5 intermediates)
+        afterBuildTicks: (axis: any) => {
+          axis.ticks = NICE_TICKS.map(v => ({ value: v }));
+        },
+        ticks: {
+          color: "#6b7280",
+          callback: (v: number | string) => fmtTick(Number(v)),
+          font: { size: 9 },
+          maxRotation: 45,
+          minRotation: 45,
+        },
         grid: { color: "#f0f2f5" },
-      },
+      } as any,
       y: {
         type: "logarithmic",
         title: { display: true, text: "Market Cap (USD)", font: { size: 12 }, color: "#6b7280" },
-        ticks: { color: "#6b7280", callback: (v) => fmt(Number(v)) },
+        afterBuildTicks: (axis: any) => {
+          axis.ticks = NICE_TICKS.map(v => ({ value: v }));
+        },
+        ticks: {
+          color: "#6b7280",
+          callback: (v: number | string) => fmtTick(Number(v)),
+          font: { size: 9 },
+        },
         grid: { color: "#f0f2f5" },
-      },
+      } as any,
     },
     plugins: {
       legend: {
@@ -245,7 +302,7 @@ export default function Analytics() {
               <div style={{ marginBottom: 16 }}>
                 <div style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e" }}>Revenue vs market cap</div>
                 <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>
-                  Bubble size = revenue. Dashed line = P/S ratio of 1x. Coloured by energy value chain position.
+                  Bubble size = revenue. Dashed lines = P/S ratios of 1x and 3x. Coloured by energy value chain position.
                 </div>
               </div>
 
