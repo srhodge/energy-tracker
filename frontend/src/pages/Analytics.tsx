@@ -676,14 +676,15 @@ export default function Analytics() {
                 left: 220,
                 right: 0,
                 zIndex: 200,
-                background: "#f4f6f9",
-                borderBottom: "1px solid #e0e4ea",
+                background: "#1a1a2e",
+                borderBottom: "1px solid rgba(255,255,255,0.1)",
                 padding: "10px 28px",
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
                 flexWrap: "wrap",
               }}>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginRight: 8, whiteSpace: "nowrap" }}>Filters</span>
                 <select style={selectStyle} value={terrFilter} onChange={e => setTerrFilter(e.target.value)}>
                   <option value="all">All Territories</option>
                   {territories.map(t => <option key={t} value={t}>{t}</option>)}
