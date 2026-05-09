@@ -721,12 +721,16 @@ def poll_fundamentals(db: Session, ticker_filter: set[str] | None = None) -> dic
     Website: fetches only when currently null (never overwrites manually entered values).
     If ticker_filter is given, only those tickers are processed (forced regardless of staleness).
     """
-    pollable = db.scalars(
-        select(Company).where(Company.skip_market_poll == False)
-    ).all()
     if ticker_filter:
+        # When tickers are explicitly requested, include all companies regardless of skip flag
         upper = {t.upper() for t in ticker_filter}
-        pollable = [c for c in pollable if (c.ticker or "").upper() in upper]
+        pollable = db.scalars(
+            select(Company).where(func.upper(Company.ticker).in_(upper))
+        ).all()
+    else:
+        pollable = db.scalars(
+            select(Company).where(Company.skip_market_poll == False)
+        ).all()
 
     if not pollable:
         print("[fundamentals] No pollable companies.", flush=True)
