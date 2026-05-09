@@ -62,6 +62,7 @@ class CompanyBase(BaseModel):
 class CompanyOut(CompanyBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
+    revenue_manually_set: bool = False
     latest_market_cap: Optional[float] = None
     latest_price: Optional[float] = None
     latest_revenue: Optional[float] = None
@@ -171,3 +172,4 @@ class CompanyUpdateRequest(BaseModel):
     acquired_by: Optional[str] = None
     acquisition_notes: Optional[str] = None
     skip_market_poll: Optional[bool] = None
+    revenue_manually_set: Optional[bool] = None

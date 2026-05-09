@@ -145,6 +145,19 @@ export function fetchMissingData(): Promise<MissingDataResult> {
   return get("/companies/missing-data");
 }
 
+export async function setRevenue(
+  company_id: number,
+  revenue_annual_usd: number,
+  revenue_fiscal_year_label: string,
+): Promise<void> {
+  const res = await fetch(`${BASE}/admin/set-revenue`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ company_id, revenue_annual_usd, revenue_fiscal_year_label }),
+  });
+  if (!res.ok) throw new Error(`API error ${res.status}`);
+}
+
 export function fetchEvents(params: { event_type?: EventType; company_id?: number; limit?: number } = {}): Promise<EventWithCompany[]> {
   const q = new URLSearchParams();
   if (params.event_type) q.set("event_type", params.event_type);

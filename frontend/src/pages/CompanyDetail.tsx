@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchCompany, fetchCompanyByTicker, updateCompany, deleteCompany } from "../api/client";
+import { fetchCompany, fetchCompanyByTicker, updateCompany, deleteCompany, setRevenue } from "../api/client";
 import type { CompanyDetail as CompanyDetailType, CompanyUpdateRequest, ValueChainPosition, CompanyStatus } from "../types";
 import { formatCap, formatPrice } from "../components/FormatCap";
 
@@ -32,6 +32,11 @@ function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
     acquired_by: company.acquired_by ?? "",
     acquisition_notes: company.acquisition_notes ?? "",
   });
+  const [revLocked, setRevLocked] = useState(company.revenue_manually_set ?? false);
+  const [revAmount, setRevAmount] = useState(
+    company.latest_revenue ? String(Math.round(company.latest_revenue)) : ""
+  );
+  const [revFY, setRevFY] = useState(company.latest_fiscal_year_label ?? "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,12 +51,24 @@ function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
     setSaving(true);
     setError(null);
     try {
-      // Send undefined instead of empty strings so backend ignores blank optionals
       const payload: CompanyUpdateRequest = {};
       for (const [k, v] of Object.entries(form)) {
         (payload as Record<string, unknown>)[k] = typeof v === "string" ? (v.trim() || undefined) : v;
       }
       payload.name = form.name!.trim();
+
+      // Handle revenue lock state change
+      const revAmountNum = revAmount.trim() ? parseFloat(revAmount.replace(/,/g, "")) : null;
+      const revChanged = revAmountNum !== null && (
+        revAmountNum !== company.latest_revenue || revFY.trim() !== (company.latest_fiscal_year_label ?? "")
+      );
+      if (revLocked && revChanged && revAmountNum && revFY.trim()) {
+        await setRevenue(company.id, revAmountNum, revFY.trim());
+        // set-revenue already sets revenue_manually_set=true on the backend
+      } else if (revLocked !== (company.revenue_manually_set ?? false) && !revChanged) {
+        payload.revenue_manually_set = revLocked;
+      }
+
       await updateCompany(company.id, payload);
       onSaved();
     } catch (e: unknown) {
@@ -149,6 +166,40 @@ function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
           <div>
             <label style={labelStyle}>Notes</label>
             <input style={inputStyle} value={form.acquisition_notes ?? ""} onChange={field("acquisition_notes")} placeholder="e.g. Acquired Q2 2024" />
+          </div>
+          <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: 14 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#374151", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+              REVENUE OVERRIDE
+              {revLocked && <span style={{ fontSize: 11, color: "#16a34a", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 4, padding: "1px 6px" }}>locked</span>}
+            </div>
+            <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, marginBottom: 10, cursor: "pointer" }}>
+              <input type="checkbox" checked={revLocked} onChange={e => setRevLocked(e.target.checked)} />
+              Lock revenue (prevent auto-update from poller)
+            </label>
+            {revLocked && (
+              <div style={rowStyle}>
+                <div>
+                  <label style={labelStyle}>Revenue (USD)</label>
+                  <input
+                    style={inputStyle}
+                    value={revAmount}
+                    onChange={e => setRevAmount(e.target.value)}
+                    placeholder="e.g. 1500000000"
+                    type="number"
+                    min="0"
+                  />
+                </div>
+                <div>
+                  <label style={labelStyle}>Fiscal Year</label>
+                  <input
+                    style={inputStyle}
+                    value={revFY}
+                    onChange={e => setRevFY(e.target.value)}
+                    placeholder="e.g. FY2024"
+                  />
+                </div>
+              </div>
+            )}
           </div>
           {error && <p style={{ margin: 0, fontSize: 13, color: "#dc2626", background: "#fef2f2", padding: "8px 12px", borderRadius: 6 }}>{error}</p>}
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", paddingTop: 4 }}>
@@ -289,7 +340,10 @@ export default function CompanyDetail() {
             <div className="value">{formatCap(company.latest_quarterly_revenue)}</div>
           </div>
           <div className="stat-card">
-            <div className="label">FY Revenue{company.latest_fiscal_year_label ? ` (${company.latest_fiscal_year_label})` : ""}</div>
+            <div className="label">
+              FY Revenue{company.latest_fiscal_year_label ? ` (${company.latest_fiscal_year_label})` : ""}
+              {company.revenue_manually_set && <span title="Revenue locked — manually verified" style={{ marginLeft: 5, fontSize: 12 }}>🔒</span>}
+            </div>
             <div className="value">{formatCap(company.latest_revenue)}</div>
           </div>
         </div>

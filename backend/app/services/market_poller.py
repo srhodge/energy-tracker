@@ -757,7 +757,7 @@ def poll_fundamentals(db: Session, ticker_filter: set[str] | None = None) -> dic
     }
 
     today = _et_today()
-    rev_updated = rev_failed = ind_updated = web_updated = skipped = 0
+    rev_updated = rev_failed = rev_manual = ind_updated = web_updated = skipped = 0
 
     for i, company in enumerate(pollable):
         if not company.ticker:
@@ -800,32 +800,35 @@ def poll_fundamentals(db: Session, ticker_filter: set[str] | None = None) -> dic
                         web_updated += 1
 
             if needs_revenue:
-                if rev_currency != "USD" and rev_currency not in fx_rates:
-                    extra = _fetch_fx_rates({rev_currency})
-                    fx_rates.update(extra)
-
-                q_rev, a_rev, q_lbl, fy_lbl = _fetch_revenue(ticker, rev_currency, fx_rates, t)
-
-                if q_rev is not None or a_rev is not None:
-                    if rec is None:
-                        rec = Financial(
-                            company_id=company.id,
-                            snapshot_date=today,
-                            revenue_quarterly_usd=q_rev,
-                            revenue_annual_usd=a_rev,
-                            revenue_quarter_label=q_lbl,
-                            revenue_fiscal_year_label=fy_lbl,
-                        )
-                        db.add(rec)
-                        latest_records[company.id] = rec
-                    else:
-                        rec.revenue_quarterly_usd = q_rev
-                        rec.revenue_annual_usd = a_rev
-                        rec.revenue_quarter_label = q_lbl
-                        rec.revenue_fiscal_year_label = fy_lbl
-                    rev_updated += 1
+                if company.revenue_manually_set:
+                    rev_manual += 1
                 else:
-                    rev_failed += 1
+                    if rev_currency != "USD" and rev_currency not in fx_rates:
+                        extra = _fetch_fx_rates({rev_currency})
+                        fx_rates.update(extra)
+
+                    q_rev, a_rev, q_lbl, fy_lbl = _fetch_revenue(ticker, rev_currency, fx_rates, t)
+
+                    if q_rev is not None or a_rev is not None:
+                        if rec is None:
+                            rec = Financial(
+                                company_id=company.id,
+                                snapshot_date=today,
+                                revenue_quarterly_usd=q_rev,
+                                revenue_annual_usd=a_rev,
+                                revenue_quarter_label=q_lbl,
+                                revenue_fiscal_year_label=fy_lbl,
+                            )
+                            db.add(rec)
+                            latest_records[company.id] = rec
+                        else:
+                            rec.revenue_quarterly_usd = q_rev
+                            rec.revenue_annual_usd = a_rev
+                            rec.revenue_quarter_label = q_lbl
+                            rec.revenue_fiscal_year_label = fy_lbl
+                        rev_updated += 1
+                    else:
+                        rev_failed += 1
         except Exception:
             pass
 
@@ -843,12 +846,13 @@ def poll_fundamentals(db: Session, ticker_filter: set[str] | None = None) -> dic
     )
     print(
         f"[fundamentals] Done — industry: {ind_updated} updated; "
-        f"revenue: {rev_updated} updated, {rev_failed} failed; {skipped} skipped",
+        f"revenue: {rev_updated} auto / {rev_manual} manual (protected) / {rev_failed} failed; {skipped} skipped",
         flush=True,
     )
     return {
         "ind_updated": ind_updated,
         "rev_updated": rev_updated,
+        "rev_manual": rev_manual,
         "rev_failed": rev_failed,
         "web_updated": web_updated,
         "web_empty": web_empty,

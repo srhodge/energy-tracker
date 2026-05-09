@@ -22,6 +22,7 @@ export interface Company {
   status?: CompanyStatus;
   acquired_by?: string;
   acquisition_notes?: string;
+  revenue_manually_set?: boolean;
   latest_market_cap?: number;
   latest_price?: number;
   latest_revenue?: number;
@@ -173,4 +174,5 @@ export interface CompanyUpdateRequest {
   status?: CompanyStatus;
   acquired_by?: string;
   acquisition_notes?: string;
+  revenue_manually_set?: boolean;
 }

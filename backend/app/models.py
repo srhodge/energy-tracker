@@ -96,6 +96,7 @@ class Company(Base):
     value_chain_position: Mapped[ValueChainPosition | None] = mapped_column(_enum(ValueChainPosition))
     supply_chain_position: Mapped[str | None] = mapped_column(String(50), index=True)
     skip_market_poll: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")
+    revenue_manually_set: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")
     status: Mapped[CompanyStatus] = mapped_column(
         _enum(CompanyStatus), nullable=False, default=CompanyStatus.active, server_default="Active"
     )

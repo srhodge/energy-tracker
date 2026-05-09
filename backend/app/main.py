@@ -107,6 +107,31 @@ async def lifespan(app: FastAPI):
             changed, _ = run_phase2_deep(db)
             print(f"[status] Done — {changed} companies enriched beyond Unknown.")
 
+        # One-time backfill: protect all existing revenue data as manually set
+        from app.models import Financial as _Financial
+        needs_backfill = db.scalar(
+            select(func.count(Company.id)).where(
+                Company.revenue_manually_set == False,
+                Company.id.in_(
+                    select(_Financial.company_id).where(_Financial.revenue_annual_usd.isnot(None))
+                )
+            )
+        )
+        if needs_backfill and needs_backfill > 0:
+            print(f"[backfill] Marking {needs_backfill} companies with existing revenue as manually set ...", flush=True)
+            to_backfill = db.scalars(
+                select(Company).where(
+                    Company.revenue_manually_set == False,
+                    Company.id.in_(
+                        select(_Financial.company_id).where(_Financial.revenue_annual_usd.isnot(None))
+                    )
+                )
+            ).all()
+            for c in to_backfill:
+                c.revenue_manually_set = True
+            db.commit()
+            print(f"[backfill] Done — {needs_backfill} companies protected.", flush=True)
+
         # Classify skip_market_poll flags (fast — DB queries only, no external calls)
         from app.services.market_poller import classify_skip_flags, is_poll_stale, is_trading_day, needs_initial_fundamentals, needs_industry_population, needs_website_population
         skip, active = classify_skip_flags(db)
@@ -308,6 +333,9 @@ def admin_set_revenue(body: dict):
         if quarterly_usd is not None: rec.revenue_quarterly_usd = quarterly_usd
         if fy_label    is not None: rec.revenue_fiscal_year_label = fy_label
         if q_label     is not None: rec.revenue_quarter_label = q_label
+        company_rec = db.get(Company, company_id)
+        if company_rec:
+            company_rec.revenue_manually_set = True
         db.commit()
     return {"status": "ok", "company_id": company_id, "revenue_annual_usd": annual_usd, "revenue_fiscal_year_label": fy_label}
 
