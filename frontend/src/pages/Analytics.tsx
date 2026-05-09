@@ -190,20 +190,29 @@ const barEndLabelPlugin: Plugin<"bar"> = {
 };
 
 // Plugin: territory name labels on bubble (Chart 4)
+// Uses d.r (pixel radius set in chart4Data) because Chart.js el.options.radius
+// is unreliable across render cycles; d.r is always the source of truth.
 const terrLabelPlugin: Plugin<"bubble"> = {
   id: "terrLabel",
   afterDatasetsDraw(chart) {
-    const { ctx } = chart;
+    const { ctx, chartArea } = chart;
+    if (!chartArea) return;
     chart.data.datasets.forEach((ds, di) => {
       const meta = chart.getDatasetMeta(di);
       meta.data.forEach((el, i) => {
         const d = ds.data[i] as TerrBubbleDatum;
         if (!d?.territory) return;
+        const r = (d as any).r as number ?? 10;
+        const labelY = el.y - r - 5;
         ctx.save();
         ctx.font = "bold 10px -apple-system, BlinkMacSystemFont, sans-serif";
-        ctx.fillStyle = "#1e293b";
         ctx.textAlign = "center";
-        ctx.fillText(d.territory, el.x, el.y - (el as any).radius - 4);
+        // White halo so text is readable over any bubble colour
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "rgba(255,255,255,0.85)";
+        ctx.strokeText(d.territory, el.x, labelY);
+        ctx.fillStyle = "#1e293b";
+        ctx.fillText(d.territory, el.x, labelY);
         ctx.restore();
       });
     });
@@ -549,10 +558,17 @@ export default function Analytics() {
     },
     scales: {
       x: {
+        type: "logarithmic",
         title: { display: true, text: "Number of Companies", color: "#6b7280", font: { size: 12 } },
-        ticks: { color: "#6b7280" },
+        afterBuildTicks: (axis: any) => {
+          axis.ticks = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000].map(v => ({ value: v }));
+        },
+        ticks: {
+          color: "#6b7280",
+          callback: (v: number | string) => String(Number(v)),
+        },
         grid: { color: "#f0f2f5" },
-      },
+      } as any,
       y: {
         type: "logarithmic",
         title: { display: true, text: "Median Market Cap (USD)", color: "#6b7280", font: { size: 12 } },
