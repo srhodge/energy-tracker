@@ -668,18 +668,22 @@ export default function Analytics() {
                 </div>
               </div>
 
-              {/* Shared filter bar — sticky so it stays visible while scrolling through charts */}
+              {/* Shared filter bar — fixed so it stays visible while scrolling through charts.
+                  left:220px matches the sidebar width; spacer below compensates for lost flow height. */}
               <div style={{
-                position: "sticky",
+                position: "fixed",
                 top: 0,
-                zIndex: 100,
+                left: 220,
+                right: 0,
+                zIndex: 200,
                 background: "#f4f6f9",
                 borderBottom: "1px solid #e0e4ea",
-                padding: "12px 28px",
-                margin: "0 -28px 16px",
-                transition: "box-shadow 0.2s ease",
+                padding: "10px 28px",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                flexWrap: "wrap",
               }}>
-              <div className="filter-bar">
                 <select style={selectStyle} value={terrFilter} onChange={e => setTerrFilter(e.target.value)}>
                   <option value="all">All Territories</option>
                   {territories.map(t => <option key={t} value={t}>{t}</option>)}
@@ -711,7 +715,8 @@ export default function Analytics() {
                   </button>
                 )}
               </div>
-              </div>
+              {/* Spacer to prevent content jumping under the fixed bar */}
+              <div style={{ height: 56 }} />
 
               <div className="card" style={{ padding: 24 }}>
                 <div style={{ height: 520 }}>
