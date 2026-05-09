@@ -63,10 +63,12 @@ def main():
             return
 
         # ── 2. Split into needs-update vs already-correct ─────────────────────
-        # Only update companies with no territory set — preserve any existing value
-        to_update    = [r for r in candidates if r.wwt_territory is None]
+        # Explicit exclusions: tickers whose territory must not be overwritten
+        EXCLUDE_TICKERS = {"WOR.AX"}  # Worley — intentionally tagged STOLA
+
+        to_update    = [r for r in candidates if r.wwt_territory != "APAC" and r.ticker not in EXCLUDE_TICKERS]
         already_set  = [r for r in candidates if r.wwt_territory == "APAC"]
-        skipped      = [r for r in candidates if r.wwt_territory is not None and r.wwt_territory != "APAC"]
+        skipped      = [r for r in candidates if r.ticker in EXCLUDE_TICKERS]
 
         col = "{:<50} {:<12} {:<25} {}"
         header = col.format("Company", "Ticker", "Country", "Territory -> APAC")
@@ -89,11 +91,11 @@ def main():
                 ))
 
         if skipped:
-            print(f"\n  Skipped -- existing territory preserved ({len(skipped)}):")
+            print(f"\n  Skipped -- explicit exclusion ({len(skipped)}):")
             for r in skipped:
                 print("  " + col.format(
                     r.name[:49], r.ticker or "-", r.country or "-",
-                    f"{r.wwt_territory} (kept)"
+                    f"{r.wwt_territory or '(null)'} (kept)"
                 ))
 
         # ── 3. Counts and update ──────────────────────────────────────────────
