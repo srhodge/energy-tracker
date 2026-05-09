@@ -342,51 +342,6 @@ def admin_set_revenue(body: dict):
     return {"status": "ok", "company_id": company_id, "revenue_annual_usd": annual_usd, "revenue_fiscal_year_label": fy_label}
 
 
-from fastapi import Request as _Request
-
-@app.post("/admin/run-mena-migration")
-async def admin_run_mena_migration(_req: _Request):
-    token = _req.headers.get("x-admin-token", "")
-    if token != "mena-migrate-2026":
-        from fastapi import HTTPException
-        raise HTTPException(status_code=403, detail="Forbidden")
-
-    MENA_COUNTRIES = [
-        "Saudi Arabia", "United Arab Emirates", "UAE", "Qatar", "Kuwait",
-        "Bahrain", "Oman", "Iraq", "Iran", "Jordan", "Lebanon", "Syria",
-        "Yemen", "Israel", "Palestine", "Egypt",
-    ]
-
-    from sqlalchemy import select, update as sa_update
-    with SessionLocal() as db:
-        rows = db.execute(
-            select(Company.id, Company.name, Company.ticker, Company.country, Company.wwt_territory)
-            .where(Company.country.in_(MENA_COUNTRIES))
-            .order_by(Company.country, Company.name)
-        ).all()
-
-        to_update = [r for r in rows if r.wwt_territory != "MENA"]
-        already_mena = [r for r in rows if r.wwt_territory == "MENA"]
-
-        if to_update:
-            db.execute(
-                sa_update(Company)
-                .where(Company.id.in_([r.id for r in to_update]))
-                .values(wwt_territory="MENA")
-            )
-            db.commit()
-
-    return {
-        "updated": len(to_update),
-        "already_mena": len(already_mena),
-        "companies_updated": [
-            {"name": r.name, "ticker": r.ticker, "country": r.country,
-             "was": r.wwt_territory}
-            for r in to_update
-        ],
-    }
-
-
 @app.get("/admin/test-industry")
 def admin_test_industry():
     """Synchronously test yfinance industry fetch on the first 5 pollable companies."""
