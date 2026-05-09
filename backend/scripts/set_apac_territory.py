@@ -63,8 +63,10 @@ def main():
             return
 
         # ── 2. Split into needs-update vs already-correct ─────────────────────
-        to_update    = [r for r in candidates if r.wwt_territory != "APAC"]
+        # Only update companies with no territory set — preserve any existing value
+        to_update    = [r for r in candidates if r.wwt_territory is None]
         already_set  = [r for r in candidates if r.wwt_territory == "APAC"]
+        skipped      = [r for r in candidates if r.wwt_territory is not None and r.wwt_territory != "APAC"]
 
         col = "{:<50} {:<12} {:<25} {}"
         header = col.format("Company", "Ticker", "Country", "Territory -> APAC")
@@ -86,9 +88,18 @@ def main():
                     r.name[:49], r.ticker or "-", r.country or "-", "APAC (unchanged)"
                 ))
 
+        if skipped:
+            print(f"\n  Skipped -- existing territory preserved ({len(skipped)}):")
+            for r in skipped:
+                print("  " + col.format(
+                    r.name[:49], r.ticker or "-", r.country or "-",
+                    f"{r.wwt_territory} (kept)"
+                ))
+
         # ── 3. Counts and update ──────────────────────────────────────────────
         print(f"\nWill update : {len(to_update)}")
         print(f"Already APAC: {len(already_set)}")
+        print(f"Skipped     : {len(skipped)}")
 
         if not to_update:
             print("\nNothing to do.")
