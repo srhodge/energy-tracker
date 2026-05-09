@@ -152,3 +152,35 @@ class NewsItem(Base):
     fetched_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     company: Mapped["Company | None"] = relationship(back_populates="news_items")
+
+
+class CrmAccount(Base):
+    __tablename__ = "crm_accounts"
+
+    id:   Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(500), nullable=False, unique=True)
+
+    opportunities: Mapped[list["CrmOpportunity"]] = relationship(back_populates="account")
+
+
+class CrmOpportunity(Base):
+    __tablename__ = "crm_opportunities"
+
+    id:                 Mapped[int]         = mapped_column(Integer, primary_key=True, autoincrement=True)
+    account_id:         Mapped[int | None]  = mapped_column(ForeignKey("crm_accounts.id"), nullable=True, index=True)
+    account_name:       Mapped[str | None]  = mapped_column(String(500))
+    owner_role:         Mapped[str | None]  = mapped_column(String(200))
+    opportunity_owner:  Mapped[str | None]  = mapped_column(String(200))
+    opportunity_name:   Mapped[str | None]  = mapped_column(String(2000))
+    stage:              Mapped[str | None]  = mapped_column(String(200), index=True)
+    fiscal_period:      Mapped[str | None]  = mapped_column(String(50))
+    amount:             Mapped[float | None] = mapped_column(Float)
+    probability:        Mapped[float | None] = mapped_column(Float)
+    age:                Mapped[float | None] = mapped_column(Float)
+    close_date:         Mapped[date | None]  = mapped_column(Date)
+    created_date:       Mapped[date | None]  = mapped_column(Date)
+    next_step:          Mapped[str | None]  = mapped_column(String(2000))
+    lead_source:        Mapped[str | None]  = mapped_column(String(200))
+    opp_type:           Mapped[str | None]  = mapped_column(String(200))
+
+    account: Mapped["CrmAccount | None"] = relationship(back_populates="opportunities")
