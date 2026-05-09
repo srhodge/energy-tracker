@@ -622,11 +622,11 @@ export default function Analytics() {
 
   return (
     <>
-      <div className="page-header" style={{ justifyContent: "space-between" }}>
+      <div className="page-header" style={{ justifyContent: "space-between", paddingTop: 56 }}>
         <div>
           <h1>Analytics</h1>
           {data && (
-            <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>
+            <div style={{ fontSize: 13, color: "#6b7280", marginTop: 8 }}>
               {data.included} of {data.total} companies have sufficient data for analysis
             </div>
           )}
@@ -640,14 +640,14 @@ export default function Analytics() {
           <>
             {/* ── Section: Revenue vs Market Cap ── */}
             <div>
-              <div style={{ marginBottom: 16 }}>
+              <div style={{ marginBottom: 12 }}>
                 <div style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e" }}>Revenue vs market cap</div>
                 <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>
                   Bubble size = revenue. Dashed lines = P/S ratios of 1x and 3x. Coloured by energy value chain position.
                 </div>
               </div>
 
-              <div className="stat-grid" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: 20 }}>
+              <div className="stat-grid" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: 16 }}>
                 <div className="stat-card">
                   <div className="label">Companies shown</div>
                   <div className="value">{metrics.count}</div>
@@ -715,9 +715,6 @@ export default function Analytics() {
                   </button>
                 )}
               </div>
-              {/* Spacer to prevent content jumping under the fixed bar */}
-              <div style={{ height: 56 }} />
-
               <div className="card" style={{ padding: 24 }}>
                 <div style={{ height: 520 }}>
                   {filtered.length > 0 ? (
