@@ -170,3 +170,4 @@ class CompanyUpdateRequest(BaseModel):
     status: Optional[CompanyStatus] = None
     acquired_by: Optional[str] = None
     acquisition_notes: Optional[str] = None
+    skip_market_poll: Optional[bool] = None

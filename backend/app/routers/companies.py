@@ -499,7 +499,7 @@ def update_company(company_id: int, req: CompanyUpdateRequest, db: Session = Dep
     for field in ("name", "exchange", "country", "website", "description",
                   "wwt_territory", "wwt_model", "energy_maturity", "industry",
                   "value_chain_position", "supply_chain_position",
-                  "status", "acquired_by", "acquisition_notes"):
+                  "status", "acquired_by", "acquisition_notes", "skip_market_poll"):
         val = getattr(req, field)
         if val is not None:
             setattr(company, field, val)
