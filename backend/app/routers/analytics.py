@@ -20,6 +20,7 @@ def scatter(db: Session = Depends(get_db)):
 
     rows = db.execute(
         select(
+            Company.id,
             Company.name,
             Company.ticker,
             Company.supply_chain_position,
@@ -45,6 +46,7 @@ def scatter(db: Session = Depends(get_db)):
 
     items = [
         {
+            "id": r.id,
             "name": r.name,
             "ticker": r.ticker,
             "supply_chain_position": r.supply_chain_position,

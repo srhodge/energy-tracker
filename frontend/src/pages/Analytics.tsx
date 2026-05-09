@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Chart as ChartJS,
   LogarithmicScale,
@@ -73,6 +74,7 @@ function median(vals: number[]): number {
 type PSFilter = "all" | "under1" | "1to3" | "over3";
 
 interface BubbleDatum extends BubbleDataPoint {
+  id: number;
   name: string;
   ticker?: string;
   fy?: string;
@@ -126,6 +128,7 @@ const psReferenceLinePlugin: Plugin<"bubble"> = {
 };
 
 export default function Analytics() {
+  const navigate = useNavigate();
   const [data, setData] = useState<{ total: number; included: number; items: ScatterPoint[] } | null>(null);
   const [loading, setLoading] = useState(true);
   const [posFilter, setPosFilter] = useState("all");
@@ -195,6 +198,7 @@ export default function Analytics() {
         x: c.revenue_annual_usd,
         y: c.market_cap_usd,
         r: bubbleR(c.revenue_annual_usd),
+        id: c.id,
         name: c.name,
         ticker: c.ticker ?? undefined,
         fy: c.revenue_fiscal_year_label ?? undefined,
@@ -215,6 +219,16 @@ export default function Analytics() {
   const options = useMemo((): ChartOptions<"bubble"> => ({
     responsive: true,
     maintainAspectRatio: false,
+    onClick(_event, elements, chart) {
+      if (!elements.length) return;
+      const { datasetIndex, index } = elements[0];
+      const d = chart.data.datasets[datasetIndex]?.data[index] as BubbleDatum | undefined;
+      if (!d) return;
+      navigate(d.ticker ? `/company/${d.ticker}` : `/companies/${d.id}`);
+    },
+    onHover(_event, elements, chart) {
+      chart.canvas.style.cursor = elements.length ? "pointer" : "default";
+    },
     scales: {
       x: {
         type: "logarithmic",

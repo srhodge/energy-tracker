@@ -160,6 +160,7 @@ export interface CompanyAddResponse {
 }
 
 export interface ScatterPoint {
+  id: number;
   name: string;
   ticker?: string;
   supply_chain_position?: string;
