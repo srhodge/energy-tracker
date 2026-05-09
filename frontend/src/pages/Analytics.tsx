@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import {
   Chart as ChartJS,
   LogarithmicScale,
+  LinearScale,
+  CategoryScale,
+  BarElement,
   PointElement,
   Tooltip,
   Legend,
@@ -11,11 +14,11 @@ import {
   type Plugin,
   type BubbleDataPoint,
 } from "chart.js";
-import { Bubble } from "react-chartjs-2";
+import { Bubble, Bar } from "react-chartjs-2";
 import { fetchScatterData } from "../api/client";
 import type { ScatterPoint } from "../types";
 
-ChartJS.register(LogarithmicScale, PointElement, Tooltip, Legend);
+ChartJS.register(LogarithmicScale, LinearScale, CategoryScale, BarElement, PointElement, Tooltip, Legend);
 
 const COLORS: Record<string, string> = {
   Upstream:       "#f97316",
@@ -188,6 +191,77 @@ export default function Analytics() {
       over3: psRatios.filter(p => p > 3).length,
     };
   }, [filtered]);
+
+  // Filtered by territory + country only — position is the grouping axis in chart 2
+  const filteredForPos = useMemo(() => {
+    if (!data) return [];
+    return data.items.filter(c => {
+      if (terrFilter !== "all" && c.territory !== terrFilter) return false;
+      if (countryFilter !== "all" && c.country !== countryFilter) return false;
+      return true;
+    });
+  }, [data, terrFilter, countryFilter]);
+
+  const posGroups = useMemo(() => {
+    const acc: Record<string, { cap: number; count: number }> = {};
+    for (const c of filteredForPos) {
+      const pos = c.supply_chain_position ?? "Other";
+      if (!acc[pos]) acc[pos] = { cap: 0, count: 0 };
+      acc[pos].cap += c.market_cap_usd;
+      acc[pos].count += 1;
+    }
+    return Object.entries(acc)
+      .sort((a, b) => b[1].cap - a[1].cap)
+      .map(([pos, v]) => ({ pos, ...v }));
+  }, [filteredForPos]);
+
+  const posChartData = useMemo((): ChartData<"bar"> => ({
+    labels: posGroups.map(g => g.pos),
+    datasets: [{
+      label: "Total Market Cap",
+      data: posGroups.map(g => g.cap),
+      backgroundColor: posGroups.map(g => (COLORS[g.pos] ?? DEFAULT_COLOR) + "bb"),
+      borderColor: posGroups.map(g => COLORS[g.pos] ?? DEFAULT_COLOR),
+      borderWidth: 1,
+      borderRadius: 4,
+    }],
+  }), [posGroups]);
+
+  const posOptions = useMemo((): ChartOptions<"bar"> => ({
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          title: (items) => items[0]?.label ?? "",
+          label: (ctx) => {
+            const g = posGroups[ctx.dataIndex];
+            return [
+              `Market Cap: ${fmt(ctx.parsed.y ?? 0)}`,
+              `Companies: ${g?.count ?? 0}`,
+            ];
+          },
+        },
+        backgroundColor: "#1e293b",
+        padding: 10,
+        cornerRadius: 8,
+        bodyFont: { size: 12 },
+        bodySpacing: 4,
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: "#6b7280", font: { size: 12 } },
+      },
+      y: {
+        title: { display: true, text: "Total Market Cap (USD)", font: { size: 12 }, color: "#6b7280" },
+        ticks: { color: "#6b7280", callback: (v) => fmt(Number(v)) },
+        grid: { color: "#f0f2f5" },
+      },
+    },
+  }), [posGroups]);
 
   const chartData = useMemo((): ChartData<"bubble", BubbleDatum[]> => {
     const groups: Record<string, BubbleDatum[]> = {};
@@ -386,8 +460,36 @@ export default function Analytics() {
               </div>
             </div>
 
-            {/* Divider — future sections below */}
             <hr style={{ margin: "32px 0", border: "none", borderTop: "1px solid #e0e4ea" }} />
+
+            {/* ── Section: Market cap by supply chain position ── */}
+            <div>
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e" }}>
+                  Market cap by energy value chain position
+                </div>
+                <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>
+                  Total market cap of companies with financial data, grouped by position.
+                  {terrFilter !== "all" && ` Filtered to ${terrFilter}.`}
+                  {countryFilter !== "all" && ` Filtered to ${countryFilter}.`}
+                </div>
+              </div>
+
+              <div className="card" style={{ padding: 24 }}>
+                <div style={{ height: 300 }}>
+                  {posGroups.length > 0 ? (
+                    <Bar data={posChartData} options={posOptions} />
+                  ) : (
+                    <div style={{
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      height: "100%", color: "#9ca3af", fontSize: 14,
+                    }}>
+                      No data available.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </>
         )}
       </div>
