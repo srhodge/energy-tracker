@@ -231,37 +231,42 @@ def filter_options(db: Session = Depends(get_db)):
 # ---------------------------------------------------------------------------
 
 _COUNTRY_TERRITORY: dict[str, str] = {
-    # North America
-    "United States": "Americas", "USA": "Americas", "Canada": "Americas", "Mexico": "Americas",
+    # North America (US territories assigned by city/state — default STOLA)
+    "United States": "STOLA", "USA": "STOLA",
+    # Canada
+    "Canada": "CANADA",
     # Latin America
-    "Brazil": "Americas", "Colombia": "Americas", "Argentina": "Americas",
-    "Chile": "Americas", "Peru": "Americas", "Venezuela": "Americas",
-    "Trinidad and Tobago": "Americas", "Ecuador": "Americas", "Bolivia": "Americas",
-    "Guyana": "Americas", "Suriname": "Americas",
+    "Mexico": "LATAM", "Brazil": "LATAM", "Colombia": "LATAM", "Argentina": "LATAM",
+    "Chile": "LATAM", "Peru": "LATAM", "Venezuela": "LATAM",
+    "Trinidad and Tobago": "LATAM", "Ecuador": "LATAM", "Bolivia": "LATAM",
+    "Guyana": "LATAM", "Suriname": "LATAM",
     # Europe
-    "United Kingdom": "EMEA", "Germany": "EMEA", "France": "EMEA", "Netherlands": "EMEA",
-    "Norway": "EMEA", "Italy": "EMEA", "Spain": "EMEA", "Sweden": "EMEA",
-    "Denmark": "EMEA", "Finland": "EMEA", "Belgium": "EMEA", "Austria": "EMEA",
-    "Switzerland": "EMEA", "Portugal": "EMEA", "Poland": "EMEA", "Greece": "EMEA",
-    "Czech Republic": "EMEA", "Hungary": "EMEA", "Romania": "EMEA", "Turkey": "EMEA",
-    "Ireland": "EMEA", "Luxembourg": "EMEA",
-    # Middle East
-    "Saudi Arabia": "EMEA", "United Arab Emirates": "EMEA", "Qatar": "EMEA",
-    "Kuwait": "EMEA", "Iraq": "EMEA", "Iran": "EMEA", "Oman": "EMEA",
-    "Bahrain": "EMEA", "Jordan": "EMEA", "Israel": "EMEA", "Egypt": "EMEA",
+    "United Kingdom": "EURO", "Germany": "EURO", "France": "EURO", "Netherlands": "EURO",
+    "Norway": "EURO", "Italy": "EURO", "Spain": "EURO", "Sweden": "EURO",
+    "Denmark": "EURO", "Finland": "EURO", "Belgium": "EURO", "Austria": "EURO",
+    "Switzerland": "EURO", "Portugal": "EURO", "Poland": "EURO", "Greece": "EURO",
+    "Czech Republic": "EURO", "Hungary": "EURO", "Romania": "EURO", "Turkey": "EURO",
+    "Ireland": "EURO", "Luxembourg": "EURO", "Monaco": "EURO", "Cyprus": "EURO",
+    "Bermuda": "EURO",
+    # Middle East / North Africa
+    "Saudi Arabia": "MENA", "United Arab Emirates": "MENA", "UAE": "MENA",
+    "Qatar": "MENA", "Kuwait": "MENA", "Iraq": "MENA", "Iran": "MENA",
+    "Oman": "MENA", "Bahrain": "MENA", "Jordan": "MENA", "Israel": "MENA",
+    "Egypt": "MENA", "Lebanon": "MENA", "Syria": "MENA", "Yemen": "MENA",
+    "Palestine": "MENA",
     # Africa
-    "Nigeria": "EMEA", "South Africa": "EMEA", "Algeria": "EMEA", "Angola": "EMEA",
-    "Libya": "EMEA", "Ghana": "EMEA", "Mozambique": "EMEA", "Tanzania": "EMEA",
-    "Kenya": "EMEA", "Senegal": "EMEA", "Equatorial Guinea": "EMEA",
+    "Nigeria": "EURO", "South Africa": "EURO", "Algeria": "EURO", "Angola": "EURO",
+    "Libya": "EURO", "Ghana": "EURO", "Mozambique": "EURO", "Tanzania": "EURO",
+    "Kenya": "EURO", "Senegal": "EURO", "Equatorial Guinea": "EURO",
     # Asia Pacific
-    "China": "Asia Pacific", "Japan": "Asia Pacific", "India": "Asia Pacific",
-    "Australia": "Asia Pacific", "South Korea": "Asia Pacific", "Indonesia": "Asia Pacific",
-    "Malaysia": "Asia Pacific", "Singapore": "Asia Pacific", "Thailand": "Asia Pacific",
-    "Vietnam": "Asia Pacific", "Philippines": "Asia Pacific", "Taiwan": "Asia Pacific",
-    "Hong Kong": "Asia Pacific", "New Zealand": "Asia Pacific", "Bangladesh": "Asia Pacific",
-    "Pakistan": "Asia Pacific", "Myanmar": "Asia Pacific",
-    # Russia / CIS
-    "Russia": "EMEA", "Kazakhstan": "EMEA", "Azerbaijan": "EMEA",
+    "China": "APAC", "Japan": "APAC", "India": "APAC", "Australia": "APAC",
+    "South Korea": "APAC", "Korea": "APAC", "Indonesia": "APAC", "Malaysia": "APAC",
+    "Singapore": "APAC", "Thailand": "APAC", "Vietnam": "APAC", "Philippines": "APAC",
+    "Taiwan": "APAC", "Hong Kong": "APAC", "New Zealand": "APAC", "Bangladesh": "APAC",
+    "Pakistan": "APAC", "Myanmar": "APAC", "Sri Lanka": "APAC", "Cambodia": "APAC",
+    "Laos": "APAC", "Mongolia": "APAC", "Papua New Guinea": "APAC", "Fiji": "APAC",
+    # Russia
+    "Russia": "RUSSIA", "Kazakhstan": "RUSSIA", "Azerbaijan": "RUSSIA",
 }
 
 
