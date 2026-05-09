@@ -15,7 +15,7 @@ import {
   type BubbleDataPoint,
 } from "chart.js";
 import { Bubble, Bar } from "react-chartjs-2";
-import { fetchScatterData, fetchChartsData } from "../api/client";
+import { fetchScatterData, fetchChartsData, fetchFilterOptions } from "../api/client";
 import type { ScatterPoint, ChartsData } from "../types";
 
 ChartJS.register(LogarithmicScale, LinearScale, CategoryScale, BarElement, PointElement, Tooltip, Legend);
@@ -225,6 +225,7 @@ export default function Analytics() {
   const [loading, setLoading] = useState(true);
   const [chartsData, setChartsData] = useState<ChartsData | null>(null);
   const [chartsLoading, setChartsLoading] = useState(false);
+  const [allTerritories, setAllTerritories] = useState<string[]>([]);
   const [posFilter, setPosFilter] = useState("all");
   const [psFilter, setPsFilter] = useState<PSFilter>("all");
   const [terrFilter, setTerrFilter] = useState("all");
@@ -236,6 +237,9 @@ export default function Analytics() {
       .then(d => setData({ total: d.total_companies, included: d.included_count, items: d.items }))
       .catch(() => null)
       .finally(() => setLoading(false));
+    fetchFilterOptions()
+      .then(o => setAllTerritories(o.wwt_territories))
+      .catch(() => null);
   }, []);
 
   // Fetch charts data whenever filters change
@@ -260,12 +264,9 @@ export default function Analytics() {
     ).sort();
   }, [data]);
 
-  const territories = useMemo(() => {
-    if (!data) return [];
-    return Array.from(
-      new Set(data.items.map(c => c.territory).filter((t): t is string => !!t))
-    ).sort();
-  }, [data]);
+  // Territories come from filter-options (all companies) so MENA and other
+  // territories with no financial data still appear in the dropdown.
+  const territories = allTerritories;
 
   const countries = useMemo(() => {
     if (!data) return [];
