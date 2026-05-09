@@ -118,30 +118,44 @@ def charts(
 
     rows = db.execute(q).all()
 
-    def ps(r):
+    def _ps(r):
         return r.market_cap_usd / r.revenue_annual_usd
 
     if ps_filter == "under1":
-        rows = [r for r in rows if ps(r) < 1]
+        rows = [r for r in rows if _ps(r) < 1]
     elif ps_filter == "1to3":
-        rows = [r for r in rows if 1 <= ps(r) <= 3]
+        rows = [r for r in rows if 1 <= _ps(r) <= 3]
     elif ps_filter == "over3":
-        rows = [r for r in rows if ps(r) > 3]
+        rows = [r for r in rows if _ps(r) > 3]
 
-    total_rev = sum(r.revenue_annual_usd for r in rows) or 1
-    total_cap = sum(r.market_cap_usd for r in rows) or 1
-    overall_median_ps = _median([ps(r) for r in rows])
-
-    # Aggregate by segment
+    # Single pass: accumulate segments and build the overall P/S list together
     seg: dict[str, dict] = {}
+    all_ps_vals: list[float] = []
     for r in rows:
+        ratio = _ps(r)
+        all_ps_vals.append(ratio)
         k = r.supply_chain_position or "Other"
         if k not in seg:
             seg[k] = {"rev": 0.0, "cap": 0.0, "ps_vals": [], "count": 0}
         seg[k]["rev"] += r.revenue_annual_usd
         seg[k]["cap"] += r.market_cap_usd
-        seg[k]["ps_vals"].append(ps(r))
+        seg[k]["ps_vals"].append(ratio)
         seg[k]["count"] += 1
+
+    # Derive totals from the same accumulated buckets — guarantees same subset
+    total_rev = sum(v["rev"] for v in seg.values()) or 1.0
+    total_cap = sum(v["cap"] for v in seg.values()) or 1.0
+    overall_median_ps = _median(all_ps_vals)
+
+    # Debug: log per-segment financials so we can verify the numbers
+    print(f"[charts] total_rev={total_rev:.4e}  total_cap={total_cap:.4e}  rows={len(rows)}", flush=True)
+    for k, v in sorted(seg.items()):
+        implied = v["cap"] / v["rev"] if v["rev"] else 0
+        print(
+            f"[charts]   {k}: rev={v['rev']:.4e}  cap={v['cap']:.4e}"
+            f"  implied_ps={implied:.4f}x  count={v['count']}",
+            flush=True,
+        )
 
     by_segment = sorted(
         [
