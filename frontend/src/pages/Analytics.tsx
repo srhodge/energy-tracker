@@ -90,6 +90,7 @@ export default function Analytics() {
   const [loading, setLoading] = useState(true);
   const [posFilter, setPosFilter] = useState("all");
   const [psFilter, setPsFilter] = useState<PSFilter>("all");
+  const [terrFilter, setTerrFilter] = useState("all");
   const chartRef = useRef<ChartJS<"bubble">>(null);
 
   useEffect(() => {
@@ -106,9 +107,17 @@ export default function Analytics() {
     ).sort();
   }, [data]);
 
+  const territories = useMemo(() => {
+    if (!data) return [];
+    return Array.from(
+      new Set(data.items.map(c => c.territory).filter((t): t is string => !!t))
+    ).sort();
+  }, [data]);
+
   const filtered = useMemo(() => {
     if (!data) return [];
     return data.items.filter(c => {
+      if (terrFilter !== "all" && c.territory !== terrFilter) return false;
       if (posFilter !== "all" && c.supply_chain_position !== posFilter) return false;
       const ps = c.market_cap_usd / c.revenue_annual_usd;
       if (psFilter === "under1" && ps >= 1) return false;
@@ -116,7 +125,7 @@ export default function Analytics() {
       if (psFilter === "over3" && ps <= 3) return false;
       return true;
     });
-  }, [data, posFilter, psFilter]);
+  }, [data, terrFilter, posFilter, psFilter]);
 
   const metrics = useMemo(() => {
     const psRatios = filtered.map(c => c.market_cap_usd / c.revenue_annual_usd);
@@ -255,6 +264,10 @@ export default function Analytics() {
 
               {/* Filters */}
               <div className="filter-bar" style={{ marginBottom: 16 }}>
+                <select style={selectStyle} value={terrFilter} onChange={e => setTerrFilter(e.target.value)}>
+                  <option value="all">All territories</option>
+                  {territories.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
                 <select style={selectStyle} value={posFilter} onChange={e => setPosFilter(e.target.value)}>
                   <option value="all">All value chains</option>
                   {positions.map(p => <option key={p} value={p}>{p}</option>)}
