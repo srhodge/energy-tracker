@@ -127,6 +127,24 @@ export async function addCompany(req: CompanyAddRequest): Promise<CompanyAddResp
   return res.json();
 }
 
+export interface MissingDataStub {
+  id: number;
+  name: string;
+  ticker: string | null;
+  country: string | null;
+}
+
+export interface MissingDataResult {
+  missing_website: MissingDataStub[];
+  missing_industry: MissingDataStub[];
+  missing_revenue: MissingDataStub[];
+  missing_all: MissingDataStub[];
+}
+
+export function fetchMissingData(): Promise<MissingDataResult> {
+  return get("/companies/missing-data");
+}
+
 export function fetchEvents(params: { event_type?: EventType; company_id?: number; limit?: number } = {}): Promise<EventWithCompany[]> {
   const q = new URLSearchParams();
   if (params.event_type) q.set("event_type", params.event_type);

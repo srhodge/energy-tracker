@@ -3,6 +3,7 @@ import CompanyList from "./pages/CompanyList";
 import CompanyDetail from "./pages/CompanyDetail";
 import TerritoryDashboard from "./pages/TerritoryDashboard";
 import ActivityFeed from "./pages/ActivityFeed";
+import MissingData from "./pages/MissingData";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
             <NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>Companies</NavLink>
             <NavLink to="/territories" className={({ isActive }) => isActive ? "active" : ""}>Territory Dashboard</NavLink>
             <NavLink to="/activity" className={({ isActive }) => isActive ? "active" : ""}>Activity Feed</NavLink>
+            <NavLink to="/admin/missing-data" className={({ isActive }) => isActive ? "active" : ""}>Missing Data</NavLink>
           </nav>
         </aside>
         <main className="main">
@@ -23,6 +25,7 @@ export default function App() {
             <Route path="/company/:ticker" element={<CompanyDetail />} />
             <Route path="/territories" element={<TerritoryDashboard />} />
             <Route path="/activity" element={<ActivityFeed />} />
+            <Route path="/admin/missing-data" element={<MissingData />} />
           </Routes>
         </main>
       </div>

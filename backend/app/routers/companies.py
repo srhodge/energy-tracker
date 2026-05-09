@@ -269,6 +269,64 @@ def _infer_wwt_territory(country: str | None) -> str | None:
     return _COUNTRY_TERRITORY.get(country)
 
 
+@router.get("/missing-data")
+def missing_data(db: Session = Depends(get_db)):
+    """Return active companies grouped by which key fields are null/empty."""
+    latest_sq = _latest_financial_subquery(db)
+
+    rows = db.execute(
+        select(
+            Company.id,
+            Company.name,
+            Company.ticker,
+            Company.country,
+            Company.website,
+            Company.industry,
+            Financial.revenue_quarterly_usd,
+            Financial.revenue_annual_usd,
+        )
+        .outerjoin(latest_sq, Company.id == latest_sq.c.company_id)
+        .outerjoin(
+            Financial,
+            and_(
+                Financial.company_id == Company.id,
+                Financial.snapshot_date == latest_sq.c.max_date,
+            ),
+        )
+        .where(Company.status.notin_(_INACTIVE))
+        .order_by(Company.name)
+    ).all()
+
+    def _stub(row):
+        return {"id": row.id, "name": row.name, "ticker": row.ticker, "country": row.country}
+
+    missing_website = []
+    missing_industry = []
+    missing_revenue = []
+    missing_all = []
+
+    for row in rows:
+        no_website = not row.website
+        no_industry = not row.industry
+        no_revenue = row.revenue_quarterly_usd is None and row.revenue_annual_usd is None
+
+        if no_website:
+            missing_website.append(_stub(row))
+        if no_industry:
+            missing_industry.append(_stub(row))
+        if no_revenue:
+            missing_revenue.append(_stub(row))
+        if no_website and no_industry and no_revenue:
+            missing_all.append(_stub(row))
+
+    return {
+        "missing_website": missing_website,
+        "missing_industry": missing_industry,
+        "missing_revenue": missing_revenue,
+        "missing_all": missing_all,
+    }
+
+
 @router.get("/lookup", response_model=CompanyLookupResult)
 def lookup_company(ticker: str = Query(..., min_length=1), db: Session = Depends(get_db)):
     ticker = ticker.strip().upper()
