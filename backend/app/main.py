@@ -4,7 +4,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import select, func, inspect as sa_inspect
+from sqlalchemy import select, func, and_, inspect as sa_inspect
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -274,6 +274,42 @@ def admin_trigger_fundamentals_targeted(body: dict):
 
     threading.Thread(target=_run, daemon=True).start()
     return {"status": f"targeted fundamentals poll started for {len(tickers)} tickers"}
+
+
+@app.post("/admin/set-revenue")
+def admin_set_revenue(body: dict):
+    """Manually set revenue fields on a company's latest (or new) Financial record."""
+    from sqlalchemy import select, func
+    from app.models import Financial
+    from app.services.market_poller import _et_today
+    company_id = body.get("company_id")
+    if not company_id:
+        return {"error": "company_id required"}
+    annual_usd  = body.get("revenue_annual_usd")
+    quarterly_usd = body.get("revenue_quarterly_usd")
+    fy_label    = body.get("revenue_fiscal_year_label")
+    q_label     = body.get("revenue_quarter_label")
+    with SessionLocal() as db:
+        latest_sq = (
+            select(Financial.company_id, func.max(Financial.snapshot_date).label("max_date"))
+            .group_by(Financial.company_id).subquery()
+        )
+        rec = db.scalars(
+            select(Financial).join(latest_sq, and_(
+                Financial.company_id == latest_sq.c.company_id,
+                Financial.snapshot_date == latest_sq.c.max_date,
+            )).where(Financial.company_id == company_id)
+        ).first()
+        if rec is None:
+            from datetime import datetime
+            rec = Financial(company_id=company_id, snapshot_date=_et_today(), last_market_update=datetime.utcnow())
+            db.add(rec)
+        if annual_usd  is not None: rec.revenue_annual_usd    = annual_usd
+        if quarterly_usd is not None: rec.revenue_quarterly_usd = quarterly_usd
+        if fy_label    is not None: rec.revenue_fiscal_year_label = fy_label
+        if q_label     is not None: rec.revenue_quarter_label = q_label
+        db.commit()
+    return {"status": "ok", "company_id": company_id, "revenue_annual_usd": annual_usd, "revenue_fiscal_year_label": fy_label}
 
 
 @app.get("/admin/test-industry")
