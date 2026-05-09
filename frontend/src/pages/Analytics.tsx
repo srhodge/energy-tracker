@@ -282,7 +282,7 @@ export default function Analytics() {
                   {countries.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
                 <select style={selectStyle} value={posFilter} onChange={e => setPosFilter(e.target.value)}>
-                  <option value="all">All value chains</option>
+                  <option value="all">All energy value chain positions</option>
                   {positions.map(p => <option key={p} value={p}>{p}</option>)}
                 </select>
                 <select style={selectStyle} value={psFilter} onChange={e => setPsFilter(e.target.value as PSFilter)}>
