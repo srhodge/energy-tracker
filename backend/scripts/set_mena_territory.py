@@ -1,21 +1,22 @@
-"""
-Migration: set wwt_territory = 'MENA' for all Middle-East companies.
-
-Run against production:
-    $env:DATABASE_URL="postgresql://..." ; python scripts/set_mena_territory.py
-
-Or put DATABASE_URL in backend/.env and run:
-    python scripts/set_mena_territory.py
-"""
+# Run against production: ensure backend/.env contains the public
+# DATABASE_URL from Railway (turntable.proxy.rlwy.net) not the internal one.
+# Then simply run: python scripts/set_mena_territory.py
 
 import sys
 import os
+from pathlib import Path
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from sqlalchemy import select, update
+from sqlalchemy import select, update as sa_update
+from app.config import settings
 from app.database import SessionLocal, engine
 from app.models import Company
+
+if not settings.database_url.startswith("postgresql"):
+    print("ERROR: This script requires production Postgres.")
+    print("Update backend/.env with the public DATABASE_URL from Railway.")
+    sys.exit(1)
 
 MENA_COUNTRIES = {
     "Saudi Arabia",
@@ -38,12 +39,6 @@ MENA_COUNTRIES = {
 
 def main():
     db_url = str(engine.url)
-    if "sqlite" in db_url:
-        print("ERROR: Connected to local SQLite, not production Postgres.")
-        print("Set DATABASE_URL to the Railway connection string and re-run.")
-        print(f"  Current URL: {db_url}")
-        sys.exit(1)
-
     print(f"Connected to: {db_url[:60]}...")
     print()
 
@@ -72,7 +67,7 @@ def main():
             return
 
         # ── 3. Split into needs-update vs already-correct ─────────────────────
-        to_update = [r for r in candidates if r.wwt_territory != "MENA"]
+        to_update   = [r for r in candidates if r.wwt_territory != "MENA"]
         already_mena = [r for r in candidates if r.wwt_territory == "MENA"]
 
         col = "{:<45} {:<10} {:<25} {}"
@@ -84,15 +79,15 @@ def main():
             print(f"\n  Will be updated ({len(to_update)}):")
             for r in to_update:
                 print("  " + col.format(
-                    r.name[:44], r.ticker or "—", r.country or "—",
-                    f"{r.wwt_territory or '(null)'} → MENA"
+                    r.name[:44], r.ticker or "-", r.country or "-",
+                    f"{r.wwt_territory or '(null)'} -> MENA"
                 ))
 
         if already_mena:
-            print(f"\n  Already MENA — no change ({len(already_mena)}):")
+            print(f"\n  Already MENA -- no change ({len(already_mena)}):")
             for r in already_mena:
                 print("  " + col.format(
-                    r.name[:44], r.ticker or "—", r.country or "—", "MENA (unchanged)"
+                    r.name[:44], r.ticker or "-", r.country or "-", "MENA (unchanged)"
                 ))
 
         # ── 4. Counts and update ──────────────────────────────────────────────
@@ -103,17 +98,16 @@ def main():
             print("\nNothing to do.")
             return
 
-        ids_to_update = [r.id for r in to_update]
         db.execute(
-            update(Company)
-            .where(Company.id.in_(ids_to_update))
+            sa_update(Company)
+            .where(Company.id.in_([r.id for r in to_update]))
             .values(wwt_territory="MENA")
         )
         db.commit()
 
         # ── 5. Confirmation ───────────────────────────────────────────────────
         print(f"\nUpdated {len(to_update)} companies to MENA")
-        print(f"{len(already_mena)} companies were already set to MENA — no change")
+        print(f"{len(already_mena)} companies were already set to MENA -- no change")
 
 if __name__ == "__main__":
     main()

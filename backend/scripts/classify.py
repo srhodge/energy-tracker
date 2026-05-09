@@ -1,12 +1,23 @@
+# Run against production: ensure backend/.env contains the public
+# DATABASE_URL from Railway (turntable.proxy.rlwy.net) not the internal one.
+# Then simply run: python scripts/classify.py
+
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from collections import Counter
 from sqlalchemy import select, text
+from app.config import settings
 from app.database import engine, SessionLocal
 from app.models import Base, Company
 from app.services.classify_supply_chain import _classify
+
+if not settings.database_url.startswith("postgresql"):
+    print("ERROR: This script requires production Postgres.")
+    print("Update backend/.env with the public DATABASE_URL from Railway.")
+    sys.exit(1)
 
 Base.metadata.create_all(bind=engine)
 
