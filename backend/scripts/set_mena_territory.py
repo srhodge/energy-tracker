@@ -76,7 +76,7 @@ def main():
         already_mena = [r for r in candidates if r.wwt_territory == "MENA"]
 
         col = "{:<45} {:<10} {:<25} {}"
-        header = col.format("Company", "Ticker", "Country", "Territory → MENA")
+        header = col.format("Company", "Ticker", "Country", "Territory -> MENA")
         print(header)
         print("-" * 110)
 
