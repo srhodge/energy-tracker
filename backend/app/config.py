@@ -1,9 +1,12 @@
+from typing import Optional
+
 from pydantic import field_validator
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     database_url: str = "sqlite:///./energy_tracker.db"
+    anthropic_api_key: Optional[str] = None
 
     @field_validator("database_url", mode="before")
     @classmethod
