@@ -310,6 +310,15 @@ def create_spend_estimate(company_id: int, body: dict, db: Session = Depends(get
     return _estimate(rec)
 
 
+# ── Calculate estimate ───────────────────────────────────────────────────────
+
+@router.post("/{company_id}/calculate-estimate", status_code=201)
+def calculate_estimate(company_id: int, db: Session = Depends(get_db)):
+    _get_company_or_404(company_id, db)
+    from app.services.spend_estimator import estimate
+    return estimate(company_id, db)
+
+
 # ── Profile patch ─────────────────────────────────────────────────────────────
 
 _PROFILE_FIELDS = {
