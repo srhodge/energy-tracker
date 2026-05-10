@@ -389,6 +389,19 @@ export default function CompanyList() {
     );
   }
 
+  const selectStyle: React.CSSProperties = {
+    padding: "7px 11px", border: "1px solid #d1d5db", borderRadius: 6,
+    fontSize: 13, background: "#fff", color: "#1a1a2e", cursor: "pointer",
+  };
+
+  const anyFilterActive = !!(search || territory || industry || supplyChain || country || statusFilter);
+
+  function handleReset() {
+    setSearch(""); setTerritory(""); setIndustry("");
+    setSupplyChain(""); setCountry(""); setStatusFilter("");
+    setPage(1);
+  }
+
   const load = useCallback(() => {
     setLoading(true);
     setError(null);
@@ -448,7 +461,57 @@ export default function CompanyList() {
           onAdded={handleAdded}
         />
       )}
-      <div className="page-header">
+      {/* Fixed filter bar — matches Analytics exactly */}
+      <div style={{
+        position: "fixed", top: 0, left: 220, right: 0, zIndex: 200,
+        background: "#1a1a2e", borderBottom: "1px solid rgba(255,255,255,0.1)",
+        padding: "10px 28px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
+      }}>
+        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginRight: 8, whiteSpace: "nowrap" }}>Filters</span>
+        <input
+          type="search" placeholder="Search company name…" value={search}
+          onChange={handleFilterChange(setSearch)}
+          style={{ ...selectStyle, minWidth: 200 }}
+        />
+        <select style={selectStyle} value={territory} onChange={handleFilterChange(setTerritory)}>
+          <option value="">All WWT Territories</option>
+          {filters?.wwt_territories.map((t) => <option key={t}>{t}</option>)}
+        </select>
+        <select style={selectStyle} value={industry} onChange={handleFilterChange(setIndustry)}>
+          <option value="">All Energy Industries</option>
+          {filters?.industries.map((s) => <option key={s}>{s}</option>)}
+        </select>
+        <select style={selectStyle} value={supplyChain} onChange={handleFilterChange(setSupplyChain)}>
+          <option value="">All Energy Value Chain Positions</option>
+          {filters?.supply_chain_positions.map((v) => <option key={v}>{v}</option>)}
+        </select>
+        <select style={selectStyle} value={country} onChange={handleFilterChange(setCountry)}>
+          <option value="">All Countries</option>
+          {filters?.countries.map((c) => <option key={c}>{c}</option>)}
+        </select>
+        <select style={selectStyle} value={statusFilter} onChange={handleFilterChange(setStatusFilter)}>
+          <option value="">Active Only</option>
+          <option value="all">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Acquired">Acquired</option>
+          <option value="Merged">Merged</option>
+          <option value="Delisted">Delisted</option>
+          <option value="Unknown">Unknown</option>
+          <option value="Sanctioned">Sanctioned</option>
+          <option value="Non-Equity">Non-Equity</option>
+        </select>
+        {anyFilterActive && (
+          <button onClick={handleReset} style={{
+            padding: "7px 11px", border: "1px solid #d1d5db", borderRadius: 6,
+            fontSize: 13, background: "#fff", color: "#6b7280", cursor: "pointer",
+            display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap",
+          }}>
+            ↺ Reset
+          </button>
+        )}
+      </div>
+
+      <div className="page-header" style={{ paddingTop: 56 }}>
         <h1>Companies</h1>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <span style={{ color: "#6b7280", fontSize: 13 }}>{total.toLocaleString()} companies</span>
@@ -474,42 +537,6 @@ export default function CompanyList() {
         />
 
         {statusSummary && <StatusSummaryBar summary={statusSummary} />}
-
-        <div className="filter-bar">
-          <input
-            type="search"
-            placeholder="Search company name..."
-            value={search}
-            onChange={handleFilterChange(setSearch)}
-          />
-          <select value={territory} onChange={handleFilterChange(setTerritory)}>
-            <option value="">All WWT Territories</option>
-            {filters?.wwt_territories.map((t) => <option key={t}>{t}</option>)}
-          </select>
-          <select value={industry} onChange={handleFilterChange(setIndustry)}>
-            <option value="">All Energy Industries</option>
-            {filters?.industries.map((s) => <option key={s}>{s}</option>)}
-          </select>
-          <select value={supplyChain} onChange={handleFilterChange(setSupplyChain)}>
-            <option value="">All Energy Value Chain Positions</option>
-            {filters?.supply_chain_positions.map((v) => <option key={v}>{v}</option>)}
-          </select>
-          <select value={country} onChange={handleFilterChange(setCountry)}>
-            <option value="">All Countries</option>
-            {filters?.countries.map((c) => <option key={c}>{c}</option>)}
-          </select>
-          <select value={statusFilter} onChange={handleFilterChange(setStatusFilter)}>
-            <option value="">Active Only</option>
-            <option value="all">All Statuses</option>
-            <option value="Active">Active</option>
-            <option value="Acquired">Acquired</option>
-            <option value="Merged">Merged</option>
-            <option value="Delisted">Delisted</option>
-            <option value="Unknown">Unknown</option>
-            <option value="Sanctioned">Sanctioned</option>
-            <option value="Non-Equity">Non-Equity</option>
-          </select>
-        </div>
 
         {error && <div className="error">{error}</div>}
 

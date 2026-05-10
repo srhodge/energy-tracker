@@ -244,6 +244,7 @@ function DetailView({ name }: { name: string }) {
   const [error, setError]           = useState<string | null>(null);
   const [page, setPage]             = useState(1);
   const [sortState, setSortState]   = useState<SortState>(() => loadSortState(name));
+  const [nameSearch, setNameSearch] = useState("");
 
   // Browser tab title
   useEffect(() => {
@@ -273,12 +274,17 @@ function DetailView({ name }: { name: string }) {
       .finally(() => setLoading(false));
   }, [name]);
 
-  // Client-side sort
+  // Client-side sort then name filter
   const sorted = useMemo(() => sortCompanies(companies, sortState), [companies, sortState]);
+  const nameFiltered = useMemo(() => {
+    if (!nameSearch.trim()) return sorted;
+    const q = nameSearch.toLowerCase();
+    return sorted.filter(c => c.name.toLowerCase().includes(q));
+  }, [sorted, nameSearch]);
 
   // Client-side pagination
-  const pageCount = Math.ceil(sorted.length / TABLE_PAGE_SIZE);
-  const pageItems = sorted.slice((page - 1) * TABLE_PAGE_SIZE, page * TABLE_PAGE_SIZE);
+  const pageCount = Math.ceil(nameFiltered.length / TABLE_PAGE_SIZE);
+  const pageItems = nameFiltered.slice((page - 1) * TABLE_PAGE_SIZE, page * TABLE_PAGE_SIZE);
 
   // Aggregate metrics
   const totalCap = useMemo(
@@ -313,14 +319,43 @@ function DetailView({ name }: { name: string }) {
 
   const thProps = { sortState, onSort: handleSort };
 
+  const anyFilterActive = !!nameSearch.trim();
+  const selectStyle: React.CSSProperties = {
+    padding: "7px 11px", border: "1px solid #d1d5db", borderRadius: 6,
+    fontSize: 13, background: "#fff", color: "#1a1a2e", cursor: "pointer",
+  };
+
   return (
     <>
-      <div className="page-header" style={{ justifyContent: "space-between" }}>
+      {/* Fixed filter bar — matches Analytics */}
+      <div style={{
+        position: "fixed", top: 0, left: 220, right: 0, zIndex: 200,
+        background: "#1a1a2e", borderBottom: "1px solid rgba(255,255,255,0.1)",
+        padding: "10px 28px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
+      }}>
+        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginRight: 8, whiteSpace: "nowrap" }}>Filters</span>
+        <input
+          type="search" placeholder="Search company name…" value={nameSearch}
+          onChange={e => { setNameSearch(e.target.value); setPage(1); }}
+          style={{ ...selectStyle, minWidth: 200 }}
+        />
+        {anyFilterActive && (
+          <button onClick={() => { setNameSearch(""); setPage(1); }} style={{
+            padding: "7px 11px", border: "1px solid #d1d5db", borderRadius: 6,
+            fontSize: 13, background: "#fff", color: "#6b7280", cursor: "pointer",
+            display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap",
+          }}>
+            ↺ Reset
+          </button>
+        )}
+      </div>
+
+      <div className="page-header" style={{ justifyContent: "space-between", paddingTop: 56 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <button className="back-btn" onClick={() => navigate("/territories")}>
             ← All Territories
           </button>
-          <h1>{name} — {total.toLocaleString()} companies</h1>
+          <h1>{name} — {nameFiltered.length.toLocaleString()} companies</h1>
         </div>
       </div>
 
