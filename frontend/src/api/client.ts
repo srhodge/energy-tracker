@@ -16,6 +16,11 @@ import type {
   CompanyUpdateRequest,
   ScatterData,
   ChartsData,
+  IntelligenceData,
+  IntelligenceProfile,
+  TechSignal,
+  LeadershipRecord,
+  SpendEstimate,
 } from "../types";
 
 const BASE = "https://energy-tracker-production-39a1.up.railway.app";
@@ -229,4 +234,49 @@ export function fetchEvents(params: { event_type?: EventType; company_id?: numbe
   if (params.limit) q.set("limit", String(params.limit));
   const qs = q.toString();
   return get(`/events${qs ? `?${qs}` : ""}`);
+}
+
+// ── Intelligence ──────────────────────────────────────────────────────────────
+
+export function fetchCompanyIntelligence(id: number): Promise<IntelligenceData> {
+  return get(`/api/companies/${id}/intelligence`);
+}
+
+export function fetchCompanySignals(id: number, params: { category?: string; type?: string; limit?: number } = {}): Promise<TechSignal[]> {
+  const q = new URLSearchParams();
+  if (params.category) q.set("category", params.category);
+  if (params.type)     q.set("type",     params.type);
+  if (params.limit)    q.set("limit",    String(params.limit));
+  const qs = q.toString();
+  return get(`/api/companies/${id}/signals${qs ? `?${qs}` : ""}`);
+}
+
+export function fetchCompanyLeadership(id: number, currentOnly = true): Promise<LeadershipRecord[]> {
+  return get(`/api/companies/${id}/leadership?current_only=${currentOnly}`);
+}
+
+export function fetchSpendEstimates(id: number): Promise<SpendEstimate[]> {
+  return get(`/api/companies/${id}/spend-estimates`);
+}
+
+export async function calculateSpendEstimate(id: number): Promise<any> {
+  const res = await fetch(`${BASE}/api/companies/${id}/calculate-estimate`, { method: "POST" });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.detail ?? `API error ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function patchCompanyProfile(id: number, fields: Record<string, unknown>): Promise<IntelligenceProfile> {
+  const res = await fetch(`${BASE}/api/companies/${id}/profile`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(fields),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.detail ?? `API error ${res.status}`);
+  }
+  return res.json();
 }

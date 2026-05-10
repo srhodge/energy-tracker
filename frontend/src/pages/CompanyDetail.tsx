@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchCompany, fetchCompanyByTicker, updateCompany, deleteCompany, setRevenue } from "../api/client";
-import type { CompanyDetail as CompanyDetailType, CompanyUpdateRequest, ValueChainPosition, CompanyStatus } from "../types";
+import { fetchCompany, fetchCompanyByTicker, updateCompany, deleteCompany, setRevenue, fetchCompanyIntelligence, calculateSpendEstimate, fetchCompanyLeadership } from "../api/client";
+import type { CompanyDetail as CompanyDetailType, CompanyUpdateRequest, ValueChainPosition, CompanyStatus, IntelligenceData, LeadershipRecord } from "../types";
 import { formatCap, formatPrice } from "../components/FormatCap";
 
 const SUPPLY_CHAIN_OPTIONS = ["Upstream", "Midstream", "Downstream", "Integrated", "Petrochemicals", "Services"];
@@ -214,12 +214,356 @@ function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
   );
 }
 
+// ── Intelligence helpers ──────────────────────────────────────────────────────
+
+const TIER_STYLE: Record<number, { bg: string; border: string; color: string }> = {
+  1: { bg: "#fef9c3", border: "#fde047", color: "#854d0e" },
+  2: { bg: "#eff6ff", border: "#bfdbfe", color: "#1d4ed8" },
+  3: { bg: "#f0fdf4", border: "#bbf7d0", color: "#166534" },
+};
+
+function TierBadge({ tier }: { tier?: number }) {
+  if (tier == null) return <span style={{ color: "#9ca3af", fontSize: 13 }}>Not collected</span>;
+  const s = TIER_STYLE[tier] ?? { bg: "#f3f4f6", border: "#d1d5db", color: "#374151" };
+  return (
+    <span style={{ background: s.bg, border: `1px solid ${s.border}`, color: s.color, borderRadius: 5, padding: "2px 9px", fontSize: 12, fontWeight: 700 }}>
+      T{tier}
+    </span>
+  );
+}
+
+function ConfBadge({ level }: { level?: string }) {
+  if (!level) return null;
+  const s = level === "HIGH"
+    ? { bg: "#f0fdf4", color: "#166534", border: "#bbf7d0" }
+    : level === "MEDIUM"
+    ? { bg: "#fffbeb", color: "#92400e", border: "#fde68a" }
+    : { bg: "#fef2f2", color: "#991b1b", border: "#fecaca" };
+  return (
+    <span style={{ background: s.bg, color: s.color, border: `1px solid ${s.border}`, borderRadius: 4, padding: "2px 8px", fontSize: 11, fontWeight: 700, letterSpacing: "0.03em" }}>
+      {level}
+    </span>
+  );
+}
+
+const SIGNAL_TYPE_COLOR: Record<string, string> = {
+  partnership:      "#0ea5e9",
+  ai_announcement:  "#7c3aed",
+  leadership_hire:  "#16a34a",
+  contract_win:     "#2563eb",
+  earnings_signal:  "#f59e0b",
+  regulatory:       "#6b7280",
+};
+
+function SignalTypeBadge({ type }: { type: string }) {
+  const color = SIGNAL_TYPE_COLOR[type] ?? "#6b7280";
+  return (
+    <span style={{ background: color, color: "#fff", borderRadius: 4, padding: "2px 7px", fontSize: 11, fontWeight: 600, whiteSpace: "nowrap" }}>
+      {type.replace(/_/g, " ")}
+    </span>
+  );
+}
+
+function DirectionIcon({ dir }: { dir?: string }) {
+  if (dir === "up")   return <span style={{ color: "#16a34a", fontWeight: 700, fontSize: 15 }}>↑</span>;
+  if (dir === "down") return <span style={{ color: "#dc2626", fontWeight: 700, fontSize: 15 }}>↓</span>;
+  return <span style={{ color: "#9ca3af", fontSize: 15 }}>→</span>;
+}
+
+function NC() {
+  return <span style={{ color: "#9ca3af", fontSize: 13 }}>Not collected</span>;
+}
+
+function IntelligenceTab({ companyId }: { companyId: number }) {
+  const [data, setData]           = useState<IntelligenceData | null>(null);
+  const [loading, setLoading]     = useState(true);
+  const [error, setError]         = useState<string | null>(null);
+  const [showPast, setShowPast]   = useState(false);
+  const [allLeaders, setAllLeaders] = useState<LeadershipRecord[] | null>(null);
+  const [calculating, setCalculating] = useState(false);
+  const [calcError, setCalcError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    fetchCompanyIntelligence(companyId)
+      .then(setData)
+      .catch(e => setError(e.message))
+      .finally(() => setLoading(false));
+  }, [companyId]);
+
+  async function handleShowPast() {
+    if (!showPast && allLeaders === null) {
+      const all = await fetchCompanyLeadership(companyId, false);
+      setAllLeaders(all);
+    }
+    setShowPast(p => !p);
+  }
+
+  async function handleCalculate() {
+    setCalculating(true);
+    setCalcError(null);
+    try {
+      await calculateSpendEstimate(companyId);
+      const fresh = await fetchCompanyIntelligence(companyId);
+      setData(fresh);
+    } catch (e: unknown) {
+      setCalcError(e instanceof Error ? e.message : "Calculation failed");
+    } finally {
+      setCalculating(false);
+    }
+  }
+
+  if (loading) return <div className="loading" style={{ padding: "32px 0" }}>Loading intelligence data…</div>;
+  if (error)   return <div className="error" style={{ marginTop: 16 }}>{error}</div>;
+  if (!data)   return null;
+
+  const { profile: p, signals, leadership, latest_estimate: est } = data;
+  const visibleLeaders = showPast ? (allLeaders ?? leadership) : leadership.filter(l => l.is_current);
+
+  const tdL: React.CSSProperties = { padding: "7px 10px", fontSize: 13, color: "#374151", borderBottom: "1px solid #f3f4f6", fontWeight: 500, whiteSpace: "nowrap" };
+  const tdV: React.CSSProperties = { padding: "7px 10px", fontSize: 13, color: "#1a1a2e", borderBottom: "1px solid #f3f4f6", textAlign: "right" };
+  const tdVB: React.CSSProperties = { ...tdV, fontWeight: 700 };
+
+  function spendRow(label: string, low?: number, mid?: number, high?: number, bold = false) {
+    const cell = bold ? tdVB : tdV;
+    const rowBg = bold ? "#f8fafc" : undefined;
+    return (
+      <tr key={label} style={{ background: rowBg }}>
+        <td style={{ ...tdL, fontWeight: bold ? 700 : 500, paddingLeft: bold ? 10 : 14 }}>{label}</td>
+        <td style={{ ...cell, color: "#6b7280" }}>{low != null ? formatCap(low) : "—"}</td>
+        <td style={cell}>{mid != null ? formatCap(mid) : "—"}</td>
+        <td style={{ ...cell, color: "#16a34a" }}>{high != null ? formatCap(high) : "—"}</td>
+      </tr>
+    );
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+
+      {/* ── Row 1: Profile + Estimate ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+
+        {/* Company Profile */}
+        <div className="detail-section card">
+          <h2 style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+            Company Profile
+            <TierBadge tier={p.data_enrichment_tier} />
+          </h2>
+          <dl className="detail-kv">
+            <dt>Sub-sector</dt>
+            <dd>{p.sub_sector ?? <NC />}</dd>
+
+            <dt>Employees</dt>
+            <dd>
+              {p.employee_count != null
+                ? <>{p.employee_count.toLocaleString()}{p.employee_count_source && <span style={{ fontSize: 11, color: "#6b7280", marginLeft: 6 }}>({p.employee_count_source})</span>}</>
+                : <NC />}
+            </dd>
+
+            <dt>HQ Location</dt>
+            <dd>{(p.hq_city || p.hq_country) ? [p.hq_city, p.hq_country].filter(Boolean).join(", ") : <NC />}</dd>
+
+            <dt>Tech Decision City</dt>
+            <dd>{(p.tech_decision_city || p.tech_decision_country) ? [p.tech_decision_city, p.tech_decision_country].filter(Boolean).join(", ") : <NC />}</dd>
+
+            <dt>Revenue TTM</dt>
+            <dd>{p.revenue_ttm != null ? formatCap(p.revenue_ttm) : <NC />}</dd>
+
+            <dt>EBITDA TTM</dt>
+            <dd>{p.ebitda_ttm != null ? formatCap(p.ebitda_ttm) : <NC />}</dd>
+
+            <dt>Private</dt>
+            <dd>{p.is_private == null ? <NC /> : p.is_private ? "Yes" : "No"}</dd>
+
+            <dt>PE-Backed</dt>
+            <dd>{p.is_pe_backed == null ? <NC /> : p.is_pe_backed ? "Yes" : "No"}</dd>
+
+            <dt>Offshore CoE</dt>
+            <dd>{p.offshore_coe_confirmed == null ? <NC /> : p.offshore_coe_confirmed
+              ? <span style={{ color: "#dc2626", fontWeight: 600 }}>Confirmed</span>
+              : "No"}
+            </dd>
+
+            <dt>Incumbent MSP</dt>
+            <dd>{p.incumbent_msp
+              ? <span style={{ fontWeight: 600, color: "#b45309" }}>{p.incumbent_msp}</span>
+              : <NC />}
+            </dd>
+
+            <dt>Channel Mismatch</dt>
+            <dd>
+              {p.channel_mismatch_flag
+                ? <span style={{ color: "#dc2626", fontWeight: 600 }}>
+                    Flagged{p.channel_mismatch_note && <span style={{ fontWeight: 400, color: "#6b7280", marginLeft: 6 }}>— {p.channel_mismatch_note}</span>}
+                  </span>
+                : p.channel_mismatch_flag === false ? "Clear" : <NC />}
+            </dd>
+          </dl>
+        </div>
+
+        {/* Spend Estimate */}
+        <div className="detail-section card">
+          <h2 style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+            Technology Spend Estimate
+            {est && <><ConfBadge level={est.confidence_level} /><span style={{ fontSize: 11, color: "#6b7280", fontWeight: 400 }}>{est.model_version} · {est.estimate_date}</span></>}
+          </h2>
+
+          {est ? (
+            <>
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr>
+                    <th style={{ ...tdL, color: "#6b7280", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "2px solid #e5e7eb" }}>Category</th>
+                    <th style={{ ...tdV, color: "#6b7280", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "2px solid #e5e7eb" }}>Low</th>
+                    <th style={{ ...tdVB, fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "2px solid #e5e7eb" }}>Mid</th>
+                    <th style={{ ...tdV, color: "#6b7280", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "2px solid #e5e7eb" }}>High</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {spendRow("IT",      est.it_spend_low,      est.it_spend_mid,      est.it_spend_high)}
+                  {spendRow("OT",      est.ot_spend_low,      est.ot_spend_mid,      est.ot_spend_high)}
+                  {spendRow("Digital", est.digital_spend_low, est.digital_spend_mid, est.digital_spend_high)}
+                  {spendRow("AI",      est.ai_spend_low,      est.ai_spend_mid,      est.ai_spend_high)}
+                  {spendRow("Total",   est.total_spend_low,   est.total_spend_mid,   est.total_spend_high, true)}
+                  <tr style={{ background: "#eff6ff" }}>
+                    <td style={{ ...tdL, fontWeight: 700, color: "#1d4ed8" }}>WWT Addressable</td>
+                    <td style={{ ...tdV, color: "#6b7280" }}>{est.wwt_addressable_low != null ? formatCap(est.wwt_addressable_low) : "—"}</td>
+                    <td style={{ ...tdVB, color: "#1d4ed8" }}>
+                      {est.wwt_addressable_pct_low != null
+                        ? <>{est.wwt_addressable_pct_low.toFixed(0)}%</>
+                        : "—"}
+                    </td>
+                    <td style={{ ...tdV, color: "#16a34a" }}>{est.wwt_addressable_high != null ? formatCap(est.wwt_addressable_high) : "—"}</td>
+                  </tr>
+                </tbody>
+              </table>
+              {est.step1_value_chain && (
+                <p style={{ margin: "10px 0 0", fontSize: 12, color: "#6b7280" }}>
+                  Basis: {est.step1_value_chain} · {est.step2_denominator_used ?? "revenue"} denominator
+                  {est.step3_regional_multiplier != null && ` · ${est.step3_regional_multiplier}x regional`}
+                </p>
+              )}
+            </>
+          ) : (
+            <div style={{ padding: "24px 0", textAlign: "center" }}>
+              <p style={{ color: "#6b7280", fontSize: 13, marginBottom: 16 }}>
+                No estimate calculated yet for this company.
+              </p>
+              {calcError && (
+                <p style={{ color: "#dc2626", fontSize: 13, marginBottom: 12, background: "#fef2f2", padding: "8px 12px", borderRadius: 6 }}>
+                  {calcError}
+                </p>
+              )}
+              <button
+                onClick={handleCalculate}
+                disabled={calculating}
+                style={{ padding: "9px 22px", borderRadius: 7, border: "none", background: "#2563eb", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer", opacity: calculating ? 0.7 : 1 }}
+              >
+                {calculating ? "Calculating…" : "Calculate Estimate"}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Leadership ── */}
+      <div className="detail-section card">
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+          <h2 style={{ margin: 0 }}>Leadership Signals</h2>
+          <button
+            onClick={handleShowPast}
+            style={{ padding: "4px 12px", borderRadius: 5, border: "1px solid #d1d5db", background: "#fff", fontSize: 12, cursor: "pointer", color: "#374151" }}
+          >
+            {showPast ? "Current only" : "Show past leaders"}
+          </button>
+        </div>
+
+        {visibleLeaders.length === 0 ? (
+          <p style={{ color: "#9ca3af", fontSize: 13 }}>No leadership data collected yet.</p>
+        ) : (
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr>
+                {["Role", "Name", "Location", "Hire Date", "Category", "Score"].map(h => (
+                  <th key={h} style={{ padding: "6px 10px", textAlign: h === "Score" ? "right" : "left", fontSize: 11, fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "2px solid #e5e7eb" }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {visibleLeaders.map(l => (
+                <tr key={l.id} style={{ opacity: l.is_current ? 1 : 0.55 }}>
+                  <td style={tdL}>{l.role}</td>
+                  <td style={tdL}>
+                    {l.linkedin_url
+                      ? <a href={l.linkedin_url} target="_blank" rel="noopener noreferrer" style={{ color: "#2563eb" }}>{l.person_name ?? "—"}</a>
+                      : (l.person_name ?? <span style={{ color: "#9ca3af" }}>—</span>)}
+                  </td>
+                  <td style={tdL}>{[l.location_city, l.location_country].filter(Boolean).join(", ") || <span style={{ color: "#9ca3af" }}>—</span>}</td>
+                  <td style={tdL}>{l.hire_date ?? <span style={{ color: "#9ca3af" }}>—</span>}</td>
+                  <td style={tdL}>
+                    {l.spend_category
+                      ? <span style={{ background: "#f3f4f6", borderRadius: 4, padding: "1px 7px", fontSize: 11, fontWeight: 600, color: "#374151" }}>{l.spend_category}</span>
+                      : <span style={{ color: "#9ca3af" }}>—</span>}
+                  </td>
+                  <td style={{ ...tdL, textAlign: "right", fontWeight: 600, color: l.signal_score > 0 ? "#2563eb" : "#9ca3af" }}>
+                    {l.signal_score ?? 0}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* ── Signals feed ── */}
+      <div className="detail-section card">
+        <h2 style={{ marginBottom: 14 }}>Recent Signals</h2>
+
+        {signals.length === 0 ? (
+          <p style={{ color: "#9ca3af", fontSize: 13 }}>No signals collected yet — first batch enrichment will populate this.</p>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            {signals.map((s, i) => (
+              <div key={s.id} style={{ padding: "12px 4px", borderBottom: i < signals.length - 1 ? "1px solid #f3f4f6" : undefined, display: "flex", flexDirection: "column", gap: 5 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                  <SignalTypeBadge type={s.signal_type} />
+                  {s.signal_category && (
+                    <span style={{ background: "#f3f4f6", borderRadius: 4, padding: "2px 7px", fontSize: 11, fontWeight: 600, color: "#374151" }}>
+                      {s.signal_category}
+                    </span>
+                  )}
+                  <DirectionIcon dir={s.spend_impact_direction} />
+                  <span style={{ fontSize: 12, color: "#9ca3af", marginLeft: "auto" }}>{s.signal_date ?? s.created_at?.slice(0, 10) ?? ""}</span>
+                  {s.signal_url && (
+                    <a href={s.signal_url} target="_blank" rel="noopener noreferrer" style={{ color: "#6b7280", fontSize: 14, lineHeight: 1 }} title="Source">&#x1F517;</a>
+                  )}
+                </div>
+                {s.signal_title && (
+                  <div style={{ fontSize: 13, color: "#1a1a2e", fontWeight: 500 }}>{s.signal_title}</div>
+                )}
+                {s.signal_description && (
+                  <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.5 }}>
+                    {s.signal_description.length > 200 ? s.signal_description.slice(0, 200) + "…" : s.signal_description}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
+
 export default function CompanyDetail() {
   const { id, ticker } = useParams<{ id?: string; ticker?: string }>();
   const navigate = useNavigate();
   const [company, setCompany] = useState<CompanyDetailType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [tab, setTab] = useState<"overview" | "intelligence">("overview");
   const [showEdit, setShowEdit] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -387,7 +731,26 @@ export default function CompanyDetail() {
           </div>
         )}
 
-        <div className="detail-grid">
+        {/* Tab bar */}
+        <div style={{ display: "flex", borderBottom: "2px solid #e5e7eb", marginBottom: 20, gap: 0 }}>
+          {(["overview", "intelligence"] as const).map(t => (
+            <button key={t} onClick={() => setTab(t)} style={{
+              padding: "10px 22px", border: "none", background: "none", cursor: "pointer", fontSize: 14,
+              fontWeight: tab === t ? 700 : 400,
+              color: tab === t ? "#2563eb" : "#6b7280",
+              borderBottom: tab === t ? "2px solid #2563eb" : "2px solid transparent",
+              marginBottom: -2, textTransform: "capitalize",
+            }}>
+              {t}
+            </button>
+          ))}
+        </div>
+
+        {tab === "intelligence" && company && (
+          <IntelligenceTab companyId={company.id} />
+        )}
+
+        {tab === "overview" && <div className="detail-grid">
           <div>
             <div className="detail-section card">
               <h2>Company Info</h2>
@@ -486,7 +849,7 @@ export default function CompanyDetail() {
               )}
             </div>
           </div>
-        </div>
+        </div>}
       </div>
     </>
   );

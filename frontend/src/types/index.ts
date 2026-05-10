@@ -225,3 +225,108 @@ export interface CompanyUpdateRequest {
   acquisition_notes?: string;
   revenue_manually_set?: boolean;
 }
+
+// ── Intelligence ──────────────────────────────────────────────────────────────
+
+export interface IntelligenceProfile {
+  sub_sector?: string;
+  employee_count?: number;
+  employee_count_source?: string;
+  employee_count_updated?: string;
+  hq_city?: string;
+  hq_country?: string;
+  tech_decision_city?: string;
+  tech_decision_country?: string;
+  revenue_ttm?: number;
+  ebitda_ttm?: number;
+  gross_profit_ttm?: number;
+  enterprise_value?: number;
+  revenue_denominator?: string;
+  is_private?: boolean;
+  is_pe_backed?: boolean;
+  commodity_exposure_pct?: number;
+  ms_standardized?: boolean;
+  offshore_coe_confirmed?: boolean;
+  incumbent_msp?: string;
+  channel_mismatch_flag?: boolean;
+  channel_mismatch_note?: string;
+  data_enrichment_tier?: number;
+}
+
+export interface TechSignal {
+  id: number;
+  company_id?: number;
+  signal_type: string;
+  signal_category?: string;
+  signal_date?: string;
+  signal_title?: string;
+  signal_description?: string;
+  signal_url?: string;
+  sentiment?: string;
+  spend_impact_direction?: string;
+  score_points: number;
+  source?: string;
+  week_batch_date?: string;
+  created_at?: string;
+}
+
+export interface LeadershipRecord {
+  id: number;
+  company_id?: number;
+  role: string;
+  person_name?: string;
+  location_city?: string;
+  location_country?: string;
+  hire_date?: string;
+  linkedin_url?: string;
+  is_current: boolean;
+  departure_date?: string;
+  spend_category?: string;
+  signal_score: number;
+  source?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface SpendEstimate {
+  id: number;
+  company_id?: number;
+  estimate_date: string;
+  estimate_type: string;
+  fiscal_year?: number;
+  it_spend_low?: number;
+  it_spend_mid?: number;
+  it_spend_high?: number;
+  ot_spend_low?: number;
+  ot_spend_mid?: number;
+  ot_spend_high?: number;
+  digital_spend_low?: number;
+  digital_spend_mid?: number;
+  digital_spend_high?: number;
+  ai_spend_low?: number;
+  ai_spend_mid?: number;
+  ai_spend_high?: number;
+  total_spend_low?: number;
+  total_spend_mid?: number;
+  total_spend_high?: number;
+  wwt_addressable_low?: number;
+  wwt_addressable_high?: number;
+  wwt_addressable_pct_low?: number;
+  wwt_addressable_pct_high?: number;
+  confidence_level?: string;
+  model_version?: string;
+  step1_value_chain?: string;
+  step2_denominator_used?: string;
+  step3_regional_multiplier?: number;
+  key_drivers?: Record<string, unknown>;
+  flags?: Record<string, unknown>;
+  notes?: string;
+  created_at?: string;
+}
+
+export interface IntelligenceData {
+  profile: IntelligenceProfile;
+  signals: TechSignal[];
+  leadership: LeadershipRecord[];
+  latest_estimate: SpendEstimate | null;
+}
