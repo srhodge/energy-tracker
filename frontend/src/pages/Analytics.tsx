@@ -615,7 +615,7 @@ export default function Analytics() {
   }), []);
 
   const selectStyle: React.CSSProperties = {
-    padding: "7px 11px", border: "1px solid #d1d5db", borderRadius: 6,
+    padding: "5px 10px", border: "1px solid #d1d5db", borderRadius: 6,
     fontSize: 13, background: "#fff", color: "#1a1a2e", cursor: "pointer",
   };
 
@@ -623,7 +623,7 @@ export default function Analytics() {
 
   return (
     <>
-      <div className="page-header" style={{ justifyContent: "space-between", paddingTop: 56 }}>
+      <div className="page-header" style={{ justifyContent: "space-between", paddingTop: 44 }}>
         <div>
           <h1>Analytics</h1>
           {data && (
@@ -679,7 +679,7 @@ export default function Analytics() {
                 zIndex: 200,
                 background: "#1a1a2e",
                 borderBottom: "1px solid rgba(255,255,255,0.1)",
-                padding: "10px 28px",
+                padding: "6px 28px",
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
@@ -708,7 +708,7 @@ export default function Analytics() {
                   <button
                     onClick={() => { setTerrFilter("all"); setCountryFilter("all"); setPosFilter("all"); setPsFilter("all"); }}
                     style={{
-                      padding: "7px 11px", border: "1px solid #d1d5db", borderRadius: 6,
+                      padding: "5px 10px", border: "1px solid #d1d5db", borderRadius: 6,
                       fontSize: 13, background: "#fff", color: "#6b7280", cursor: "pointer",
                       display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap",
                     }}

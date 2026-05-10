@@ -18,12 +18,12 @@ const FILTER_BAR: React.CSSProperties = {
   position: "fixed", top: 0, left: 220, right: 0, zIndex: 200,
   background: "#1a1a2e",
   borderBottom: "1px solid rgba(255,255,255,0.1)",
-  padding: "10px 28px",
+  padding: "6px 28px",
   display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
 };
 
 const SEL: React.CSSProperties = {
-  padding: "7px 11px", border: "1px solid #d1d5db", borderRadius: 6,
+  padding: "5px 10px", border: "1px solid #d1d5db", borderRadius: 6,
   fontSize: 13, background: "#fff", color: "#1a1a2e", cursor: "pointer",
 };
 
@@ -33,7 +33,7 @@ const SEL_ACTIVE: React.CSSProperties = {
 };
 
 const RESET_BTN: React.CSSProperties = {
-  padding: "7px 11px", border: "1px solid #d1d5db", borderRadius: 6,
+  padding: "5px 10px", border: "1px solid #d1d5db", borderRadius: 6,
   fontSize: 13, background: "#fff", color: "#6b7280", cursor: "pointer",
   display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap",
 };
@@ -620,7 +620,7 @@ export default function CrmDashboard() {
     <>
       {renderFilterBar()}
 
-      <div className="page-header" style={{ paddingTop: showFilterBar ? 56 : undefined }}>
+      <div className="page-header" style={{ paddingTop: showFilterBar ? 44 : undefined }}>
         <h1>CRM Dashboard</h1>
       </div>
 
