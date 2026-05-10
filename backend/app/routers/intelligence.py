@@ -180,7 +180,7 @@ def get_intelligence(company_id: int, db: Session = Depends(get_db)):
     latest_estimate = db.scalars(
         select(CompanySpendEstimate)
         .where(CompanySpendEstimate.company_id == company_id)
-        .order_by(CompanySpendEstimate.estimate_date.desc())
+        .order_by(CompanySpendEstimate.estimate_date.desc(), CompanySpendEstimate.id.desc())
         .limit(1)
     ).first()
 
@@ -292,7 +292,7 @@ def get_spend_estimates(company_id: int, db: Session = Depends(get_db)):
     estimates = db.scalars(
         select(CompanySpendEstimate)
         .where(CompanySpendEstimate.company_id == company_id)
-        .order_by(CompanySpendEstimate.estimate_date.desc())
+        .order_by(CompanySpendEstimate.estimate_date.desc(), CompanySpendEstimate.id.desc())
     ).all()
     return [_estimate(e) for e in estimates]
 
