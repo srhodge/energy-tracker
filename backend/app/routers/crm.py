@@ -157,15 +157,39 @@ def crm_company_detail(company_id: int, db: Session = Depends(get_db)):
 
 # ── GET /api/crm/opportunities ────────────────────────────────────────────────
 
+# ── GET /api/crm/filter-options ───────────────────────────────────────────────
+
+@router.get("/filter-options")
+def crm_filter_options(db: Session = Depends(get_db)):
+    stages = [r[0] for r in db.execute(
+        select(CrmOpportunity.stage).distinct()
+        .where(CrmOpportunity.stage.isnot(None))
+        .order_by(CrmOpportunity.stage)
+    ).all()]
+    owners = [r[0] for r in db.execute(
+        select(CrmOpportunity.opportunity_owner).distinct()
+        .where(CrmOpportunity.opportunity_owner.isnot(None))
+        .order_by(CrmOpportunity.opportunity_owner)
+    ).all()]
+    periods = [r[0] for r in db.execute(
+        select(CrmOpportunity.fiscal_period).distinct()
+        .where(CrmOpportunity.fiscal_period.isnot(None))
+        .order_by(CrmOpportunity.fiscal_period)
+    ).all()]
+    return {"stages": stages, "owners": owners, "fiscal_periods": periods}
+
+
 @router.get("/opportunities")
 def crm_opportunities(
-    stage:        Optional[str] = Query(None),
-    owner:        Optional[str] = Query(None),
+    stage:        Optional[str]  = Query(None),
+    owner:        Optional[str]  = Query(None),
     fiscal_period: Optional[str] = Query(None),
-    account_id:   Optional[int] = Query(None),
-    lead_source:  Optional[str] = Query(None),
-    page:         int           = Query(1, ge=1),
-    page_size:    int           = Query(50, ge=1, le=500),
+    account_id:   Optional[int]  = Query(None),
+    account_name: Optional[str]  = Query(None),
+    lead_source:  Optional[str]  = Query(None),
+    active_only:  bool           = Query(False),
+    page:         int            = Query(1, ge=1),
+    page_size:    int            = Query(50, ge=1, le=500),
     db: Session = Depends(get_db),
 ):
     q = select(CrmOpportunity)
@@ -177,8 +201,12 @@ def crm_opportunities(
         q = q.where(CrmOpportunity.fiscal_period == fiscal_period)
     if account_id:
         q = q.where(CrmOpportunity.account_id == account_id)
+    if account_name:
+        q = q.where(CrmOpportunity.account_name.ilike(f"%{account_name}%"))
     if lead_source:
         q = q.where(CrmOpportunity.lead_source == lead_source)
+    if active_only:
+        q = q.where(~CrmOpportunity.stage.ilike("closed%"))
 
     total = db.scalar(select(func.count()).select_from(q.subquery()))
     opps  = db.scalars(

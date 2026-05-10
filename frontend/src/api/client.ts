@@ -197,14 +197,17 @@ export function fetchCrmCompany(id: number): Promise<any> {
 
 export function fetchCrmOpportunities(params: {
   stage?: string; owner?: string; fiscal_period?: string;
-  account_id?: number; lead_source?: string; page?: number; page_size?: number;
+  account_id?: number; account_name?: string; lead_source?: string;
+  active_only?: boolean; page?: number; page_size?: number;
 } = {}): Promise<any> {
   const q = new URLSearchParams();
   if (params.stage)         q.set("stage",         params.stage);
   if (params.owner)         q.set("owner",          params.owner);
   if (params.fiscal_period) q.set("fiscal_period",  params.fiscal_period);
   if (params.account_id)    q.set("account_id",     String(params.account_id));
+  if (params.account_name)  q.set("account_name",   params.account_name);
   if (params.lead_source)   q.set("lead_source",    params.lead_source);
+  if (params.active_only)   q.set("active_only",    "true");
   if (params.page)          q.set("page",           String(params.page));
   if (params.page_size)     q.set("page_size",      String(params.page_size));
   const qs = q.toString();
@@ -213,6 +216,10 @@ export function fetchCrmOpportunities(params: {
 
 export function fetchCrmOwners(): Promise<any[]> {
   return get("/api/crm/owners");
+}
+
+export function fetchCrmFilterOptions(): Promise<{ stages: string[]; owners: string[]; fiscal_periods: string[] }> {
+  return get("/api/crm/filter-options");
 }
 
 export function fetchEvents(params: { event_type?: EventType; company_id?: number; limit?: number } = {}): Promise<EventWithCompany[]> {
