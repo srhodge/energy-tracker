@@ -14,7 +14,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models import (
-    Company, Financial,
+    Company, CompanyStatus, Financial,
     CompanyLeadership, CompanyTechSignal, CompanySpendEstimate,
 )
 
@@ -73,6 +73,8 @@ def estimate(company_id: int, db: Session) -> dict:
     c = db.get(Company, company_id)
     if not c:
         raise ValueError(f"Company {company_id} not found")
+    if c.status != CompanyStatus.active:
+        raise ValueError(f"Company {company_id} ({c.name}) is not active (status={c.status.value})")
 
     # ── STEP 1: baseline ─────────────────────────────────────────────────────
     it_pcts, ot_pcts, dig_pcts, ai_pcts = _BASELINE.get(

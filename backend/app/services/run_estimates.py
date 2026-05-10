@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
 from sqlalchemy import select
 from app.database import SessionLocal
-from app.models import Company
+from app.models import Company, CompanyStatus
 from app.services.spend_estimator import estimate
 
 
@@ -98,23 +98,35 @@ def main():
 
     with SessionLocal() as db:
         if args.company_id:
-            companies = db.scalars(
+            all_requested = db.scalars(
                 select(Company).where(Company.id.in_(args.company_id))
             ).all()
+            companies = [c for c in all_requested if c.status == CompanyStatus.active]
+            skipped = [c for c in all_requested if c.status != CompanyStatus.active]
+            if skipped:
+                print(f"Skipping {len(skipped)} non-active companies:")
+                for c in skipped:
+                    print(f"  - {c.name} (id={c.id}, status={c.status.value})")
         elif args.tier:
             companies = db.scalars(
-                select(Company).where(Company.data_enrichment_tier.in_(args.tier))
+                select(Company)
+                .where(
+                    Company.data_enrichment_tier.in_(args.tier),
+                    Company.status == CompanyStatus.active,
+                )
             ).all()
         else:
-            companies = db.scalars(select(Company)).all()
+            companies = db.scalars(
+                select(Company).where(Company.status == CompanyStatus.active)
+            ).all()
 
     if not companies:
-        print("No companies matched.")
+        print("No active companies matched.")
         sys.exit(0)
 
     tier_map = {c.id: c.data_enrichment_tier for c in companies}
     ids = [c.id for c in companies]
-    print(f"Running estimates for {len(ids)} companies...")
+    print(f"Running estimates for {len(ids)} active companies...")
 
     run(ids, tier_map)
 
