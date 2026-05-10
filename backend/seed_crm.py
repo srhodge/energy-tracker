@@ -22,7 +22,7 @@ if not settings.database_url.startswith("postgresql"):
     print("Update backend/.env with the public DATABASE_URL from Railway.")
     sys.exit(1)
 
-XLS_PATH = r"C:\Users\sfsal\Downloads\report1778360280346.xls"
+XLS_PATH = r"C:\Users\sfsal\Downloads\report1778365957341.xls"
 
 # ── Models ────────────────────────────────────────────────────────────────────
 
