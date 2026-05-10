@@ -234,14 +234,15 @@ function TierBadge({ tier }: { tier?: number }) {
 
 function ConfBadge({ level }: { level?: string }) {
   if (!level) return null;
-  const s = level === "HIGH"
-    ? { bg: "#f0fdf4", color: "#166534", border: "#bbf7d0" }
-    : level === "MEDIUM"
-    ? { bg: "#fffbeb", color: "#92400e", border: "#fde68a" }
-    : { bg: "#fef2f2", color: "#991b1b", border: "#fecaca" };
+  const s =
+    level === "HIGH"        ? { bg: "#f0fdf4", color: "#166534", border: "#bbf7d0" } :
+    level === "MEDIUM_HIGH" ? { bg: "#ecfdf5", color: "#065f46", border: "#6ee7b7" } :
+    level === "MEDIUM"      ? { bg: "#fffbeb", color: "#92400e", border: "#fde68a" } :
+    level === "LOW_MEDIUM"  ? { bg: "#fff7ed", color: "#9a3412", border: "#fed7aa" } :
+                              { bg: "#fef2f2", color: "#991b1b", border: "#fecaca" };
   return (
     <span style={{ background: s.bg, color: s.color, border: `1px solid ${s.border}`, borderRadius: 4, padding: "2px 8px", fontSize: 11, fontWeight: 700, letterSpacing: "0.03em" }}>
-      {level}
+      {level.replace("_", " ")}
     </span>
   );
 }
@@ -438,10 +439,18 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                 </tbody>
               </table>
               {est.step1_value_chain && (
-                <p style={{ margin: "10px 0 0", fontSize: 12, color: "#6b7280" }}>
-                  Basis: {est.step1_value_chain} · {est.step2_denominator_used ?? "revenue"} denominator
-                  {est.step3_regional_multiplier != null && ` · ${est.step3_regional_multiplier}x regional`}
-                </p>
+                <div style={{ marginTop: 10, fontSize: 12, color: "#6b7280", borderTop: "1px solid #f3f4f6", paddingTop: 8 }}>
+                  <span style={{ fontWeight: 600 }}>Model basis:</span> {est.step1_value_chain} · {est.step2_denominator_used ?? "revenue"} denominator · {est.step3_regional_multiplier}x regional
+                  {est.flags && Object.keys(est.flags).length > 0 && (
+                    <div style={{ marginTop: 4 }}>
+                      {Object.entries(est.flags).map(([k, v]) => (
+                        <span key={k} style={{ background: "#fef3c7", border: "1px solid #fde68a", borderRadius: 3, padding: "1px 6px", fontSize: 11, marginRight: 4, color: "#92400e", display: "inline-block", marginBottom: 2 }}>
+                          {String(v) === "true" ? k.replace(/_/g, " ") : `${k.replace(/_/g, " ")}: ${v}`}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               )}
             </>
           ) : (
