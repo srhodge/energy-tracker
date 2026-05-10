@@ -95,7 +95,7 @@ def patch_company(data: dict, base_url: str, dry_run: bool = False) -> dict:
         try:
             result = _request("PATCH", url, profile, dry_run=dry_run)
             summary["profile"] = "updated" if not dry_run else "dry_run"
-            print(f"  [profile] {'updated' if not dry_run else 'dry_run'} — {list(profile.keys())}")
+            print(f"  [profile] {'updated' if not dry_run else 'dry_run'}: {list(profile.keys())}")
         except RuntimeError as e:
             summary["errors"].append(f"profile: {e}")
             print(f"  [profile] ERROR: {e}")
@@ -111,7 +111,7 @@ def patch_company(data: dict, base_url: str, dry_run: bool = False) -> dict:
             result = _request("POST", url, rec, dry_run=dry_run)
             created_id = result.get("id", "?") if not dry_run else "dry_run"
             summary["leadership"].append({"role": role, "person_name": name, "id": created_id})
-            print(f"  [leadership] {role}: {name} → id={created_id}")
+            print(f"  [leadership] {role}: {name} (id={created_id})")
         except RuntimeError as e:
             summary["errors"].append(f"leadership/{role}: {e}")
             print(f"  [leadership] {role} ERROR: {e}")
@@ -124,7 +124,7 @@ def patch_company(data: dict, base_url: str, dry_run: bool = False) -> dict:
             result = _request("POST", url, sig, dry_run=dry_run)
             created_id = result.get("id", "?") if not dry_run else "dry_run"
             summary["signals"].append({"title": title, "id": created_id})
-            print(f"  [signal] {title!r} → id={created_id}")
+            print(f"  [signal] {title!r} (id={created_id})")
         except RuntimeError as e:
             summary["errors"].append(f"signal/{title}: {e}")
             print(f"  [signal] ERROR: {e}")

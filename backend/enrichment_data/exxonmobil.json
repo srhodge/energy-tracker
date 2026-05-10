@@ -1,0 +1,34 @@
+{
+  "company_id": 2,
+  "profile": {
+    "sub_sector": "Integrated O&G",
+    "employee_count": 60900,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Spring",
+    "hq_country": "United States",
+    "tech_decision_city": "Spring",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 323905000000,
+    "ebitda_ttm": 39530000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 65,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": true,
+    "channel_mismatch_flag": false
+  },
+  "leadership": [
+    {"role": "CEO", "person_name": "Darren W. Woods", "location_city": "Spring", "location_country": "United States", "is_current": true, "spend_category": "All", "signal_score": 1, "source": "company_website"},
+    {"role": "CFO", "person_name": "Kathryn A. Mikells", "location_city": "Spring", "location_country": "United States", "is_current": true, "spend_category": "All", "signal_score": 1, "source": "company_website"},
+    {"role": "CISO", "person_name": "Bryan Wesley Pate", "location_city": "Spring", "location_country": "United States", "is_current": true, "spend_category": "IT", "signal_score": 2, "source": "zoominfo"},
+    {"role": "OT_CISO", "person_name": "Shazad Shafi", "location_city": "Spring", "location_country": "United States", "is_current": true, "spend_category": "OT", "signal_score": 2, "source": "news"},
+    {"role": "VP_Technology", "person_name": "William Cirioli", "location_city": "Spring", "location_country": "United States", "is_current": true, "spend_category": "IT", "signal_score": 1, "source": "comparably"}
+  ],
+  "signals": [
+    {"signal_type": "partnership", "signal_category": "AI", "signal_date": "2025-01-01", "signal_title": "ExxonMobil commissions Discovery 6 supercomputer with HPE and NVIDIA for seismic processing", "signal_description": "ExxonMobil commissioned its Discovery Six supercomputer developed with Hewlett Packard Enterprise and NVIDIA to accelerate seismic processing and exploration. Processing that took months now takes weeks.", "signal_url": "https://naturalgasintel.com/news/exxonmobil-tapping-data-center-ai-technology-to-drive-low-carbon-natural-gas-demand/", "sentiment": "positive", "spend_impact_direction": "increase", "score_points": 3, "source": "news"},
+    {"signal_type": "partnership", "signal_category": "AI", "signal_date": "2025-06-01", "signal_title": "ExxonMobil partners with Intel and UNICOM Engineering on data center immersion cooling technology", "signal_description": "ExxonMobil expanded its data center strategy through partnerships with Intel and UNICOM Engineering to develop immersion cooling solutions, positioning itself as a full-stack energy partner for AI data centers.", "signal_url": "https://enkiai.com/exxonmobil-ai-initiatives-for-2025-key-projects-strategies-and-partnerships", "sentiment": "positive", "spend_impact_direction": "increase", "score_points": 2, "source": "news"},
+    {"signal_type": "partnership", "signal_category": "Digital", "signal_date": "2024-01-01", "signal_title": "ExxonMobil Microsoft partnership for Permian Basin IoT and cloud infrastructure", "signal_description": "ExxonMobil collaborates with Microsoft to use IoT technologies in Permian Basin operations to monitor and optimize field assets. Data collected from extensive sensor network stored in cloud.", "signal_url": "https://corporate.exxonmobil.com/who-we-are/technology-and-collaborations/digital-technologies", "sentiment": "positive", "spend_impact_direction": "increase", "score_points": 2, "source": "company_website"},
+    {"signal_type": "partnership", "signal_category": "AI", "signal_date": "2025-03-01", "signal_title": "ExxonMobil partners with CoLab Software for AI engineering tools on offshore rigs", "signal_description": "ExxonMobil invested $5.6 million partnership with CoLab Software to deploy AI engineering tools on offshore rigs, establishing an AI development hub in Newfoundland and Labrador Canada.", "signal_url": "https://enkiai.com/exxonmobil-ai-initiatives-for-2025-key-projects-strategies-and-partnerships", "sentiment": "positive", "spend_impact_direction": "increase", "score_points": 2, "source": "news"},
+    {"signal_type": "strategic_pivot", "signal_category": "AI", "signal_date": "2025-12-01", "signal_title": "ExxonMobil advancing low-carbon data center projects targeting FID by late 2026", "signal_description": "ExxonMobil advancing integrated CCS-enabled low-carbon data center projects targeting a final investment decision by late 2026, positioning company as energy-as-a-service provider for AI hyperscalers.", "signal_url": "https://corporate.exxonmobil.com/news/news-releases/2025/1209-exxonmobil-raises-2030-plan-transformation", "sentiment": "positive", "spend_impact_direction": "increase", "score_points": 3, "source": "press_release"}
+  ]
+}
