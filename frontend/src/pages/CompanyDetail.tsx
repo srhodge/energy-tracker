@@ -326,22 +326,24 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
   const tdV: React.CSSProperties = { padding: "7px 10px", fontSize: 13, color: "#1a1a2e", borderBottom: "1px solid #f3f4f6", textAlign: "right" };
   const tdVB: React.CSSProperties = { ...tdV, fontWeight: 700 };
 
-  function spendRow(label: string, low?: number, mid?: number, high?: number, bold = false, totalMid?: number) {
+  function spendRow(label: string, low?: number, mid?: number, high?: number, bold = false, totalLow?: number, totalMid?: number, totalHigh?: number) {
     const cell = bold ? tdVB : tdV;
     const rowBg = bold ? "#f8fafc" : undefined;
-    const pct = (!bold && totalMid && mid != null && totalMid > 0)
-      ? Math.round((mid / totalMid) * 100)
-      : null;
+    const pctLow  = (!bold && totalLow  && low  != null && totalLow  > 0) ? Math.round((low  / totalLow)  * 100) : null;
+    const pctMid  = (!bold && totalMid  && mid  != null && totalMid  > 0) ? Math.round((mid  / totalMid)  * 100) : null;
+    const pctHigh = (!bold && totalHigh && high != null && totalHigh > 0) ? Math.round((high / totalHigh) * 100) : null;
     return (
       <tr key={label} style={{ background: rowBg }}>
         <td style={{ ...tdL, fontWeight: bold ? 700 : 500, paddingLeft: bold ? 10 : 14 }}>{label}</td>
-        <td style={{ ...cell, color: "#6b7280" }}>{low != null ? formatCap(low) : "—"}</td>
-        <td style={cell}>
-          {mid != null
-            ? <>{formatCap(mid)}{pct != null && <span style={{ fontSize: 11, color: "#9ca3af", marginLeft: 4 }}>({pct}%)</span>}</>
-            : "—"}
+        <td style={{ ...cell, color: "#6b7280" }}>
+          {low != null ? <>{formatCap(low)}{pctLow != null && <span style={{ fontSize: 10, color: "#9ca3af", marginLeft: 4 }}>({pctLow}%)</span>}</> : "—"}
         </td>
-        <td style={{ ...cell, color: "#16a34a" }}>{high != null ? formatCap(high) : "—"}</td>
+        <td style={cell}>
+          {mid != null ? <>{formatCap(mid)}{pctMid != null && <span style={{ fontSize: 10, color: "#9ca3af", marginLeft: 4 }}>({pctMid}%)</span>}</> : "—"}
+        </td>
+        <td style={{ ...cell, color: "#16a34a" }}>
+          {high != null ? <>{formatCap(high)}{pctHigh != null && <span style={{ fontSize: 10, color: "#9ca3af", marginLeft: 4 }}>({pctHigh}%)</span>}</> : "—"}
+        </td>
       </tr>
     );
   }
@@ -405,10 +407,10 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
             <dt>Offshore CoE</dt>
             <dd>
               {p.offshore_coe_confirmed == null ? <NC /> : p.offshore_coe_confirmed
-                ? <span style={{ color: "#dc2626", fontWeight: 600 }}>
+                ? <>
                     Confirmed
-                    <span style={{ fontWeight: 400, marginLeft: 4 }}>— reduces addressable by 8%</span>
-                  </span>
+                    <span style={{ fontSize: 11, color: "#6b7280", marginLeft: 6 }}>— reduces addressable by 8%</span>
+                  </>
                 : "No"}
             </dd>
 
@@ -416,7 +418,7 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
             <dd>
               {p.incumbent_msp
                 ? <>
-                    <span style={{ fontWeight: 600, color: "#b45309" }}>{p.incumbent_msp}</span>
+                    {p.incumbent_msp}
                     <span style={{ fontSize: 11, color: "#6b7280", marginLeft: 6 }}>(-10% addressable)</span>
                   </>
                 : <NC />}
@@ -425,10 +427,11 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
             <dt>Channel Mismatch</dt>
             <dd>
               {p.channel_mismatch_flag
-                ? <span style={{ color: "#dc2626", fontWeight: 600 }}>
-                    Flagged (-8% addressable)
-                    {p.channel_mismatch_note && <span style={{ fontWeight: 400, color: "#6b7280", marginLeft: 6 }}>— {p.channel_mismatch_note}</span>}
-                  </span>
+                ? <>
+                    Flagged
+                    <span style={{ fontSize: 11, color: "#6b7280", marginLeft: 6 }}>(-8% addressable)</span>
+                    {p.channel_mismatch_note && <span style={{ fontSize: 11, color: "#6b7280", marginLeft: 6 }}>— {p.channel_mismatch_note}</span>}
+                  </>
                 : p.channel_mismatch_flag === false ? "Clear" : <NC />}
             </dd>
           </dl>
@@ -453,24 +456,32 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {spendRow("IT",      est.it_spend_low,      est.it_spend_mid,      est.it_spend_high,      false, est.total_spend_mid ?? undefined)}
-                  {spendRow("OT",      est.ot_spend_low,      est.ot_spend_mid,      est.ot_spend_high,      false, est.total_spend_mid ?? undefined)}
-                  {spendRow("Digital", est.digital_spend_low, est.digital_spend_mid, est.digital_spend_high, false, est.total_spend_mid ?? undefined)}
-                  {spendRow("AI",      est.ai_spend_low,      est.ai_spend_mid,      est.ai_spend_high,      false, est.total_spend_mid ?? undefined)}
+                  {spendRow("IT",      est.it_spend_low,      est.it_spend_mid,      est.it_spend_high,      false, est.total_spend_low ?? undefined, est.total_spend_mid ?? undefined, est.total_spend_high ?? undefined)}
+                  {spendRow("OT",      est.ot_spend_low,      est.ot_spend_mid,      est.ot_spend_high,      false, est.total_spend_low ?? undefined, est.total_spend_mid ?? undefined, est.total_spend_high ?? undefined)}
+                  {spendRow("Digital", est.digital_spend_low, est.digital_spend_mid, est.digital_spend_high, false, est.total_spend_low ?? undefined, est.total_spend_mid ?? undefined, est.total_spend_high ?? undefined)}
+                  {spendRow("AI",      est.ai_spend_low,      est.ai_spend_mid,      est.ai_spend_high,      false, est.total_spend_low ?? undefined, est.total_spend_mid ?? undefined, est.total_spend_high ?? undefined)}
                   {spendRow("Total",   est.total_spend_low,   est.total_spend_mid,   est.total_spend_high,   true)}
                   <tr style={{ background: "#eff6ff" }}>
                     <td style={{ ...tdL, fontWeight: 700, color: "#1d4ed8" }}>WWT Addressable</td>
-                    <td style={{ ...tdV, color: "#6b7280" }}>{est.wwt_addressable_low != null ? formatCap(est.wwt_addressable_low) : "—"}</td>
+                    <td style={{ ...tdV, color: "#6b7280" }}>
+                      {est.wwt_addressable_low != null
+                        ? <>{formatCap(est.wwt_addressable_low)}{est.wwt_addressable_pct_low != null && <span style={{ fontSize: 10, color: "#9ca3af", marginLeft: 4 }}>({est.wwt_addressable_pct_low.toFixed(0)}%)</span>}</>
+                        : "—"}
+                    </td>
                     <td style={{ ...tdVB, color: "#1d4ed8" }}>
                       {(() => {
                         const pct = est.wwt_addressable_pct_low;
                         const mid = est.total_spend_mid != null && pct != null ? est.total_spend_mid * pct / 100 : null;
                         return mid != null
-                          ? <>{formatCap(mid)}<span style={{ fontSize: 11, color: "#6b7280", marginLeft: 4 }}>({pct!.toFixed(0)}%)</span></>
+                          ? <>{formatCap(mid)}<span style={{ fontSize: 10, color: "#6b7280", marginLeft: 4 }}>({pct!.toFixed(0)}%)</span></>
                           : pct != null ? <>{pct.toFixed(0)}%</> : "—";
                       })()}
                     </td>
-                    <td style={{ ...tdV, color: "#16a34a" }}>{est.wwt_addressable_high != null ? formatCap(est.wwt_addressable_high) : "—"}</td>
+                    <td style={{ ...tdV, color: "#16a34a" }}>
+                      {est.wwt_addressable_high != null
+                        ? <>{formatCap(est.wwt_addressable_high)}{est.wwt_addressable_pct_high != null && <span style={{ fontSize: 10, color: "#9ca3af", marginLeft: 4 }}>({est.wwt_addressable_pct_high.toFixed(0)}%)</span>}</>
+                        : "—"}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -514,18 +525,29 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                         {showAddrBreakdown ? "hide calculation" : "show calculation"}
                       </button>
                     </div>
-                    {showAddrBreakdown && (
-                      <div style={{ marginTop: 6, background: "#f8fafc", border: "1px solid #e5e7eb", borderRadius: 5, padding: "8px 10px", fontSize: 11, lineHeight: 1.8 }}>
-                        {addrItems.map((item, i) => (
-                          <div key={i} style={{ color: item.delta < 0 ? "#dc2626" : item.delta > 0 && i > 0 ? "#16a34a" : "#374151" }}>
-                            {i === 0 ? `Base: ${item.delta}%` : `${item.delta > 0 ? "+" : ""}${item.delta}% ${item.label}`}
+                    {showAddrBreakdown && (() => {
+                      const rawPct = addrItems.reduce((s, i) => s + i.delta, 0);
+                      const isClamped = finalPct !== rawPct;
+                      const isFloor = isClamped && finalPct > rawPct;
+                      const isCeil  = isClamped && finalPct < rawPct;
+                      return (
+                        <div style={{ marginTop: 6, background: "#f8fafc", border: "1px solid #e5e7eb", borderRadius: 5, padding: "8px 10px", fontSize: 11, lineHeight: 1.8 }}>
+                          {addrItems.map((item, i) => (
+                            <div key={i} style={{ color: item.delta < 0 ? "#dc2626" : item.delta > 0 && i > 0 ? "#16a34a" : "#374151" }}>
+                              {i === 0 ? `Base: ${item.delta}%` : `${item.delta > 0 ? "+" : ""}${item.delta}% ${item.label}`}
+                            </div>
+                          ))}
+                          <div style={{ borderTop: "1px solid #e5e7eb", marginTop: 4, paddingTop: 4, color: "#374151" }}>
+                            = Subtotal: {rawPct}%
                           </div>
-                        ))}
-                        <div style={{ borderTop: "1px solid #e5e7eb", marginTop: 4, paddingTop: 4, fontWeight: 700, color: "#374151" }}>
-                          = Final: {finalPct}%{finalPct !== addrItems.reduce((s, i) => s + i.delta, 0) && " (clamped)"}
+                          {isFloor && <div style={{ color: "#2563eb" }}>Floor applied (min 12%)</div>}
+                          {isCeil  && <div style={{ color: "#dc2626" }}>Ceiling applied (max 42%)</div>}
+                          <div style={{ fontWeight: 700, color: "#374151", marginTop: isClamped ? 0 : 2 }}>
+                            = Final: {finalPct}%
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      );
+                    })()}
                   </div>
                 );
               })()}
