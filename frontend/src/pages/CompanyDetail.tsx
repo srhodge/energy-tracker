@@ -283,6 +283,7 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
   const [allLeaders, setAllLeaders] = useState<LeadershipRecord[] | null>(null);
   const [calculating, setCalculating] = useState(false);
   const [calcError, setCalcError] = useState<string | null>(null);
+  const [showAddrBreakdown, setShowAddrBreakdown] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -325,14 +326,21 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
   const tdV: React.CSSProperties = { padding: "7px 10px", fontSize: 13, color: "#1a1a2e", borderBottom: "1px solid #f3f4f6", textAlign: "right" };
   const tdVB: React.CSSProperties = { ...tdV, fontWeight: 700 };
 
-  function spendRow(label: string, low?: number, mid?: number, high?: number, bold = false) {
+  function spendRow(label: string, low?: number, mid?: number, high?: number, bold = false, totalMid?: number) {
     const cell = bold ? tdVB : tdV;
     const rowBg = bold ? "#f8fafc" : undefined;
+    const pct = (!bold && totalMid && mid != null && totalMid > 0)
+      ? Math.round((mid / totalMid) * 100)
+      : null;
     return (
       <tr key={label} style={{ background: rowBg }}>
         <td style={{ ...tdL, fontWeight: bold ? 700 : 500, paddingLeft: bold ? 10 : 14 }}>{label}</td>
         <td style={{ ...cell, color: "#6b7280" }}>{low != null ? formatCap(low) : "—"}</td>
-        <td style={cell}>{mid != null ? formatCap(mid) : "—"}</td>
+        <td style={cell}>
+          {mid != null
+            ? <>{formatCap(mid)}{pct != null && <span style={{ fontSize: 11, color: "#9ca3af", marginLeft: 4 }}>({pct}%)</span>}</>
+            : "—"}
+        </td>
         <td style={{ ...cell, color: "#16a34a" }}>{high != null ? formatCap(high) : "—"}</td>
       </tr>
     );
@@ -357,7 +365,14 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
             <dt>Employees</dt>
             <dd>
               {p.employee_count != null
-                ? <>{p.employee_count.toLocaleString()}{p.employee_count_source && <span style={{ fontSize: 11, color: "#6b7280", marginLeft: 6 }}>({p.employee_count_source})</span>}</>
+                ? <>
+                    {p.employee_count.toLocaleString()}
+                    {p.employee_count_source && (
+                      <span style={{ fontSize: 11, color: "#6b7280", marginLeft: 6 }}>
+                        ({p.employee_count_source.replace(/_/g, " ")})
+                      </span>
+                    )}
+                  </>
                 : <NC />}
             </dd>
 
@@ -368,10 +383,18 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
             <dd>{(p.tech_decision_city || p.tech_decision_country) ? [p.tech_decision_city, p.tech_decision_country].filter(Boolean).join(", ") : <NC />}</dd>
 
             <dt>Revenue TTM</dt>
-            <dd>{p.revenue_ttm != null ? formatCap(p.revenue_ttm) : <NC />}</dd>
+            <dd>
+              {p.revenue_ttm != null
+                ? <>{formatCap(p.revenue_ttm)}<span style={{ fontSize: 11, color: "#6b7280", marginLeft: 6 }}>(annual report 2025)</span></>
+                : <NC />}
+            </dd>
 
             <dt>EBITDA TTM</dt>
-            <dd>{p.ebitda_ttm != null ? formatCap(p.ebitda_ttm) : <NC />}</dd>
+            <dd>
+              {p.ebitda_ttm != null
+                ? <>{formatCap(p.ebitda_ttm)}<span style={{ fontSize: 11, color: "#6b7280", marginLeft: 6 }}>(annual report 2025)</span></>
+                : <NC />}
+            </dd>
 
             <dt>Private</dt>
             <dd>{p.is_private == null ? <NC /> : p.is_private ? "Yes" : "No"}</dd>
@@ -380,22 +403,31 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
             <dd>{p.is_pe_backed == null ? <NC /> : p.is_pe_backed ? "Yes" : "No"}</dd>
 
             <dt>Offshore CoE</dt>
-            <dd>{p.offshore_coe_confirmed == null ? <NC /> : p.offshore_coe_confirmed
-              ? <span style={{ color: "#dc2626", fontWeight: 600 }}>Confirmed</span>
-              : "No"}
+            <dd>
+              {p.offshore_coe_confirmed == null ? <NC /> : p.offshore_coe_confirmed
+                ? <span style={{ color: "#dc2626", fontWeight: 600 }}>
+                    Confirmed
+                    <span style={{ fontWeight: 400, marginLeft: 4 }}>— reduces addressable by 8%</span>
+                  </span>
+                : "No"}
             </dd>
 
             <dt>Incumbent MSP</dt>
-            <dd>{p.incumbent_msp
-              ? <span style={{ fontWeight: 600, color: "#b45309" }}>{p.incumbent_msp}</span>
-              : <NC />}
+            <dd>
+              {p.incumbent_msp
+                ? <>
+                    <span style={{ fontWeight: 600, color: "#b45309" }}>{p.incumbent_msp}</span>
+                    <span style={{ fontSize: 11, color: "#6b7280", marginLeft: 6 }}>(-10% addressable)</span>
+                  </>
+                : <NC />}
             </dd>
 
             <dt>Channel Mismatch</dt>
             <dd>
               {p.channel_mismatch_flag
                 ? <span style={{ color: "#dc2626", fontWeight: 600 }}>
-                    Flagged{p.channel_mismatch_note && <span style={{ fontWeight: 400, color: "#6b7280", marginLeft: 6 }}>— {p.channel_mismatch_note}</span>}
+                    Flagged (-8% addressable)
+                    {p.channel_mismatch_note && <span style={{ fontWeight: 400, color: "#6b7280", marginLeft: 6 }}>— {p.channel_mismatch_note}</span>}
                   </span>
                 : p.channel_mismatch_flag === false ? "Clear" : <NC />}
             </dd>
@@ -421,37 +453,82 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {spendRow("IT",      est.it_spend_low,      est.it_spend_mid,      est.it_spend_high)}
-                  {spendRow("OT",      est.ot_spend_low,      est.ot_spend_mid,      est.ot_spend_high)}
-                  {spendRow("Digital", est.digital_spend_low, est.digital_spend_mid, est.digital_spend_high)}
-                  {spendRow("AI",      est.ai_spend_low,      est.ai_spend_mid,      est.ai_spend_high)}
-                  {spendRow("Total",   est.total_spend_low,   est.total_spend_mid,   est.total_spend_high, true)}
+                  {spendRow("IT",      est.it_spend_low,      est.it_spend_mid,      est.it_spend_high,      false, est.total_spend_mid ?? undefined)}
+                  {spendRow("OT",      est.ot_spend_low,      est.ot_spend_mid,      est.ot_spend_high,      false, est.total_spend_mid ?? undefined)}
+                  {spendRow("Digital", est.digital_spend_low, est.digital_spend_mid, est.digital_spend_high, false, est.total_spend_mid ?? undefined)}
+                  {spendRow("AI",      est.ai_spend_low,      est.ai_spend_mid,      est.ai_spend_high,      false, est.total_spend_mid ?? undefined)}
+                  {spendRow("Total",   est.total_spend_low,   est.total_spend_mid,   est.total_spend_high,   true)}
                   <tr style={{ background: "#eff6ff" }}>
                     <td style={{ ...tdL, fontWeight: 700, color: "#1d4ed8" }}>WWT Addressable</td>
                     <td style={{ ...tdV, color: "#6b7280" }}>{est.wwt_addressable_low != null ? formatCap(est.wwt_addressable_low) : "—"}</td>
                     <td style={{ ...tdVB, color: "#1d4ed8" }}>
-                      {est.wwt_addressable_pct_low != null
-                        ? <>{est.wwt_addressable_pct_low.toFixed(0)}%</>
-                        : "—"}
+                      {(() => {
+                        const pct = est.wwt_addressable_pct_low;
+                        const mid = est.total_spend_mid != null && pct != null ? est.total_spend_mid * pct / 100 : null;
+                        return mid != null
+                          ? <>{formatCap(mid)}<span style={{ fontSize: 11, color: "#6b7280", marginLeft: 4 }}>({pct!.toFixed(0)}%)</span></>
+                          : pct != null ? <>{pct.toFixed(0)}%</> : "—";
+                      })()}
                     </td>
                     <td style={{ ...tdV, color: "#16a34a" }}>{est.wwt_addressable_high != null ? formatCap(est.wwt_addressable_high) : "—"}</td>
                   </tr>
                 </tbody>
               </table>
-              {est.step1_value_chain && (
-                <div style={{ marginTop: 10, fontSize: 12, color: "#6b7280", borderTop: "1px solid #f3f4f6", paddingTop: 8 }}>
-                  <span style={{ fontWeight: 600 }}>Model basis:</span> {est.step1_value_chain} · {est.step2_denominator_used ?? "revenue"} denominator · {est.step3_regional_multiplier}x regional
-                  {est.flags && Object.keys(est.flags).length > 0 && (
-                    <div style={{ marginTop: 4 }}>
-                      {Object.entries(est.flags).map(([k, v]) => (
-                        <span key={k} style={{ background: "#fef3c7", border: "1px solid #fde68a", borderRadius: 3, padding: "1px 6px", fontSize: 11, marginRight: 4, color: "#92400e", display: "inline-block", marginBottom: 2 }}>
-                          {String(v) === "true" ? k.replace(/_/g, " ") : `${k.replace(/_/g, " ")}: ${v}`}
-                        </span>
-                      ))}
+              {est.step1_value_chain && (() => {
+                const denom = est.step2_denominator_used;
+                const denomVal = denom === "blended" && p.revenue_ttm != null && p.ebitda_ttm != null
+                  ? p.revenue_ttm * 0.6 + p.ebitda_ttm * 0.4
+                  : denom === "ebitda" ? (p.ebitda_ttm ?? null)
+                  : denom === "gross_profit" ? (p.gross_profit_ttm ?? null)
+                  : (p.revenue_ttm ?? null);
+                const denomLabel = denomVal != null ? `${denom} ${formatCap(denomVal)}` : (denom ?? "revenue");
+
+                const kd = est.key_drivers as Record<string, unknown> | undefined;
+                const matScore = typeof kd?.maturity_score === "number" ? kd.maturity_score : 0;
+
+                const addrItems: { label: string; delta: number }[] = [{ label: "Base", delta: 28 }];
+                if (p.ms_standardized) addrItems.push({ label: "MS Standardized", delta: 5 });
+                if (p.offshore_coe_confirmed) addrItems.push({ label: "Offshore CoE", delta: -8 });
+                if (p.incumbent_msp) addrItems.push({ label: "Incumbent MSP", delta: -10 });
+                if (p.channel_mismatch_flag) addrItems.push({ label: "Channel mismatch", delta: -8 });
+                if (matScore >= 15) addrItems.push({ label: "High AI maturity (15+)", delta: 5 });
+                const finalPct = Math.max(12, Math.min(42, addrItems.reduce((s, i) => s + i.delta, 0)));
+
+                return (
+                  <div style={{ marginTop: 10, fontSize: 12, color: "#6b7280", borderTop: "1px solid #f3f4f6", paddingTop: 8 }}>
+                    <span style={{ fontWeight: 600 }}>Model basis:</span> {est.step1_value_chain} · {denomLabel} denominator · {est.step3_regional_multiplier}x regional
+                    {est.flags && Object.keys(est.flags).length > 0 && (
+                      <div style={{ marginTop: 4 }}>
+                        {Object.entries(est.flags).map(([k, v]) => (
+                          <span key={k} style={{ background: "#fef3c7", border: "1px solid #fde68a", borderRadius: 3, padding: "1px 6px", fontSize: 11, marginRight: 4, color: "#92400e", display: "inline-block", marginBottom: 2 }}>
+                            {String(v) === "true" ? k.replace(/_/g, " ") : `${k.replace(/_/g, " ")}: ${v}`}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <div style={{ marginTop: 5 }}>
+                      <button
+                        onClick={() => setShowAddrBreakdown(s => !s)}
+                        style={{ background: "none", border: "none", padding: 0, color: "#2563eb", fontSize: 11, cursor: "pointer", textDecoration: "underline" }}
+                      >
+                        {showAddrBreakdown ? "hide calculation" : "show calculation"}
+                      </button>
                     </div>
-                  )}
-                </div>
-              )}
+                    {showAddrBreakdown && (
+                      <div style={{ marginTop: 6, background: "#f8fafc", border: "1px solid #e5e7eb", borderRadius: 5, padding: "8px 10px", fontSize: 11, lineHeight: 1.8 }}>
+                        {addrItems.map((item, i) => (
+                          <div key={i} style={{ color: item.delta < 0 ? "#dc2626" : item.delta > 0 && i > 0 ? "#16a34a" : "#374151" }}>
+                            {i === 0 ? `Base: ${item.delta}%` : `${item.delta > 0 ? "+" : ""}${item.delta}% ${item.label}`}
+                          </div>
+                        ))}
+                        <div style={{ borderTop: "1px solid #e5e7eb", marginTop: 4, paddingTop: 4, fontWeight: 700, color: "#374151" }}>
+                          = Final: {finalPct}%{finalPct !== addrItems.reduce((s, i) => s + i.delta, 0) && " (clamped)"}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </>
           ) : (
             <div style={{ padding: "24px 0", textAlign: "center" }}>
