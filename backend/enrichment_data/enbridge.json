@@ -1,0 +1,83 @@
+{
+  "company_id": 12,
+  "profile": {
+    "sub_sector": "Midstream Pipeline & Processing",
+    "employee_count": 12000,
+    "employee_count_source": "annual_report_2025",
+    "hq_city": "Calgary",
+    "hq_country": "Canada",
+    "tech_decision_city": "Calgary",
+    "tech_decision_country": "Canada",
+    "revenue_ttm": 38750000000,
+    "revenue_denominator": "revenue",
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 55,
+    "ms_standardized": true,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ Calgary — primary tech decisions outside WWT STOLA territory. Major US operations include Ingleside Energy Center (TX), Texas Eastern Transmission, and newly acquired Dominion gas utilities in Ohio, Utah, and North Carolina.",
+    "data_enrichment_tier": 1
+  },
+  "leadership": [
+    {
+      "role": "CIO",
+      "person_name": "Bhushan Ivaturi",
+      "location_city": "Calgary",
+      "location_country": "Canada",
+      "hire_date": null,
+      "linkedin_url": null,
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 13,
+      "source": "public_disclosure"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "m_and_a",
+      "signal_category": "M&A",
+      "signal_date": "2024-12-01",
+      "signal_title": "Completed $14B acquisition of three Dominion US gas utilities — IT integration underway",
+      "signal_description": "Enbridge completed its $14B acquisition of three Dominion Energy US gas utilities (Questar, East Ohio Gas, Public Service North Carolina) in 2024, adding North America's largest gas utility operation by volume. IT integration of three separate utility platforms represents significant active demand.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "sec_filing"
+    },
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "AI",
+      "signal_date": "2024-09-01",
+      "signal_title": "Generative AI for knowledge capture to address retiring Baby Boomer workforce",
+      "signal_description": "CIO Bhushan Ivaturi is driving generative AI programs specifically designed to capture and transfer institutional knowledge from retiring Baby Boomer employees. This workforce transition challenge is a top IT investment driver at Enbridge, underpinned by the completed cloud migration.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "public_disclosure"
+    },
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "OT",
+      "signal_date": "2024-06-01",
+      "signal_title": "AI-enabled pipeline inspection gauges and leak detection in production",
+      "signal_description": "Enbridge has deployed AI-enabled pipeline inspection gauges and automated leak detection systems across its 17,000+ mile pipeline network. Corrosion monitoring systems also use AI for predictive maintenance, reducing pipeline integrity risk.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "public_disclosure"
+    },
+    {
+      "signal_type": "strategic_pivot",
+      "signal_category": "Cloud",
+      "signal_date": "2024-01-01",
+      "signal_title": "Cloud migration complete — 17 data centers consolidated to 4, 9,050 servers decommissioned",
+      "signal_description": "Enbridge completed a major cloud migration reducing its data center footprint from 17 to 4 facilities and decommissioning 9,050 servers. Carbon footprint reduced 66% via shift to renewable-powered cloud. This completed foundation enables AI and data workloads across the post-Dominion enterprise.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "public_disclosure"
+    }
+  ]
+}

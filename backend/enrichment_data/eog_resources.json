@@ -1,0 +1,61 @@
+{
+  "company_id": 21,
+  "profile": {
+    "sub_sector": "Upstream E&P",
+    "employee_count": 3000,
+    "employee_count_source": "annual_report_2025",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 23700000000,
+    "revenue_denominator": "revenue",
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 95,
+    "ms_standardized": false,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "channel_mismatch_flag": false,
+    "channel_mismatch_note": "HQ and technology decision-making in Houston — fully within WWT STOLA territory. No channel conflict.",
+    "data_enrichment_tier": 1
+  },
+  "leadership": [
+    {
+      "role": "CITO",
+      "person_name": "Sandeep Bhakhri",
+      "location_city": "Houston",
+      "location_country": "United States",
+      "hire_date": null,
+      "linkedin_url": null,
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 8,
+      "source": "public_disclosure"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "Data",
+      "signal_date": "2024-06-01",
+      "signal_title": "Internal data analytics for drilling and completions optimization — proprietary tooling",
+      "signal_description": "EOG Resources develops proprietary internal technology tools for drilling and completions optimization, consistent with its operationally lean, self-reliant culture. Data analytics underpin well performance and capital efficiency decisions. Limited external vendor footprint compared to peers.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 1,
+      "source": "public_disclosure"
+    },
+    {
+      "signal_type": "regulatory",
+      "signal_category": "Cybersecurity",
+      "signal_date": "2024-10-01",
+      "signal_title": "AI and cybersecurity risk acknowledged in 2024 10-K risk factors",
+      "signal_description": "EOG Resources' 2024 10-K explicitly identifies AI adoption and cybersecurity as material risk factors, signaling awareness of the need to manage and invest in these areas even within its conservative IT culture.",
+      "sentiment": "neutral",
+      "spend_impact_direction": "increase",
+      "score_points": 1,
+      "source": "sec_filing"
+    }
+  ]
+}
