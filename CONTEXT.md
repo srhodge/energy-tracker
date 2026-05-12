@@ -37,11 +37,12 @@ Floor: 12%, Ceiling: 42%
 Full 13-step model documentation: see WWT_Energy_Spend_Model_v4.docx
 
 ## Enrichment Status (as of May 2026)
-Tier 1 (21 companies) — 2 enriched with HIGH confidence:
+Tier 1 (21 companies) — 3 enriched with HIGH confidence:
 - ExxonMobil (id=2): XOM, Integrated O&G, $323.9B rev, 58,000 employees
 - Chevron (id=3): CVX, Integrated O&G, $189.0B rev, 43,039 employees
+- ConocoPhillips (id=8): COP, Upstream E&P, $56.1B rev, 11,800 employees, $1.60B WWT addressable (34%)
 
-Tier 1 remaining (19 companies): ConocoPhillips (id=8), Halliburton (id=67),
+Tier 1 remaining (18 companies): Halliburton (id=67),
 Phillips 66 (id=34), Enbridge (id=12), EOG Resources (id=21), Targa Resources (id=53),
 LyondellBasell (id=63), Sempra Energy (id=31), Antero Resources (id=144),
 Chord Energy (id=150), CVR Energy (id=345), Helmerich & Payne (id=258),
