@@ -68,3 +68,89 @@ TechnipFMC (id=110), Weatherford (id=179), Worley (id=201)
 - Enrichment research done by Claude (web search) -> JSON -> Claude Code pushes via API
 - All batch processes filter WHERE status = 'active' (567 active, 18 non-active)
 - No Anthropic API key available locally or in Railway for automated enrichment
+
+## CRM Data Details
+- 83 Salesforce accounts loaded (48 with real opportunity data, 35 named placeholders with $0)
+- 7,878 total opportunities (deduplicated across all export files)
+- $60.35M open pipeline, $179.56M closed won, 64.4% win rate
+- Key sellers: Sam Hodge (hodges) - 25 open opps, Matthew Nalbone (nalbonem) - 30 opps, Shay Gillespie (sgill)
+- CRM data is in crm_accounts and crm_opportunities tables — NOT linked to companies table yet (deliberate)
+- Fuzzy matching script exists (match_crm_accounts.py) but was NOT run — manual review UI planned first
+- The 83 CRM accounts were used only to set data_enrichment_tier=1 via exact name match (21 matched)
+
+## WWT Territory Structure (for channel mismatch logic)
+Territories in the database: STOLA (Houston/TX), EURO, MENA, APAC, CALA, FEDERAL, and others
+Channel mismatch flag = tech decisions made in a city not covered by the WWT account owner's territory
+Key examples: Shell (EURO account, Houston tech decisions), BP (EURO account, Houston ops),
+Dow Chemical (FEDERAL/STOLA mismatch), Bechtel (similar)
+
+## UI Pages and Their Status
+- Companies page — filter bar complete, working
+- Territory Dashboard — filter bar complete, working
+- Analytics page — REFERENCE for filter bar pattern (sticky horizontal, pill-style dropdowns, Reset button)
+- Activity Feed — has filters, needs standardization
+- CRM Dashboard — 4 tabs (Companies, Opportunities, Owners, Summary)
+  - Has been partially improved but filter bar NOT yet standardized to Analytics pattern
+  - Pending: full filter bar standardization matching Analytics exactly
+- Company Detail page — Overview + Intelligence tabs both working
+
+## Filter Bar Standardization (PENDING TASK — HIGH PRIORITY)
+The Analytics page has the reference filter bar pattern:
+- Sticky/fixed at top of content area (below sidebar/nav)
+- Pill-style dropdown buttons
+- Reset button appears only when any filter differs from default, disappears when reset
+This pattern needs to be applied to:
+1. CrmDashboard.tsx — all 4 tabs (Companies, Opportunities, Owners, Summary)
+2. Companies page — already has filters, needs to match Analytics style exactly
+3. Territory Dashboard — same
+4. Activity Feed page
+
+## Intelligence Tab Enhancements (PENDING)
+Phase 2 enhancements planned but not yet built:
+- Forward estimate FY2027E column (data exists in company_spend_estimates, just not displayed)
+- Opportunity Scorecard (5-factor: tech maturity, financial capacity, strategic urgency, WWT accessibility, relationship warmth)
+- Confidence indicator per category (not just overall)
+- Trend arrow vs. prior estimate
+- Signal age warning banner (>90 days since last signal)
+- NEW badge for recent leadership hires (<18 months)
+- Missing role flags (grayed-out row if no CAIO identified)
+- Completeness score / data freshness indicator on profile card
+- WWT relationship context pulled from CRM (last opportunity date, pipeline, account owner)
+
+## Weekly Batch Signal Collection (PLANNED, NOT YET BUILT)
+Planned architecture:
+- Backend scheduled job collects signals weekly from news/LinkedIn/SEC
+- Signals stored in company_tech_signals with week_batch_date
+- Displayed in company detail Intelligence tab as "Recent Signals" feed
+- Scoring refreshed quarterly at earnings dates
+- Requires Anthropic API key in Railway env vars (NOT YET SET)
+
+## Sub-Sector Values Currently in Database
+Mapped from value_chain_position:
+- Upstream E&P, Midstream Pipeline & Processing, Downstream Refining
+- Integrated O&G, Oilfield & Energy Services, Energy Utilities
+- Petrochemical & Specialty Chemicals, Renewable & New Energy
+New segments to add (not yet in DB):
+- Energy Infrastructure & Power, Carbon Management, LNG & Gas Trading
+
+## Enrichment JSON Files Location
+backend/enrichment_data/
+- exxonmobil.json (company_id=2) — COMPLETE
+- chevron.json (company_id=3) — COMPLETE
+
+## Key WWT Commercial Context (for model/enrichment work)
+- WWT acquired Softchoice in 2024 — adds Microsoft licensing addressability (+5% Step 10)
+- WWT AI Proving Ground — ~12 years AI history, 7x consecutive NVIDIA Americas Enterprise Partner of Year
+- Halliburton has expressed desire for WWT strategic alignment (internal knowledge)
+- Chevron MSP confirmed: HCL Technologies + LTIMindtree (internal knowledge)
+- Shell Houston relationship exists at WWT but account owned by EURO territory (channel conflict)
+
+## Salesforce Account to Company ID Mapping Notes
+The 83 CRM accounts use slightly different names than the 585 companies database.
+Known aliases needing manual mapping when ready:
+- "Oxy" = Occidental Petroleum
+- "ExxonMobil Global Services Company" = ExxonMobil (id=2)
+- "Engie North America" = ENGIE
+- "ONEOK" = ONEOK (may not exist in companies DB)
+- "Baker Hughes Inc" vs "Baker Hughes"
+- "Schlumberger Ltd." vs "Schlumberger/SLB"
