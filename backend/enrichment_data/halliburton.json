@@ -1,0 +1,83 @@
+{
+  "company_id": 67,
+  "profile": {
+    "sub_sector": "Oilfield & Energy Services",
+    "employee_count": 48000,
+    "employee_count_source": "annual_report_2025",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 22940000000,
+    "revenue_denominator": "revenue",
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 70,
+    "ms_standardized": true,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": "Accenture",
+    "channel_mismatch_flag": false,
+    "channel_mismatch_note": "HQ and technology decision-making in Houston — fully within WWT STOLA territory. No channel conflict.",
+    "data_enrichment_tier": 1
+  },
+  "leadership": [
+    {
+      "role": "CIO",
+      "person_name": "Shane Miller",
+      "location_city": "Houston",
+      "location_country": "United States",
+      "hire_date": "2024-01-01",
+      "linkedin_url": "https://www.linkedin.com/in/dshanemiller/",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 10,
+      "source": "linkedin"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "AI",
+      "signal_date": "2024-09-01",
+      "signal_title": "DS365.ai — AI/ML embedded in Landmark DecisionSpace 365 geoscience suite",
+      "signal_description": "Halliburton's DS365.ai integrates AI and machine learning directly into the DecisionSpace 365 geoscience and engineering platform, enabling AI-assisted subsurface interpretation, well planning, and production optimization for operator customers. Halliburton Data Lake on Azure serves as the ML analytics backbone.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "public_disclosure"
+    },
+    {
+      "signal_type": "partnership",
+      "signal_category": "Cloud",
+      "signal_date": "2024-06-01",
+      "signal_title": "Halliburton Data Lake on Microsoft Azure — ML and analytics platform confirmed",
+      "signal_description": "Halliburton's primary ML and analytics platform runs on Microsoft Azure via the Halliburton Data Lake. Azure is confirmed as primary cloud platform alongside Microsoft 365 for enterprise collaboration. Full Azure data center migration completed under Accenture 2020-2024 agreement.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "public_disclosure"
+    },
+    {
+      "signal_type": "earnings_signal",
+      "signal_category": "ERP",
+      "signal_date": "2024-10-01",
+      "signal_title": "SAP S/4HANA Cloud upgrade active through 2024 — Accenture-led implementation",
+      "signal_description": "Halliburton is upgrading to SAP S/4HANA Cloud with Accenture as the implementation partner. The program was expensed as a separate line item in 2024 10-Q filings. Oracle is also retained as a strategic platform alongside SAP, with CIO Shane Miller citing Oracle-Microsoft alliance flexibility as key to Halliburton's hybrid architecture.",
+      "sentiment": "neutral",
+      "spend_impact_direction": "increase",
+      "score_points": 1,
+      "source": "sec_filing"
+    },
+    {
+      "signal_type": "strategic_pivot",
+      "signal_category": "Digital",
+      "signal_date": "2025-01-01",
+      "signal_title": "Digital and automation stated as CEO strategic priority for 2025",
+      "signal_description": "Halliburton CEO Jeff Miller cited digital and automation as a top strategic priority for 2025, underpinned by the iEnergy hybrid cloud platform and DecisionSpace 365. Remote operations and real-time automation are key investment themes. Accenture Azure migration completion creates a natural transition point for new delivery partners.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "public_disclosure"
+    }
+  ]
+}
