@@ -1,5 +1,5 @@
 """
-Technology spend estimation engine — v3.1 model.
+Technology spend estimation engine — v4.0 model.
 
 13-step model producing low/mid/high IT, OT, Digital, and AI spend
 estimates plus a 1-year forward estimate (step 11).
@@ -108,7 +108,7 @@ def _f(v) -> Optional[float]:
 
 
 def estimate(company_id: int, db: Session) -> dict:
-    """Run the v3.1 spend model. Writes current_year + forward_1yr rows. Returns current_year dict."""
+    """Run the v4.0 spend model. Writes current_year + forward_1yr rows. Returns current_year dict."""
     c = db.get(Company, company_id)
     if not c:
         raise ValueError(f"Company {company_id} not found")
@@ -323,8 +323,33 @@ def estimate(company_id: int, db: Session) -> dict:
         total_mid  = round(it_mid  + ot_mid  + dig_mid  + ai_mid,  2)
         total_high = round(it_high + ot_high + dig_high + ai_high, 2)
 
-    # ── STEP 10: WWT addressable ──────────────────────────────────────────────
-    addressable_pct = 28.0
+    # ── STEP 10: WWT Addressable Share ────────────────────────────────────────
+    # Base 27% reflects partner-channel addressable categories only:
+    # hardware (partner portion), networking, IT security, OT security,
+    # cloud infrastructure, AI infrastructure, Microsoft (via Softchoice).
+    #
+    # Already EXCLUDED from the 27% base (non-addressable, never counted):
+    #   - Internal IT labor (28-38% of total budget)
+    #   - SAP/Oracle direct licensing (go-to-market bypasses WWT)
+    #   - Seismic software (SLB Petrel, HAL Landmark — direct vendor)
+    #   - Specialized process control (AspenTech, Honeywell UniSim — direct)
+    #
+    # Additional deductions applied below:
+    #   - OEM-direct hardware: -3% (large enterprise >$10B, Gartner research)
+    #   - Offshore CoE: -8% (confirmed India delivery center)
+    #   - Incumbent MSP: -10% (confirmed managed services contract)
+    #   - Channel mismatch: -8% (tech decisions not in account owner territory)
+    #   + Microsoft standardized (Softchoice): +5%
+    #   + High AI maturity (score >=15): +5%
+    #   Floor: 12%, Ceiling: 42%
+    addressable_pct = 27.0
+    # OEM-direct hardware deduction — large enterprises (>$10B revenue)
+    # negotiate direct OEM contracts bypassing partner channel
+    # Source: Gartner channel research Fortune 500 hardware, 30-45% direct
+    revenue_for_oem_check = float(c.revenue_ttm) if c.revenue_ttm else 0
+    if revenue_for_oem_check >= 10_000_000_000:
+        addressable_pct -= 3.0
+        flags["oem_direct_hardware"] = True
     if c.ms_standardized:       addressable_pct += 5.0
     if c.offshore_coe_confirmed: addressable_pct -= 8.0
     if c.incumbent_msp:          addressable_pct -= 10.0
@@ -394,7 +419,7 @@ def estimate(company_id: int, db: Session) -> dict:
         wwt_addressable_pct_low=addressable_pct,
         wwt_addressable_pct_high=addressable_pct,
         confidence_level         = confidence,
-        model_version            = "v3.1",
+        model_version            = "v4.0",
         step1_value_chain        = step1_value_chain,
         step2_denominator_used   = denom_used,
         step3_regional_multiplier = regional_mult,
@@ -447,7 +472,7 @@ def estimate(company_id: int, db: Session) -> dict:
             wwt_addressable_pct_low  = addressable_pct,
             wwt_addressable_pct_high = addressable_pct,
             confidence_level    = confidence,
-            model_version       = "v3.1",
+            model_version       = "v4.0",
             step1_value_chain   = step1_value_chain,
             step2_denominator_used = denom_used,
             step3_regional_multiplier = regional_mult,
@@ -472,7 +497,7 @@ def estimate(company_id: int, db: Session) -> dict:
         "estimate_type":    est.estimate_type,
         "fiscal_year":      est.fiscal_year,
         "confidence_level": confidence,
-        "model_version":    "v3.1",
+        "model_version":    "v4.0",
         "sub_sector":       c.sub_sector,
         "country":          c.country,
         "denominator_used": denom_used,
