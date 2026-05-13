@@ -548,15 +548,6 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                 return (
                   <div style={{ marginTop: 10, fontSize: 12, color: "#6b7280", borderTop: "1px solid #f3f4f6", paddingTop: 8 }}>
                     <span style={{ fontWeight: 600 }}>Model basis:</span> {est.step1_value_chain} · {denomLabel} denominator · {est.step3_regional_multiplier}x regional
-                    {est.flags && Object.keys(est.flags as object).length > 0 && (
-                      <div style={{ marginTop: 4 }}>
-                        {Object.entries(est.flags as Record<string, unknown>).map(([k, v]) => (
-                          <span key={k} style={{ background: "#fef3c7", border: "1px solid #fde68a", borderRadius: 3, padding: "1px 6px", fontSize: 11, marginRight: 4, color: "#92400e", display: "inline-block", marginBottom: 2 }}>
-                            {String(v) === "true" ? k.replace(/_/g, " ") : `${k.replace(/_/g, " ")}: ${v}`}
-                          </span>
-                        ))}
-                      </div>
-                    )}
 
                     {/* ── WWT Addressable Share Panel ── */}
                     <div style={{ marginTop: 10, background: "#f8fafc", border: "1px solid #e5e7eb", borderRadius: 7, padding: "12px 14px" }}>
