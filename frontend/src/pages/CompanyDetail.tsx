@@ -283,6 +283,7 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
   const [allLeaders, setAllLeaders] = useState<LeadershipRecord[] | null>(null);
   const [calculating, setCalculating] = useState(false);
   const [calcError, setCalcError] = useState<string | null>(null);
+  const [showAddrPanel, setShowAddrPanel] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -484,7 +485,17 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                   </tr>
                 </tbody>
               </table>
-              {est.step1_value_chain && (() => {
+              {est.step1_value_chain && (
+                <div style={{ textAlign: "right", marginTop: 6 }}>
+                  <button
+                    onClick={() => setShowAddrPanel(p => !p)}
+                    style={{ background: "none", border: "none", color: "#2563eb", fontSize: 12, cursor: "pointer", padding: 0, textDecoration: "underline" }}
+                  >
+                    {showAddrPanel ? "Hide calculation" : "Show calculation"}
+                  </button>
+                </div>
+              )}
+              {showAddrPanel && est.step1_value_chain && (() => {
                 const denom = est.step2_denominator_used;
                 const denomVal = denom === "blended" && p.revenue_ttm != null && p.ebitda_ttm != null
                   ? p.revenue_ttm * 0.6 + p.ebitda_ttm * 0.4
