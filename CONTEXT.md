@@ -175,6 +175,34 @@ Current confirmed MSP relationships in database:
 
 All other enriched companies: no MSP confirmed. Do not flag without confirmation.
 
+## Consulting Firm Reference List (for enrichment validation)
+When enriching any company, check for confirmed relationships with these consulting firms. A confirmed consulting relationship is noted in enrichment_notes for intelligence purposes but does NOT trigger a model deduction — consulting relationships influence vendor selection and strategy but do not displace WWT infrastructure/networking spend the way MSP relationships do. Only flag if confirmed via WWT internal intelligence, press release, SEC filing, or credible news source. Never presume.
+
+Note: Several firms appear on both the MSP list and this list (Accenture, Capgemini, IBM, CGI, TCS, Wipro, HCLTech, Infosys, NTT Data). When a firm acts as an MSP (running IT infrastructure), apply the -10% MSP deduction. When acting as a strategy/IT consultant only, record the relationship but do not apply the deduction.
+
+Global Strategy & Management Consulting (MBB):
+McKinsey & Company, Boston Consulting Group (BCG), Bain & Company
+
+Big Four Advisory & Strategy:
+Deloitte / Monitor Deloitte, PwC / Strategy&, Ernst & Young (EY) / EY-Parthenon, KPMG Advisory
+
+Global IT & Business Transformation Consultancies (overlap with MSP list):
+Accenture, Capgemini, IBM Consulting, NTT Data, TCS, Wipro, HCLTech, Infosys Consulting, Cognizant Consulting
+
+Elite Global Strategy & Specialty Firms:
+Oliver Wyman, Kearney, Roland Berger, L.E.K. Consulting, ZS Associates, Arthur D. Little, Booz Allen Hamilton, Alvarez & Marsal, FTI Consulting, PA Consulting, Slalom Consulting, West Monroe, Protiviti, BDO Consulting, Grant Thornton Advisory
+
+Digital, Cloud & Technology-Focused Consulting:
+Publicis Sapient, EPAM Systems, Thoughtworks, Hitachi Consulting, CGI, Atos
+
+Boutique Strategy & High-Impact Specialists:
+The Cambridge Group, Innosight, Simon-Kucher & Partners, OC&C Strategy Consultants
+
+Current confirmed consulting relationships in database:
+- ExxonMobil (id=2): Deloitte (publicly cited as consulting client), McKinsey (WWT internal confirmed), Accenture (WWT internal confirmed — dual role: MSP + consulting, MSP deduction already applied)
+
+All other enriched companies: no consulting firm relationship confirmed. Do not flag without confirmation.
+
 ## Salesforce Account to Company ID Mapping Notes
 The 83 CRM accounts use slightly different names than the 585 companies database.
 Known aliases needing manual mapping when ready:
