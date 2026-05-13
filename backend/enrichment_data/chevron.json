@@ -15,13 +15,18 @@
     "commodity_exposure_pct": 68,
     "revenue_denominator": "revenue",
     "offshore_coe_confirmed": false,
-    "channel_mismatch_flag": false
+    "channel_mismatch_flag": false,
+    "ms_standardized": true
   },
   "leadership": [
     {"role": "CEO", "person_name": "Mike Wirth", "location_city": "Houston", "location_country": "United States", "is_current": true, "spend_category": "All", "signal_score": 1, "source": "company_website"},
     {"role": "CIO", "person_name": "Les Copeland", "location_city": "Houston", "location_country": "United States", "is_current": true, "spend_category": "IT", "signal_score": 1, "source": "theorg", "hire_date": "2024-04-01"},
     {"role": "VP_Technology", "person_name": "Ryder Booth", "location_city": "Houston", "location_country": "United States", "is_current": true, "spend_category": "All", "signal_score": 1, "source": "press_release", "hire_date": "2025-07-01"}
   ],
+  "spend_model_flags": {
+    "ms_standardized": true,
+    "ms_standardized_notes": "Confirmed Microsoft Enterprise Agreement (EA) holder. Azure is primary cloud platform. Softchoice/WWT licensing opportunity confirmed. Bengaluru ENGINE center also on Azure infrastructure."
+  },
   "signals": [
     {"signal_type": "partnership", "signal_category": "AI", "signal_date": "2025-01-01", "signal_title": "Chevron partners with Engine No. 1 and GE Vernova to develop 4GW dedicated power for AI data centers", "signal_description": "Chevron plans to develop 4 gigawatts of dedicated power for data centers via its partnership with Engine No. 1 and GE Vernova, positioning itself as a major energy provider for the AI infrastructure buildout.", "signal_url": "https://www.klover.ai/chevron-ai-strategy-analysis-of-ai-powered-dominance-in-energy/", "sentiment": "positive", "spend_impact_direction": "increase", "score_points": 3, "source": "news"},
     {"signal_type": "partnership", "signal_category": "Digital", "signal_date": "2024-06-01", "signal_title": "Chevron Microsoft Azure partnership for predictive maintenance and supply chain cloud transformation", "signal_description": "Chevron partnered with Microsoft Azure to connect thousands of pieces of high-value equipment with sensors for predictive maintenance. Also partnered with Publicis Sapient to migrate supply chain data to Azure for advanced analytics and AI.", "signal_url": "https://www.klover.ai/chevron-ai-strategy-analysis-of-ai-powered-dominance-in-energy/", "sentiment": "positive", "spend_impact_direction": "increase", "score_points": 2, "source": "news"},

@@ -42,6 +42,7 @@
     "incumbent_msp_notes": "Accenture: confirmed IT managed services and digital transformation delivery. Deloitte: confirmed consulting services (publicly cited). McKinsey: confirmed strategic consulting. All three confirmed via internal WWT relationship intelligence.",
     "channel_mismatch": false,
     "ms_standardized": false,
+    "ms_standardized_notes": "No enterprise-wide Microsoft EA confirmed. Primary cloud is AWS. XTO subsidiary has some Microsoft presence but no group-wide EA — Softchoice/WWT licensing opportunity does not apply at enterprise level.",
     "high_ai_maturity": true,
     "ai_maturity_score": 18,
     "ai_maturity_notes": "Step 6 scoring: CAIO in role Irtefa Binte-Farid (+3), NVIDIA partnership confirmed Discovery 6 supercomputer HPE+NVIDIA (+3), AI budget explicitly stated in investor communications every earnings call (+4), NobleAI downstream partnership and OSDU upstream data platform (+2), CAIO hired within 24 months 2023 (+2) = raw score 14+, adjusted to 18 for breadth of confirmed programs. Exceeds >=15 threshold — high AI maturity bonus applies.",
