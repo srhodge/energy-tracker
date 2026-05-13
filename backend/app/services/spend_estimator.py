@@ -478,8 +478,8 @@ def estimate(company_id: int, db: Session) -> dict:
             step3_regional_multiplier = regional_mult,
             step10_addressable_pct = addressable_pct,
             step11_forward_estimate = step11_forward_estimate,
-            key_drivers = {"forward_mult": fwd_mult},
-            flags = {},
+            key_drivers = {"forward_mult": fwd_mult, "maturity_score": maturity_score},
+            flags = flags,
         )
         db.add(fwd_est)
         db.commit()
