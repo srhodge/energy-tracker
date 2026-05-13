@@ -532,11 +532,15 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                 const BLUE  = "#1d4ed8";
                 const AMBER = "#d97706";
 
-                function fRow(label: React.ReactNode, value: string, applied: boolean, valueColor: string) {
+                const coeName = (typeof estFlags?.offshore_coe_name === "string" && estFlags.offshore_coe_name)
+                  ? estFlags.offshore_coe_name as string
+                  : "India-based technology center";
+
+                function fRow(label: React.ReactNode, value: string, applied: boolean, valueColor: string, valueBold = false) {
                   return (
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "5px 0", borderBottom: "1px solid #f3f4f6" }}>
                       <div style={{ fontSize: 12, color: applied ? "#374151" : GRAY, flex: 1, paddingRight: 12 }}>{label}</div>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: applied ? valueColor : GRAY, whiteSpace: "nowrap" }}>{value}</div>
+                      <div style={{ fontSize: 12, fontWeight: valueBold ? 700 : 600, color: applied ? valueColor : GRAY, whiteSpace: "nowrap" }}>{value}</div>
                     </div>
                   );
                 }
@@ -562,8 +566,8 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                       </div>
 
                       {fRow(
-                        "Base addressable (hardware, networking, IT security, OT security, cloud, AI infra)",
-                        "+27%", true, "#374151"
+                        "Base addressable (hardware, networking, IT/OT security, cloud, AI infra)",
+                        "+27%", true, "#1a1a2e", true
                       )}
                       {fRow(
                         "Hardware OEM-direct (revenue >$10B — large enterprise buys direct)",
@@ -571,20 +575,20 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                         oemApplied, RED
                       )}
                       {fRow(
-                        <>Offshore CoE confirmed (<em>India-based technology center</em>)</>,
+                        <>Offshore CoE — <em>{coeName}</em></>,
                         offshoreApplied ? "−8%" : "−8% — not applicable",
                         offshoreApplied, RED
                       )}
                       {fRow(
-                        <>Incumbent MSP ({p.incumbent_msp
+                        <>Incumbent MSP — {p.incumbent_msp
                           ? <em>{p.incumbent_msp}</em>
-                          : "managed service provider"})</>,
+                          : "managed service provider"}</>,
                         mspApplied ? "−10%" : "−10% — none confirmed",
                         mspApplied, RED
                       )}
                       {fRow(
                         <>
-                          Channel mismatch (tech decisions outside WWT account owner territory)
+                          Channel mismatch (tech decisions outside account owner territory)
                           {mismatchApplied && p.channel_mismatch_note && (
                             <div style={{ fontSize: 11, color: "#6b7280", marginTop: 2 }}>{p.channel_mismatch_note}</div>
                           )}
@@ -593,15 +597,12 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                         mismatchApplied, RED
                       )}
                       {fRow(
-                        "Microsoft standardized — Softchoice licensing access confirmed",
+                        "Microsoft standardized — Softchoice licensing access",
                         msApplied ? "+5%" : "+5% — not confirmed",
                         msApplied, GREEN
                       )}
                       {fRow(
-                        <>
-                          High AI maturity (score ≥15 — WWT AI practice competitive advantage)
-                          <span style={{ fontSize: 11, color: GRAY, marginLeft: 4 }}>(score: {matScore})</span>
-                        </>,
+                        <>High AI maturity (score ≥15) — <span style={{ color: GRAY }}>score: {matScore}</span></>,
                         aiApplied ? "+5%" : "+5% — score below threshold",
                         aiApplied, GREEN
                       )}
