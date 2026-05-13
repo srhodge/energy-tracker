@@ -152,6 +152,27 @@ backend/enrichment_data/
 - Chevron MSP confirmed: HCL Technologies + LTIMindtree (internal knowledge)
 - Shell Houston relationship exists at WWT but account owned by EURO territory (channel conflict)
 
+## MSP Reference List (for enrichment validation)
+When enriching any company, check for confirmed relationships with these MSPs. A confirmed relationship triggers incumbent_msp=true and -10% addressable deduction. Only flag if confirmed via WWT internal intelligence, press release, SEC filing, or credible news source. Sector inference alone is never sufficient — do not presume.
+
+Enterprise MSPs (top priority to check — most likely at Tier 1 accounts):
+Accenture, DXC Technology, HCLTech, Infosys, Capgemini, IBM, NTT Data, TCS, Wipro, CGI, Lumen Technologies
+
+Enterprise & Mid-Market MSPs:
+Abacus Group, Accucode, Advizex, Agilant Solutions, All Covered, Alphaserve Technologies, Anexinet, ANM, Applied Imaging, Arraya Solutions, ATSG, BlueAlly, Buchanan Technologies, Burwood Group, C Spire Business, Calligo, CDW Canada, CentriLogic, CGS, Clearpath Solutions Group, CompuCom, Computer Design & Integration, Computex Technology Solutions, Dataprise, designDATA, Ensono, Fidelus Technologies, Frontline Managed Services, GDT, GreenPages, Insight, InterVision Systems, iVenture Solutions, Jolera, Lemongrass, Logically, Lunavi, Magna5, Marco, Meridian IT, Microserve, Navisite, NetGain Technologies, Netrix, NexusTek, Ntiva, NWN Corporation, OneNeck, Onica, OST, Otava, Park Place Technologies, Procurri, Quest Technology Management, Reliable IT, Right! Systems, SADA, Scantron
+
+SMB MSPs (unlikely at Tier 1 — relevant for Tier 2/3 smaller companies):
+AxiaTP, Creospark, V2 Systems, Systech MSP, NuMSP, Apex Technology Corporation, Corserva
+
+NOTE: Softchoice is a WWT company and is NEVER listed as an incumbent MSP. It represents a WWT opportunity, not a displacement challenge.
+
+Current confirmed MSP relationships in database:
+- ExxonMobil (id=2): Accenture, Deloitte, McKinsey — WWT internal confirmed
+- Chevron (id=3): HCL Technologies, LTIMindtree — WWT internal confirmed
+- Halliburton (id=67): Accenture — confirmed public sources (Azure migration partner + SAP S/4HANA implementation partner)
+
+All other enriched companies: no MSP confirmed. Do not flag without confirmation.
+
 ## Salesforce Account to Company ID Mapping Notes
 The 83 CRM accounts use slightly different names than the 585 companies database.
 Known aliases needing manual mapping when ready:
