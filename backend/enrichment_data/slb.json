@@ -1,0 +1,83 @@
+{
+  "company_id": 28,
+  "profile": {
+    "sub_sector": "Oilfield & Energy Services",
+    "employee_count": 113000,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 35940000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 55,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": true,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Olivier Le Peuch",
+      "location_city": "Houston",
+      "location_country": "United States",
+      "hire_date": "2019-08-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 8,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "Digital",
+      "signal_date": "2024-12-31",
+      "signal_title": "SLB Delfi digital platform $2.44B revenue FY2024 — 20% growth, 6,500+ users",
+      "signal_description": "SLB's Digital & Integration segment generated $2.44B in FY2024 revenue, up 20% YoY. Delfi cloud-native platform has 6,500+ users with 32% YoY growth. Cloud/AI/Edge platform growing at ~60% CAGR since 2021. CEO targets $3B digital revenue by 2025. Confirms SLB as the highest-digital-intensity OFS company by revenue.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 4,
+      "source": "annual_report"
+    },
+    {
+      "signal_type": "partnership",
+      "signal_category": "AI",
+      "signal_date": "2024-06-01",
+      "signal_title": "SLB NVIDIA partnership for AI compute at wellsite — autonomous drilling systems",
+      "signal_description": "SLB partnered with NVIDIA to deploy AI compute at wellsite for autonomous drilling and real-time reservoir characterization. Automated drilling footage reached 2.4M feet in Q1 2024, up 88% YoY. NVIDIA partnership confirms enterprise-grade AI infrastructure investment.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "m_and_a",
+      "signal_category": "Digital",
+      "signal_date": "2025-07-01",
+      "signal_title": "SLB acquires ChampionX July 2025 — adds 200,000 connected assets to digital portfolio",
+      "signal_description": "SLB closed the $7.75B acquisition of ChampionX in July 2025, adding 200,000 connected chemical production assets to its digital portfolio. Significantly expands edge AI and connected asset management scope, driving post-acquisition IT integration demand.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "AI",
+      "signal_date": "2024-03-01",
+      "signal_title": "SLB OSDU founding member — open subsurface data platform driving cloud standardization",
+      "signal_description": "SLB is a founding member of the Open Subsurface Data Universe (OSDU) data platform standard. Drives cloud-native data standardization across the upstream sector. Positions SLB as the preferred integration layer for E&P digital infrastructure.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 1,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $35.94B with $2.44B digital revenue (6.8% — highest digital intensity in OFS sector). 113,000 employees globally. Houston is primary technology decision hub — within STOLA. No incumbent MSP. Azure primary cloud for Delfi platform. Microsoft 365 confirmed. Multi-cloud (AWS, GCP also used). NVIDIA partnership confirmed. OSDU founding member. ai_maturity_score=19 (≥15 — high AI maturity bonus applies). ChampionX acquisition July 2025 adds 200,000 connected assets. WWT opportunity: Houston account, no MSP, NVIDIA alignment (WWT 7x NVIDIA Americas Partner of Year), Delfi platform expansion, AI infrastructure demand from connected assets growth. Highest-priority Tier 2 account."
+}

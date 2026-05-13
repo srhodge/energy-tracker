@@ -1,0 +1,84 @@
+{
+  "company_id": 38,
+  "profile": {
+    "sub_sector": "Downstream Refining",
+    "employee_count": 16738,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Findlay",
+    "hq_country": "United States",
+    "tech_decision_city": "Findlay",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 135950000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 90,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": true,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ Findlay OH — outside WWT STOLA territory. Primary technology decisions likely made in Findlay OH. Channel mismatch flag applied.",
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CDO",
+      "person_name": "Ehren D. Powell",
+      "location_city": "Findlay",
+      "location_country": "United States",
+      "hire_date": "2020-07-20",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 5,
+      "source": "company_website"
+    },
+    {
+      "role": "CEO",
+      "person_name": "Maryann Mannen",
+      "location_city": "Findlay",
+      "location_country": "United States",
+      "hire_date": "2024-08-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 2,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "partnership",
+      "signal_category": "Digital",
+      "signal_date": "2025-01-01",
+      "signal_title": "MPLX data center campus partnership with MARA Holdings — West Texas AI power infrastructure 2025",
+      "signal_description": "MPLX LP (Marathon’s midstream MLP) signed a partnership with MARA Holdings in 2025 for AI data center power infrastructure in West Texas. Pivoting midstream assets toward AI compute power confirms board-level digital infrastructure investment.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "AI",
+      "signal_date": "2024-01-01",
+      "signal_title": "Imubit reinforcement learning deployed for Marathon refinery process optimization",
+      "signal_description": "Marathon Petroleum deployed Imubit’s reinforcement learning AI platform for real-time refinery process optimization. Confirms active AI deployment in core operations beyond pilot stage.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "AI",
+      "signal_date": "2023-06-01",
+      "signal_title": "Flyscan aerial AI leak detection deployed operationally at Marathon Petroleum",
+      "signal_description": "Marathon Petroleum deployed Flyscan aerial AI-enabled leak detection operationally across field assets. Confirms AI deployment in OT/field operations.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 1,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $135.95B — highly commodity-exposed refining. 16,738 employees. CDO Ehren Powell confirmed since July 2020 (former GE Healthcare VP/CIO), externally active, Metis Strategy network member. New CEO Maryann Mannen Aug 2024 from TechnipFMC = IT budget reset signal. Azure confirmed as cloud platform. Microsoft 365 in use. SAP ERP backbone. No incumbent MSP. Channel mismatch: Findlay OH outside STOLA. MPLX AI data center power pivot (West Texas, MARA Holdings 2025) is major emerging signal. Imubit reinforcement learning in production. ai_maturity_score=13 (below ≥15 threshold). WWT opportunity: clean account, no MSP displacement, active digital transformation."
+}

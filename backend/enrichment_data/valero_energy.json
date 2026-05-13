@@ -1,0 +1,38 @@
+{
+  "company_id": 50,
+  "profile": {
+    "sub_sector": "Downstream Refining",
+    "employee_count": 9811,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "San Antonio",
+    "hq_country": "United States",
+    "tech_decision_city": "San Antonio",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 117840000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 92,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "VP_Technology",
+      "person_name": "Garry Kirker",
+      "location_city": "San Antonio",
+      "location_country": "United States",
+      "hire_date": null,
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 6,
+      "source": "company_website"
+    }
+  ],
+  "signals": [],
+  "enrichment_notes": "FY2024 revenue $117.84B — highly commodity-exposed refining. 9,811 employees. No CIO or CDO at C-suite — VP Technology (Garry Kirker) only, below C-suite. No cloud platform or AI programs confirmed publicly. SAP likely as ERP. San Antonio HQ within STOLA territory — clean account. No MSP, no CoE. Confidence MEDIUM due to limited public IT signal. ai_maturity_score=6 (well below ≥15 threshold). WWT opportunity: clean Houston/SA territory account, no MSP displacement, but limited near-term digital hook without known initiative."
+}

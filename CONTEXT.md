@@ -64,6 +64,10 @@ Tier 1 (21 companies) — 21 enriched (COMPLETE):
 
 Tier 1 remaining: NONE — all 21 companies enriched.
 
+Tier 2 (US companies by revenue) — enrichment begun May 2026:
+- Marathon Petroleum (id=38): MPC, Downstream Refining, $135.95B rev, 16,738 employees, $1.86B WWT addressable (24%; 27%−8%mismatch+5%MS=24%; CDO Ehren Powell confirmed since 2020, new CEO Maryann Mannen Aug 2024 from TechnipFMC, ms_standardized=true, channel_mismatch=Findlay OH outside STOLA, Imubit AI deployed, MPLX AI data center pivot 2025, ai_maturity=13) [HIGH]
+- Valero Energy (id=50): VLO, Downstream Refining, $117.84B rev, 9,811 employees, $1.44B WWT addressable (27%; 27%=27%; no CIO/CDO — VP Technology only, no cloud/MSP/AI programs confirmed, San Antonio TX in STOLA, ai_maturity=6) [MEDIUM_HIGH]
+- SLB (id=28): SLB, Oilfield & Energy Services, $35.94B rev, 113,000 employees, $1.61B WWT addressable (37%; 27%+5%MS+5%AI=37%; CEO Olivier Le Peuch drives digital-first, $2.44B digital revenue FY2024, NVIDIA partnership, ChampionX acquisition July 2025, ms_standardized=true, Houston HQ in STOLA, ai_maturity=19 — highest in Tier 2 set) [HIGH]
 
 ## Enrichment Workflow
 1. I (Claude in new chat) research company via web search
