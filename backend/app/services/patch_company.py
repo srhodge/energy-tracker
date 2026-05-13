@@ -103,10 +103,29 @@ def patch_company(data: dict, base_url: str, dry_run: bool = False) -> dict:
         print("  [profile] skipped (no profile data)")
 
     # ── Leadership ────────────────────────────────────────────────────────────
+    # Fetch existing records so we can skip duplicates (match on role + person_name)
+    existing_leadership: dict[tuple[str, str], int] = {}
+    if not dry_run:
+        try:
+            existing = _request("GET", f"{base_url}/api/companies/{company_id}/leadership?include_past=true")
+            if isinstance(existing, list):
+                existing_leadership = {
+                    (r.get("role", ""), r.get("person_name") or ""): r["id"]
+                    for r in existing
+                }
+        except RuntimeError:
+            pass  # proceed without dedup rather than abort
+
     for rec in data.get("leadership", []):
-        url = f"{base_url}/api/companies/{company_id}/leadership"
         role = rec.get("role", "?")
-        name = rec.get("person_name", "?")
+        name = rec.get("person_name") or "?"
+        key = (role, name)
+        if key in existing_leadership:
+            eid = existing_leadership[key]
+            summary["leadership"].append({"role": role, "person_name": name, "id": eid, "action": "skipped"})
+            print(f"  [leadership] {role}: {name} (exists id={eid} — skipped)")
+            continue
+        url = f"{base_url}/api/companies/{company_id}/leadership"
         try:
             result = _request("POST", url, rec, dry_run=dry_run)
             created_id = result.get("id", "?") if not dry_run else "dry_run"
@@ -117,9 +136,24 @@ def patch_company(data: dict, base_url: str, dry_run: bool = False) -> dict:
             print(f"  [leadership] {role} ERROR: {e}")
 
     # ── Signals ───────────────────────────────────────────────────────────────
+    # Fetch existing titles so we can skip duplicates (match on signal_title)
+    existing_signal_titles: set[str] = set()
+    if not dry_run:
+        try:
+            existing_sigs = _request("GET", f"{base_url}/api/companies/{company_id}/signals")
+            if isinstance(existing_sigs, list):
+                existing_signal_titles = {s.get("signal_title") or "" for s in existing_sigs}
+        except RuntimeError:
+            pass  # proceed without dedup rather than abort
+
     for sig in data.get("signals", []):
+        raw_title = sig.get("signal_title") or "?"
+        title = raw_title[:60]
+        if raw_title in existing_signal_titles:
+            summary["signals"].append({"title": title, "action": "skipped"})
+            print(f"  [signal] {title!r} (exists — skipped)")
+            continue
         url = f"{base_url}/api/companies/{company_id}/signals"
-        title = sig.get("signal_title", "?")[:60]
         try:
             result = _request("POST", url, sig, dry_run=dry_run)
             created_id = result.get("id", "?") if not dry_run else "dry_run"
