@@ -17,8 +17,9 @@
     "offshore_coe_confirmed": false,
     "incumbent_msp": null,
     "channel_mismatch_flag": false,
-    "channel_mismatch_note": "HQ and technology decision-making in Houston — fully within WWT STOLA territory. No channel conflict.",
-    "data_enrichment_tier": 1
+    "channel_mismatch_note": "HQ and technology decision-making in Houston \u2014 fully within WWT STOLA territory. No channel conflict.",
+    "data_enrichment_tier": 1,
+    "oem_direct_confirmed": false
   },
   "leadership": [
     {
@@ -39,7 +40,7 @@
       "signal_type": "ai_announcement",
       "signal_category": "Data",
       "signal_date": "2024-06-01",
-      "signal_title": "Internal data analytics for drilling and completions optimization — proprietary tooling",
+      "signal_title": "Internal data analytics for drilling and completions optimization \u2014 proprietary tooling",
       "signal_description": "EOG Resources develops proprietary internal technology tools for drilling and completions optimization, consistent with its operationally lean, self-reliant culture. Data analytics underpin well performance and capital efficiency decisions. Limited external vendor footprint compared to peers.",
       "sentiment": "positive",
       "spend_impact_direction": "increase",

@@ -17,7 +17,8 @@
     "incumbent_msp": null,
     "ms_standardized": false,
     "channel_mismatch_flag": true,
-    "channel_mismatch_note": "HQ Tulsa OK — outside WWT STOLA territory. Channel mismatch flag applied."
+    "channel_mismatch_note": "HQ Tulsa OK \u2014 outside WWT STOLA territory. Channel mismatch flag applied.",
+    "oem_direct_confirmed": false
   },
   "leadership": [],
   "signals": [],
@@ -29,9 +30,9 @@
     "ms_standardized": false,
     "high_ai_maturity": false,
     "ai_maturity_score": 10,
-    "ai_maturity_notes": "H&P Technologies subsidiary is a meaningful AI/automation signal — dedicated entity for drilling automation, AI-assisted geosteering, AutoSlide technology. Microsoft Teams + EC2 confirmed. No CAIO identified. KCA Deutag acquisition (July 2024) adds international scale and IT integration demand. Score 10 — below threshold.",
+    "ai_maturity_notes": "H&P Technologies subsidiary is a meaningful AI/automation signal \u2014 dedicated entity for drilling automation, AI-assisted geosteering, AutoSlide technology. Microsoft Teams + EC2 confirmed. No CAIO identified. KCA Deutag acquisition (July 2024) adds international scale and IT integration demand. Score 10 \u2014 below threshold.",
     "territory": "STOLA",
-    "channel_mismatch_notes": "HQ Tulsa OK — outside WWT STOLA territory. Channel mismatch flag applied."
+    "channel_mismatch_notes": "HQ Tulsa OK \u2014 outside WWT STOLA territory. Channel mismatch flag applied."
   },
-  "enrichment_notes": "FY2024 revenue $2.76B (fiscal year ends September 30). 6,200 employees. Revenue below $10B — no OEM deduction. HQ Tulsa = channel mismatch. H&P Technologies subsidiary is key AI/automation signal. KCA Deutag acquisition July 2024 = active M&A integration demand. No CIO identified publicly. Microsoft Teams + EC2 confirmed. Confidence MEDIUM."
+  "enrichment_notes": "FY2024 revenue $2.76B (fiscal year ends September 30). 6,200 employees. Revenue below $10B \u2014 no OEM deduction. HQ Tulsa = channel mismatch. H&P Technologies subsidiary is key AI/automation signal. KCA Deutag acquisition July 2024 = active M&A integration demand. No CIO identified publicly. Microsoft Teams + EC2 confirmed. Confidence MEDIUM."
 }

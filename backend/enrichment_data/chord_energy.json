@@ -16,7 +16,8 @@
     "offshore_coe_confirmed": false,
     "incumbent_msp": null,
     "ms_standardized": false,
-    "channel_mismatch_flag": false
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false
   },
   "leadership": [
     {
@@ -40,9 +41,9 @@
     "ms_standardized": false,
     "high_ai_maturity": false,
     "ai_maturity_score": 5,
-    "ai_maturity_notes": "No CIO identified publicly. Very lean 762-person workforce. Formed from merger 2022 — IT integration phase likely complete. No AI programs, cloud platforms, or technology partnerships publicly identified. Williston Basin focused — lower technology intensity than Permian operators. Score 5 — well below threshold.",
+    "ai_maturity_notes": "No CIO identified publicly. Very lean 762-person workforce. Formed from merger 2022 \u2014 IT integration phase likely complete. No AI programs, cloud platforms, or technology partnerships publicly identified. Williston Basin focused \u2014 lower technology intensity than Permian operators. Score 5 \u2014 well below threshold.",
     "territory": "STOLA",
-    "channel_mismatch_notes": "HQ Houston TX — within WWT STOLA territory. No channel conflict."
+    "channel_mismatch_notes": "HQ Houston TX \u2014 within WWT STOLA territory. No channel conflict."
   },
-  "enrichment_notes": "FY2024 revenue $5.25B. 762 employees — very lean. Formed from Oasis + Whiting merger July 2022. Revenue below $10B so OEM deduction does not apply. Clean Houston account with no MSP or CoE. No technology leadership or programs publicly identified. Confidence LOW. WWT opportunity: clean account in STOLA territory but limited near-term hook without known initiative or relationship."
+  "enrichment_notes": "FY2024 revenue $5.25B. 762 employees \u2014 very lean. Formed from Oasis + Whiting merger July 2022. Revenue below $10B so OEM deduction does not apply. Clean Houston account with no MSP or CoE. No technology leadership or programs publicly identified. Confidence LOW. WWT opportunity: clean account in STOLA territory but limited near-term hook without known initiative or relationship."
 }

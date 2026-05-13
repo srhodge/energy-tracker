@@ -1,0 +1,60 @@
+{
+  "company_id": 53,
+  "profile": {
+    "sub_sector": "Midstream Pipeline & Processing",
+    "employee_count": 3570,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 17000000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 85,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Matthew J. Meloy",
+      "location_city": "Houston",
+      "location_country": "United States",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 1,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "m_and_a",
+      "signal_category": "IT",
+      "signal_date": "2026-01-01",
+      "signal_title": "Targa Resources acquires Stakeholder Midstream for $1.25B \u2014 IT integration pending",
+      "signal_description": "Targa Resources completed the acquisition of Stakeholder Midstream in January 2026 for $1.25 billion, adding gathering and processing assets in the Midland Basin. IT systems integration across disparate platforms is an active near-term demand driver.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "sec_filing"
+    }
+  ],
+  "spend_model_flags": {
+    "oem_direct_deduction": false,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "channel_mismatch": false,
+    "ms_standardized": false,
+    "high_ai_maturity": false,
+    "ai_maturity_score": 6,
+    "ai_maturity_notes": "No CIO identified publicly. CEO operationally focused. Tech stack primarily operational (IBM Cognos, SolarWinds, Apache Kafka, Sphera). No AI CoE, no CAIO, no NVIDIA or foundation model partnerships. AGI technology is process engineering, not IT AI. IT GRC Director role being hired \u2014 IT function relatively lean. Score 6, well below >=15 threshold.",
+    "territory": "STOLA",
+    "channel_mismatch_notes": "HQ Houston TX \u2014 fully within WWT STOLA territory. No channel conflict."
+  },
+  "enrichment_notes": "FY2024 revenue $17.0B \u2014 highly commodity-exposed midstream; revenue_denominator=revenue used but EBITDA may be more representative. 3,570 employees. No CIO identified publicly. Microsoft 365 confirmed. No incumbent MSP, no offshore CoE. Acquired Stakeholder Midstream Jan 2026 ($1.25B) \u2014 M&A integration signal active. Confidence MEDIUM due to no identified IT leadership and limited public IT disclosure."
+}

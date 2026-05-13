@@ -16,7 +16,8 @@
     "offshore_coe_confirmed": false,
     "incumbent_msp": null,
     "ms_standardized": false,
-    "channel_mismatch_flag": false
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false
   },
   "leadership": [],
   "signals": [],
@@ -30,7 +31,7 @@
     "ai_maturity_score": 3,
     "ai_maturity_notes": "Very small company (~250 employees, $163M revenue). Has a CTO role confirmed (LeadIQ). Technology focus is product/completion technology, not IT AI. No internal IT AI programs identified. Score 3.",
     "territory": "STOLA",
-    "channel_mismatch_notes": "HQ Houston TX — within WWT STOLA territory. No channel conflict."
+    "channel_mismatch_notes": "HQ Houston TX \u2014 within WWT STOLA territory. No channel conflict."
   },
-  "enrichment_notes": "FY2024 revenue $162.6M — smallest Tier 1 company by far. ~250 employees. Revenue well below $10B — no OEM deduction. Houston HQ in STOLA. WWT opportunity extremely limited — company is too small for enterprise IT spend of meaningful scale. Included as Tier 1 due to CRM account presence. Confidence LOW."
+  "enrichment_notes": "FY2024 revenue $162.6M \u2014 smallest Tier 1 company by far. ~250 employees. Revenue well below $10B \u2014 no OEM deduction. Houston HQ in STOLA. WWT opportunity extremely limited \u2014 company is too small for enterprise IT spend of meaningful scale. Included as Tier 1 due to CRM account presence. Confidence LOW."
 }

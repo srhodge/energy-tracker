@@ -17,7 +17,8 @@
     "incumbent_msp": null,
     "ms_standardized": false,
     "channel_mismatch_flag": true,
-    "channel_mismatch_note": "HQ Denver CO — outside WWT STOLA territory. Technology decisions made in Denver. Channel mismatch flag applied."
+    "channel_mismatch_note": "HQ Denver CO \u2014 outside WWT STOLA territory. Technology decisions made in Denver. Channel mismatch flag applied.",
+    "oem_direct_confirmed": false
   },
   "leadership": [],
   "signals": [],
@@ -29,9 +30,9 @@
     "ms_standardized": false,
     "high_ai_maturity": false,
     "ai_maturity_score": 4,
-    "ai_maturity_notes": "No CIO, CDO, or CAIO identified publicly. Extremely lean workforce (632 employees for $4.1B revenue). No public technology programs, partnerships, or AI initiatives found. Appalachian Basin focused — lower technology intensity than Permian operators. Score 4 — well below threshold.",
+    "ai_maturity_notes": "No CIO, CDO, or CAIO identified publicly. Extremely lean workforce (632 employees for $4.1B revenue). No public technology programs, partnerships, or AI initiatives found. Appalachian Basin focused \u2014 lower technology intensity than Permian operators. Score 4 \u2014 well below threshold.",
     "territory": "STOLA",
-    "channel_mismatch_notes": "HQ Denver CO — outside WWT STOLA territory. Technology decisions made in Denver. Channel mismatch flag applied."
+    "channel_mismatch_notes": "HQ Denver CO \u2014 outside WWT STOLA territory. Technology decisions made in Denver. Channel mismatch flag applied."
   },
-  "enrichment_notes": "FY2024 revenue $4.11B. Only 632 employees — exceptionally lean. Revenue below $10B so OEM deduction does not apply. HQ Denver = channel mismatch vs STOLA. No technology leadership, cloud platform, MSP, or AI programs identified. Confidence LOW due to extremely limited public IT signal and very small IT org implied by headcount. WWT opportunity limited without a known entry point or relationship."
+  "enrichment_notes": "FY2024 revenue $4.11B. Only 632 employees \u2014 exceptionally lean. Revenue below $10B so OEM deduction does not apply. HQ Denver = channel mismatch vs STOLA. No technology leadership, cloud platform, MSP, or AI programs identified. Confidence LOW due to extremely limited public IT signal and very small IT org implied by headcount. WWT opportunity limited without a known entry point or relationship."
 }

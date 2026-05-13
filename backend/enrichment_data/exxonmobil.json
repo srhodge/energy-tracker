@@ -17,7 +17,8 @@
     "offshore_coe_confirmed": true,
     "incumbent_msp": "Accenture, Deloitte, McKinsey",
     "ms_standardized": false,
-    "channel_mismatch_flag": false
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": true
   },
   "leadership": [
     {"role": "CEO", "person_name": "Darren W. Woods", "location_city": "Spring", "location_country": "United States", "is_current": true, "spend_category": "All", "signal_score": 1, "source": "company_website"},

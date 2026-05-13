@@ -1,0 +1,62 @@
+{
+  "company_id": 63,
+  "profile": {
+    "sub_sector": "Petrochemical & Specialty Chemicals",
+    "employee_count": 26000,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 37700000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 65,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": true,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Peter Vanacker",
+      "location_city": "Houston",
+      "location_country": "United States",
+      "hire_date": "2022-06-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 1,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "strategic_pivot",
+      "signal_category": "Digital",
+      "signal_date": "2024-01-01",
+      "signal_title": "LyondellBasell Value Enhancement Program targeting $800M+ EBITDA improvement \u2014 digital analytics as named pillar",
+      "signal_description": "LyondellBasell launched its Value Enhancement Program (VEP) targeting $800M+ in recurring EBITDA improvements. CEO Peter Vanacker has named technology as one of three strategic pillars. Data analytics and digital transformation are explicit components of the program, which spans 90+ manufacturing sites globally.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    }
+  ],
+  "spend_model_flags": {
+    "oem_direct_deduction": false,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "channel_mismatch": false,
+    "ms_standardized": true,
+    "ms_standardized_notes": "Microsoft Power BI confirmed deployed. Microsoft 365 in tech stack. Azure confirmed as cloud platform. Softchoice/WWT licensing opportunity likely \u2014 EA confirmation pending.",
+    "high_ai_maturity": false,
+    "ai_maturity_score": 8,
+    "ai_maturity_notes": "No CIO at C-suite level identified \u2014 unusual for $37.7B company. Board tech advisory via Bridget Karlin (Kaiser Permanente SVP IT, former IBM GTS CTO, Intel IoT GM). CEO names technology as strategic pillar. Power BI and SAP confirmed. No CAIO, no AI CoE, no NVIDIA partnership. Score 8 \u2014 below >=15 threshold.",
+    "territory": "STOLA",
+    "channel_mismatch_notes": "Incorporated Netherlands but operationally HQ Houston TX. Technology decisions made in Houston \u2014 within WWT STOLA territory. No channel conflict."
+  },
+  "enrichment_notes": "FY2024 revenue $37.7B across chemicals and petrochemicals. 26,000 employees globally. No CIO at C-suite level \u2014 IT embedded under COO or CFO. SAP confirmed ERP backbone. Microsoft Power BI and Azure confirmed. No incumbent MSP found. Exited refining Q1 2025 \u2014 operational simplification. VEP ($800M+ EBITDA) is active transformation signal. Confidence MEDIUM due to no identified CIO."
+}

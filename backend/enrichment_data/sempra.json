@@ -1,0 +1,107 @@
+{
+  "company_id": 31,
+  "profile": {
+    "sub_sector": "Energy Utilities",
+    "employee_count": 16773,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "San Diego",
+    "hq_country": "United States",
+    "tech_decision_city": "San Diego",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 13185000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 20,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": true,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ San Diego CA \u2014 primary corporate IT decisions outside WWT STOLA territory. Oncor subsidiary in Dallas/Irving TX is within STOLA but account owned at corporate level. Channel mismatch applied.",
+    "oem_direct_confirmed": false
+  },
+  "leadership": [
+    {
+      "role": "CIO",
+      "person_name": "Chris Baker",
+      "location_city": "San Diego",
+      "location_country": "United States",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 8,
+      "source": "linkedin",
+      "linkedin_url": "https://www.linkedin.com/in/chris-baker-53b64212/"
+    },
+    {
+      "role": "VP_Technology",
+      "person_name": "Chantale Rondeau",
+      "location_city": "Houston",
+      "location_country": "United States",
+      "is_current": true,
+      "spend_category": "IT",
+      "signal_score": 10,
+      "source": "linkedin",
+      "linkedin_url": "https://www.linkedin.com/in/chantale-rondeau-115343112/"
+    },
+    {
+      "role": "CISO",
+      "person_name": "Jamie Levitt",
+      "location_city": "San Diego",
+      "location_country": "United States",
+      "hire_date": "2024-01-01",
+      "is_current": true,
+      "spend_category": "IT",
+      "signal_score": 8,
+      "source": "public_disclosure"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "strategic_pivot",
+      "signal_category": "Cloud",
+      "signal_date": "2024-01-01",
+      "signal_title": "RISE with SAP implementation at Sempra Infrastructure \u2014 agile platform for LNG operations",
+      "signal_description": "Sempra Infrastructure is implementing RISE with SAP as an agile, scalable platform for its LNG operations. VP Technology Chantale Rondeau is overseeing the implementation. Represents a significant digital transformation investment and signals appetite for major technology projects.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "public_disclosure"
+    },
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "OT",
+      "signal_date": "2024-06-01",
+      "signal_title": "SDG&E Wildfire and Climate Resiliency Center opened \u2014 technology-driven wildfire risk mitigation",
+      "signal_description": "SDG&E opened the Wildfire and Climate Resiliency Center in 2024, deploying advanced monitoring systems, predictive analytics, and real-time wildfire risk mitigation capabilities. Represents active OT/IT investment in climate resilience infrastructure.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "strategic_pivot",
+      "signal_category": "OT",
+      "signal_date": "2024-01-01",
+      "signal_title": "Oncor $3B System Resiliency Plan approved \u2014 grid hardening and OT cybersecurity investment",
+      "signal_description": "Oncor's $3B System Resiliency Plan was approved as part of its $36B five-year capital plan, including grid hardening, OT cybersecurity upgrades, and advanced metering infrastructure. Largest grid investment program in Texas \u2014 significant active IT/OT demand.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "public_disclosure"
+    }
+  ],
+  "spend_model_flags": {
+    "oem_direct_deduction": false,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "channel_mismatch": true,
+    "ms_standardized": true,
+    "ms_standardized_notes": "Microsoft Azure confirmed as primary cloud. Microsoft 365 in use across enterprise. SAP RISE deployed on Azure at Sempra Infrastructure. Softchoice/WWT licensing opportunity confirmed.",
+    "high_ai_maturity": false,
+    "ai_maturity_score": 11,
+    "ai_maturity_notes": "CISO hired within 18 months (+2), SAP RISE implementation active (+2), Wildfire technology program public commitment (+2), Oncor $3B grid resiliency (+2), technology explicitly named in capex guidance (+3 partial \u2014 utility-specific). Score 11 \u2014 below >=15 threshold. No CAIO, no NVIDIA partnership, no AI CoE identified. Utility-focused technology investment rather than AI-led.",
+    "territory": "STOLA",
+    "channel_mismatch_notes": "HQ San Diego CA \u2014 outside WWT STOLA territory. Primary corporate IT decisions in San Diego. Oncor in Dallas/Irving TX within STOLA but owned at corporate level."
+  },
+  "enrichment_notes": "FY2024 revenue $13.185B. 16,773 employees. Regulated utility \u2014 channel mismatch applied (San Diego HQ outside STOLA). SVP CIO Chris Baker at corporate level. CIO/VP Technology Chantale Rondeau at Infrastructure subsidiary (SAP RISE lead). CISO Jamie Levitt hired Jan 2024. Azure confirmed. SAP RISE confirmed at Infrastructure. No incumbent MSP. Record $48B five-year capex plan. Oncor $36B plan is largest grid investment in Texas. HIGH confidence."
+}

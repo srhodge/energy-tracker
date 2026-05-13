@@ -343,11 +343,8 @@ def estimate(company_id: int, db: Session) -> dict:
     #   + High AI maturity (score >=15): +5%
     #   Floor: 12%, Ceiling: 42%
     addressable_pct = 27.0
-    # OEM-direct hardware deduction — large enterprises (>$10B revenue)
-    # negotiate direct OEM contracts bypassing partner channel
-    # Source: Gartner channel research Fortune 500 hardware, 30-45% direct
-    revenue_for_oem_check = float(c.revenue_ttm) if c.revenue_ttm else 0
-    if revenue_for_oem_check >= 10_000_000_000:
+    # OEM-direct deduction requires manual confirmation — not auto-applied by revenue threshold.
+    if c.oem_direct_confirmed:
         addressable_pct -= 3.0
         flags["oem_direct_hardware"] = True
     if c.ms_standardized:       addressable_pct += 5.0

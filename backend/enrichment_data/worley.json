@@ -17,7 +17,8 @@
     "incumbent_msp": null,
     "ms_standardized": false,
     "channel_mismatch_flag": true,
-    "channel_mismatch_note": "HQ Sydney Australia — significant channel mismatch. Technology decisions made in Australia. Channel mismatch flag applied."
+    "channel_mismatch_note": "HQ Sydney Australia \u2014 significant channel mismatch. Technology decisions made in Australia. Channel mismatch flag applied.",
+    "oem_direct_confirmed": false
   },
   "leadership": [],
   "signals": [],
@@ -29,9 +30,9 @@
     "ms_standardized": false,
     "high_ai_maturity": false,
     "ai_maturity_score": 7,
-    "ai_maturity_notes": "Engineering services company — digital offerings are client-facing, not internal IT AI. No CIO identified at corporate level. No internal AI programs publicly identified. Score 7.",
+    "ai_maturity_notes": "Engineering services company \u2014 digital offerings are client-facing, not internal IT AI. No CIO identified at corporate level. No internal AI programs publicly identified. Score 7.",
     "territory": "STOLA",
-    "channel_mismatch_notes": "HQ Sydney Australia — significant channel mismatch. Technology decisions made in Australia. Channel mismatch flag applied. Revenue below $10B USD — no OEM deduction."
+    "channel_mismatch_notes": "HQ Sydney Australia \u2014 significant channel mismatch. Technology decisions made in Australia. Channel mismatch flag applied. Revenue below $10B USD \u2014 no OEM deduction."
   },
-  "enrichment_notes": "FY TTM revenue ~$8.24B USD (fiscal year ends June 30; AUD converted at ~0.65). 45,505 employees. Revenue below $10B USD — no OEM deduction. HQ Sydney = channel mismatch. No CIO at corporate level identified. Australia country multiplier applies (Step 3 — 0.92-1.05x). Engineering services company — internal IT secondary to client-facing technology. Confidence LOW."
+  "enrichment_notes": "FY TTM revenue ~$8.24B USD (fiscal year ends June 30; AUD converted at ~0.65). 45,505 employees. Revenue below $10B USD \u2014 no OEM deduction. HQ Sydney = channel mismatch. No CIO at corporate level identified. Australia country multiplier applies (Step 3 \u2014 0.92-1.05x). Engineering services company \u2014 internal IT secondary to client-facing technology. Confidence LOW."
 }

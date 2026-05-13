@@ -16,7 +16,8 @@
     "offshore_coe_confirmed": false,
     "incumbent_msp": null,
     "ms_standardized": false,
-    "channel_mismatch_flag": false
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false
   },
   "leadership": [
     {
@@ -36,7 +37,7 @@
       "signal_type": "m_and_a",
       "signal_category": "Digital",
       "signal_date": "2024-09-01",
-      "signal_title": "Weatherford acquires Datagration (PetroVisor/EcoVisor) Q3 2024 — AI production optimization",
+      "signal_title": "Weatherford acquires Datagration (PetroVisor/EcoVisor) Q3 2024 \u2014 AI production optimization",
       "signal_description": "Weatherford acquired Datagration Solutions in Q3 2024, adding the PetroVisor AI-enabled production optimization platform and EcoVisor ESG analytics to its Digital Solutions segment. CEO Girish Saligram has named digitalization as a core strategic differentiator. Creates active post-acquisition IT integration demand.",
       "sentiment": "positive",
       "spend_impact_direction": "increase",
@@ -63,9 +64,9 @@
     "ms_standardized": false,
     "high_ai_maturity": false,
     "ai_maturity_score": 12,
-    "ai_maturity_notes": "Datagration acquisition (PetroVisor AI/EcoVisor) is a strong signal — dedicated AI platform for production optimization now part of product portfolio. CEO publicly drives digitalization. Digital Solutions is a standalone segment — dedicated investment. 8-year Romgaz digital contract confirms commercial AI deployment. Score 12 — approaching threshold but below ≥15.",
+    "ai_maturity_notes": "Datagration acquisition (PetroVisor AI/EcoVisor) is a strong signal \u2014 dedicated AI platform for production optimization now part of product portfolio. CEO publicly drives digitalization. Digital Solutions is a standalone segment \u2014 dedicated investment. 8-year Romgaz digital contract confirms commercial AI deployment. Score 12 \u2014 approaching threshold but below \u226515.",
     "territory": "STOLA",
-    "channel_mismatch_notes": "HQ Houston TX — within WWT STOLA territory. No channel conflict."
+    "channel_mismatch_notes": "HQ Houston TX \u2014 within WWT STOLA territory. No channel conflict."
   },
-  "enrichment_notes": "FY2024 revenue ~$5.4B. ~17,000 employees globally. Revenue below $10B — no OEM deduction. Houston HQ in STOLA. Datagration acquisition Q3 2024 = significant digital/AI signal. Digital Solutions standalone segment. CEO digitalization mandate. No MSP or CoE identified. Confidence MEDIUM. WWT opportunity: Houston account, no MSP, active digital transformation, AI platform integration demand post-Datagration."
+  "enrichment_notes": "FY2024 revenue ~$5.4B. ~17,000 employees globally. Revenue below $10B \u2014 no OEM deduction. Houston HQ in STOLA. Datagration acquisition Q3 2024 = significant digital/AI signal. Digital Solutions standalone segment. CEO digitalization mandate. No MSP or CoE identified. Confidence MEDIUM. WWT opportunity: Houston account, no MSP, active digital transformation, AI platform integration demand post-Datagration."
 }

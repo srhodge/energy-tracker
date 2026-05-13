@@ -48,6 +48,7 @@ def _profile(c: Company) -> dict:
         "incumbent_msp":            c.incumbent_msp,
         "channel_mismatch_flag":    c.channel_mismatch_flag,
         "channel_mismatch_note":    c.channel_mismatch_note,
+        "oem_direct_confirmed":     c.oem_direct_confirmed,
         "data_enrichment_tier":     c.data_enrichment_tier,
     }
 
@@ -327,7 +328,7 @@ _PROFILE_FIELDS = {
     "revenue_ttm", "ebitda_ttm", "gross_profit_ttm", "enterprise_value",
     "revenue_denominator", "is_private", "is_pe_backed", "commodity_exposure_pct",
     "ms_standardized", "offshore_coe_confirmed", "incumbent_msp",
-    "channel_mismatch_flag", "channel_mismatch_note", "data_enrichment_tier",
+    "channel_mismatch_flag", "channel_mismatch_note", "oem_direct_confirmed", "data_enrichment_tier",
 }
 
 

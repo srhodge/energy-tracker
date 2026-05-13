@@ -17,8 +17,9 @@
     "offshore_coe_confirmed": false,
     "incumbent_msp": null,
     "channel_mismatch_flag": true,
-    "channel_mismatch_note": "HQ Calgary — primary tech decisions outside WWT STOLA territory. Major US operations include Ingleside Energy Center (TX), Texas Eastern Transmission, and newly acquired Dominion gas utilities in Ohio, Utah, and North Carolina.",
-    "data_enrichment_tier": 1
+    "channel_mismatch_note": "HQ Calgary \u2014 primary tech decisions outside WWT STOLA territory. Major US operations include Ingleside Energy Center (TX), Texas Eastern Transmission, and newly acquired Dominion gas utilities in Ohio, Utah, and North Carolina.",
+    "data_enrichment_tier": 1,
+    "oem_direct_confirmed": false
   },
   "leadership": [
     {
@@ -39,7 +40,7 @@
       "signal_type": "m_and_a",
       "signal_category": "M&A",
       "signal_date": "2024-12-01",
-      "signal_title": "Completed $14B acquisition of three Dominion US gas utilities — IT integration underway",
+      "signal_title": "Completed $14B acquisition of three Dominion US gas utilities \u2014 IT integration underway",
       "signal_description": "Enbridge completed its $14B acquisition of three Dominion Energy US gas utilities (Questar, East Ohio Gas, Public Service North Carolina) in 2024, adding North America's largest gas utility operation by volume. IT integration of three separate utility platforms represents significant active demand.",
       "sentiment": "positive",
       "spend_impact_direction": "increase",
@@ -72,7 +73,7 @@
       "signal_type": "strategic_pivot",
       "signal_category": "Cloud",
       "signal_date": "2024-01-01",
-      "signal_title": "Cloud migration complete — 17 data centers consolidated to 4, 9,050 servers decommissioned",
+      "signal_title": "Cloud migration complete \u2014 17 data centers consolidated to 4, 9,050 servers decommissioned",
       "signal_description": "Enbridge completed a major cloud migration reducing its data center footprint from 17 to 4 facilities and decommissioning 9,050 servers. Carbon footprint reduced 66% via shift to renewable-powered cloud. This completed foundation enables AI and data workloads across the post-Dominion enterprise.",
       "sentiment": "positive",
       "spend_impact_direction": "increase",

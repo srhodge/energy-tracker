@@ -16,21 +16,22 @@
     "offshore_coe_confirmed": false,
     "incumbent_msp": null,
     "ms_standardized": false,
-    "channel_mismatch_flag": false
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false
   },
   "leadership": [],
   "signals": [],
   "spend_model_flags": {
-    "oem_direct_deduction": true,
+    "oem_direct_deduction": false,
     "offshore_coe": false,
     "incumbent_msp": false,
     "channel_mismatch": false,
     "ms_standardized": false,
     "high_ai_maturity": false,
     "ai_maturity_score": 5,
-    "ai_maturity_notes": "No CIO, CDO, or CAIO identified publicly. Formed 2022 from HollyFrontier + Sinclair merger — IT integration likely still in progress. SAP probable given refining peers. No public AI programs or cloud platform confirmed. Score 5.",
+    "ai_maturity_notes": "No CIO, CDO, or CAIO identified publicly. Formed 2022 from HollyFrontier + Sinclair merger \u2014 IT integration likely still in progress. SAP probable given refining peers. No public AI programs or cloud platform confirmed. Score 5.",
     "territory": "STOLA",
-    "channel_mismatch_notes": "HQ Dallas TX — within WWT STOLA territory (Dallas/Houston coverage). No channel conflict."
+    "channel_mismatch_notes": "HQ Dallas TX \u2014 within WWT STOLA territory (Dallas/Houston coverage). No channel conflict."
   },
-  "enrichment_notes": "FY2024 revenue $28.57B — highly commodity-exposed refining. ~4,800 employees. Revenue >$10B triggers OEM deduction. Dallas HQ within STOLA. No technology leadership or programs publicly identified. Confidence LOW — very limited public IT signal. Post-merger IT integration (HollyFrontier + Sinclair 2022) is likely active demand signal."
+  "enrichment_notes": "FY2024 revenue $28.57B \u2014 highly commodity-exposed refining. ~4,800 employees. Revenue >$10B triggers OEM deduction. Dallas HQ within STOLA. No technology leadership or programs publicly identified. Confidence LOW \u2014 very limited public IT signal. Post-merger IT integration (HollyFrontier + Sinclair 2022) is likely active demand signal."
 }

@@ -17,7 +17,8 @@
     "incumbent_msp": null,
     "ms_standardized": false,
     "channel_mismatch_flag": true,
-    "channel_mismatch_note": "HQ Newcastle UK — channel mismatch. Significant Houston TX operational hub but UK incorporation drives mismatch flag."
+    "channel_mismatch_note": "HQ Newcastle UK \u2014 channel mismatch. Significant Houston TX operational hub but UK incorporation drives mismatch flag.",
+    "oem_direct_confirmed": false
   },
   "leadership": [],
   "signals": [
@@ -25,7 +26,7 @@
       "signal_type": "m_and_a",
       "signal_category": "Digital",
       "signal_date": "2024-09-01",
-      "signal_title": "TechnipFMC acquires Datagration (PetroVisor/EcoVisor) Q3 2024 — production AI platform",
+      "signal_title": "TechnipFMC acquires Datagration (PetroVisor/EcoVisor) Q3 2024 \u2014 production AI platform",
       "signal_description": "TechnipFMC acquired Datagration Solutions in Q3 2024, adding the PetroVisor production optimization AI platform and EcoVisor ESG analytics platform to its Digital Solutions portfolio. Represents a significant AI/digital signal and creates active IT integration demand.",
       "sentiment": "positive",
       "spend_impact_direction": "increase",
@@ -41,9 +42,9 @@
     "ms_standardized": false,
     "high_ai_maturity": false,
     "ai_maturity_score": 10,
-    "ai_maturity_notes": "Datagration acquisition (PetroVisor/EcoVisor) is a meaningful AI signal — production optimization AI platform. CEO publicly names digital innovation as strategic pillar. Real-time digital wellsite monitoring contract confirms operational AI deployment. No CAIO or NVIDIA partnership found. Score 10 — below threshold.",
+    "ai_maturity_notes": "Datagration acquisition (PetroVisor/EcoVisor) is a meaningful AI signal \u2014 production optimization AI platform. CEO publicly names digital innovation as strategic pillar. Real-time digital wellsite monitoring contract confirms operational AI deployment. No CAIO or NVIDIA partnership found. Score 10 \u2014 below threshold.",
     "territory": "STOLA",
-    "channel_mismatch_notes": "HQ Newcastle UK — channel mismatch. However TechnipFMC has a significant Houston TX operational hub. Technology decisions may be split between UK and Houston. Mismatch flag applied conservatively given UK incorporation."
+    "channel_mismatch_notes": "HQ Newcastle UK \u2014 channel mismatch. However TechnipFMC has a significant Houston TX operational hub. Technology decisions may be split between UK and Houston. Mismatch flag applied conservatively given UK incorporation."
   },
-  "enrichment_notes": "FY2024 revenue $9.08B — record year. ~21,000 employees. Revenue below $10B — no OEM deduction. HQ UK = channel mismatch (though significant Houston presence). Datagration acquisition Q3 2024 adds AI/digital signal. No CIO or MSP identified. SAP probable. UK country multiplier applies. Confidence MEDIUM."
+  "enrichment_notes": "FY2024 revenue $9.08B \u2014 record year. ~21,000 employees. Revenue below $10B \u2014 no OEM deduction. HQ UK = channel mismatch (though significant Houston presence). Datagration acquisition Q3 2024 adds AI/digital signal. No CIO or MSP identified. SAP probable. UK country multiplier applies. Confidence MEDIUM."
 }

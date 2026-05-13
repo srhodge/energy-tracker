@@ -18,6 +18,7 @@
     "incumbent_msp": "Accenture",
     "channel_mismatch_flag": false,
     "channel_mismatch_note": "HQ and technology decision-making in Houston — fully within WWT STOLA territory. No channel conflict.",
+    "oem_direct_confirmed": true,
     "data_enrichment_tier": 1
   },
   "leadership": [

@@ -17,8 +17,9 @@
     "offshore_coe_confirmed": false,
     "incumbent_msp": null,
     "channel_mismatch_flag": false,
-    "channel_mismatch_note": "HQ and primary technology decision-making in Houston — fully within WWT STOLA territory. No channel conflict.",
-    "data_enrichment_tier": 1
+    "channel_mismatch_note": "HQ and primary technology decision-making in Houston \u2014 fully within WWT STOLA territory. No channel conflict.",
+    "data_enrichment_tier": 1,
+    "oem_direct_confirmed": false
   },
   "leadership": [
     {
@@ -62,7 +63,7 @@
       "signal_type": "ai_announcement",
       "signal_category": "Data",
       "signal_date": "2024-06-01",
-      "signal_title": "Global Well Data Warehouse (GWDW) — ~1 billion rows, foundation for all ML/AI",
+      "signal_title": "Global Well Data Warehouse (GWDW) \u2014 ~1 billion rows, foundation for all ML/AI",
       "signal_description": "COP's Global Well Data Warehouse contains approximately 1 billion rows of well data and serves as the foundation for all machine learning and AI initiatives including artificial gas lift optimization, predictive maintenance, and the DrillBET back-reaming efficiency tool.",
       "sentiment": "positive",
       "spend_impact_direction": "increase",
@@ -73,7 +74,7 @@
       "signal_type": "partnership",
       "signal_category": "Cloud",
       "signal_date": "2024-09-01",
-      "signal_title": "Global Digital Twin Program on Microsoft Azure — visualization, monitoring, simulation tiers",
+      "signal_title": "Global Digital Twin Program on Microsoft Azure \u2014 visualization, monitoring, simulation tiers",
       "signal_description": "ConocoPhillips has deployed a multi-tier Global Digital Twin Program on Microsoft Azure spanning visualization, real-time monitoring, and full physics simulation. Azure confirmed as primary cloud platform alongside Microsoft Teams for collaboration.",
       "sentiment": "positive",
       "spend_impact_direction": "increase",
@@ -84,7 +85,7 @@
       "signal_type": "m_and_a",
       "signal_category": "M&A",
       "signal_date": "2024-11-22",
-      "signal_title": "Completed $22.5B acquisition of Marathon Oil — IT integration underway",
+      "signal_title": "Completed $22.5B acquisition of Marathon Oil \u2014 IT integration underway",
       "signal_description": "ConocoPhillips closed its $22.5B acquisition of Marathon Oil on November 22, 2024. Marathon's well and production data is being integrated into the Global Well Data Warehouse (GWDW). IT integration demand is elevated across infrastructure, OT, and data platforms.",
       "sentiment": "positive",
       "spend_impact_direction": "increase",
@@ -95,7 +96,7 @@
       "signal_type": "strategic_pivot",
       "signal_category": "Cost Optimization",
       "signal_date": "2025-09-01",
-      "signal_title": "20-25% workforce reduction announced — accelerating automation and AI investment",
+      "signal_title": "20-25% workforce reduction announced \u2014 accelerating automation and AI investment",
       "signal_description": "ConocoPhillips announced a 20-25% workforce reduction in September 2025 as part of post-Marathon integration restructuring. Workforce consolidation is accelerating investment in automation, AI-driven operations, and digital tools to maintain production efficiency with a leaner headcount.",
       "sentiment": "neutral",
       "spend_impact_direction": "increase",

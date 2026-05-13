@@ -17,7 +17,8 @@
     "offshore_coe_confirmed": true,
     "incumbent_msp": "HCL Technologies, LTIMindtree",
     "channel_mismatch_flag": false,
-    "ms_standardized": true
+    "ms_standardized": true,
+    "oem_direct_confirmed": true
   },
   "leadership": [
     {"role": "CEO", "person_name": "Mike Wirth", "location_city": "Houston", "location_country": "United States", "is_current": true, "spend_category": "All", "signal_score": 1, "source": "company_website"},

@@ -139,6 +139,7 @@ class Company(Base):
     incumbent_msp: Mapped[str | None] = mapped_column(String(200))
     channel_mismatch_flag: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
     channel_mismatch_note: Mapped[str | None] = mapped_column(Text)
+    oem_direct_confirmed: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
     data_enrichment_tier: Mapped[int | None] = mapped_column(Integer)
 
     financials: Mapped[list["Financial"]] = relationship(back_populates="company", cascade="all, delete-orphan")
