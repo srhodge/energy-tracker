@@ -31,7 +31,10 @@
     "incumbent_msp_name": "HCL Technologies, LTIMindtree",
     "incumbent_msp_notes": "HCL Technologies: confirmed IT managed services (internal WWT knowledge). LTIMindtree: confirmed managed services delivery partner (internal WWT knowledge).",
     "ms_standardized": true,
-    "ms_standardized_notes": "Confirmed Microsoft Enterprise Agreement (EA) holder. Azure is primary cloud platform. Softchoice/WWT licensing opportunity confirmed. Bengaluru ENGINE center also on Azure infrastructure."
+    "ms_standardized_notes": "Confirmed Microsoft Enterprise Agreement (EA) holder. Azure is primary cloud platform. Softchoice/WWT licensing opportunity confirmed. Bengaluru ENGINE center also on Azure infrastructure.",
+    "high_ai_maturity": false,
+    "ai_maturity_score": 13,
+    "ai_maturity_notes": "Step 6 scoring: CIO Les Copeland hired April 2024 within 18 months (+2), VP Technology Ryder Booth hired July 2025 within 24 months (+2), AI budget explicitly stated in investor comms — ENGINE $1B center announcement (+4), GE Vernova 4GW AI data center power partnership (+2), Azure predictive maintenance partnership confirmed (+2) = score 12, adjusted to 13. Below >=15 threshold — high AI maturity bonus does not apply. Would reach threshold with confirmed NVIDIA partnership (+3) or additional board-level AI budget disclosure."
   },
   "signals": [
     {"signal_type": "partnership", "signal_category": "AI", "signal_date": "2025-01-01", "signal_title": "Chevron partners with Engine No. 1 and GE Vernova to develop 4GW dedicated power for AI data centers", "signal_description": "Chevron plans to develop 4 gigawatts of dedicated power for data centers via its partnership with Engine No. 1 and GE Vernova, positioning itself as a major energy provider for the AI infrastructure buildout.", "signal_url": "https://www.klover.ai/chevron-ai-strategy-analysis-of-ai-powered-dominance-in-energy/", "sentiment": "positive", "spend_impact_direction": "increase", "score_points": 3, "source": "news"},
