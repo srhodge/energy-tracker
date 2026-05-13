@@ -26,10 +26,10 @@
   ],
   "spend_model_flags": {
     "offshore_coe": true,
-    "offshore_coe_name": "Chevron ENGINE Centre, Bengaluru — Azure-based, supports global IT and digital operations",
+    "offshore_coe_name": "Chevron ENGINE (Engineering and Innovation Excellence Center), Bengaluru — $1B investment, opened October 2025, 1,000+ professionals",
     "incumbent_msp": true,
     "incumbent_msp_name": "HCL Technologies, LTIMindtree",
-    "incumbent_msp_notes": "HCL Technologies: confirmed IT managed services (internal WWT knowledge). LTIMindtree: confirmed managed services delivery partner (internal WWT knowledge).",
+    "incumbent_msp_notes": "HCL Technologies and LTIMindtree confirmed as incumbent managed service providers. Confirmed via internal WWT relationship intelligence. Reduces WWT addressable by -10%.",
     "ms_standardized": true,
     "ms_standardized_notes": "Confirmed Microsoft Enterprise Agreement (EA) holder. Azure is primary cloud platform. Softchoice/WWT licensing opportunity confirmed. Bengaluru ENGINE center also on Azure infrastructure.",
     "high_ai_maturity": false,
