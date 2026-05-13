@@ -1,0 +1,48 @@
+{
+  "company_id": 150,
+  "profile": {
+    "sub_sector": "Upstream E&P",
+    "employee_count": 762,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 5251000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 88,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Daniel E. Brown",
+      "location_city": "Houston",
+      "location_country": "United States",
+      "hire_date": "2022-07-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 1,
+      "source": "company_website"
+    }
+  ],
+  "signals": [],
+  "spend_model_flags": {
+    "oem_direct_deduction": false,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "channel_mismatch": false,
+    "ms_standardized": false,
+    "high_ai_maturity": false,
+    "ai_maturity_score": 5,
+    "ai_maturity_notes": "No CIO identified publicly. Very lean 762-person workforce. Formed from merger 2022 — IT integration phase likely complete. No AI programs, cloud platforms, or technology partnerships publicly identified. Williston Basin focused — lower technology intensity than Permian operators. Score 5 — well below threshold.",
+    "territory": "STOLA",
+    "channel_mismatch_notes": "HQ Houston TX — within WWT STOLA territory. No channel conflict."
+  },
+  "enrichment_notes": "FY2024 revenue $5.25B. 762 employees — very lean. Formed from Oasis + Whiting merger July 2022. Revenue below $10B so OEM deduction does not apply. Clean Houston account with no MSP or CoE. No technology leadership or programs publicly identified. Confidence LOW. WWT opportunity: clean account in STOLA territory but limited near-term hook without known initiative or relationship."
+}

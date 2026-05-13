@@ -1,0 +1,36 @@
+{
+  "company_id": 345,
+  "profile": {
+    "sub_sector": "Downstream Refining",
+    "employee_count": 1595,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Sugar Land",
+    "hq_country": "United States",
+    "tech_decision_city": "Sugar Land",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 7610000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 92,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false
+  },
+  "leadership": [],
+  "signals": [],
+  "spend_model_flags": {
+    "oem_direct_deduction": false,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "channel_mismatch": false,
+    "ms_standardized": false,
+    "high_ai_maturity": false,
+    "ai_maturity_score": 3,
+    "ai_maturity_notes": "No CIO, CDO, or CAIO identified publicly. Icahn-controlled holding company with lean corporate structure (1,595 employees). Mid-Continent refineries are operationally focused with minimal public IT signal. No technology partnerships, AI programs, or digital transformation initiatives found. Lowest AI maturity in Tier 1 set. Score 3.",
+    "territory": "STOLA",
+    "channel_mismatch_notes": "HQ Sugar Land TX — within WWT STOLA territory (Houston metro). No channel conflict."
+  },
+  "enrichment_notes": "FY2024 revenue $7.61B — highly commodity-exposed refining and fertilizer. 1,595 employees. Revenue below $10B so OEM deduction does not apply. Icahn-controlled — lean corporate structure, cost-focused culture, minimal discretionary IT investment expected. No technology leadership identified. No MSP, CoE, or AI programs. Confidence LOW. WWT opportunity very limited — Icahn portfolio companies are known for minimal IT discretionary spend."
+}

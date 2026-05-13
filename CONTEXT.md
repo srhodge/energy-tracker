@@ -37,7 +37,7 @@ Floor: 12%, Ceiling: 42%
 Full 13-step model documentation: see WWT_Energy_Spend_Model_v4.docx
 
 ## Enrichment Status (as of May 2026)
-Tier 1 (21 companies) — 10 enriched:
+Tier 1 (21 companies) — 13 enriched:
 - ExxonMobil (id=2): XOM, Integrated O&G, $323.9B rev, 58,000 employees, $1.81B WWT addressable high (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%AI=11%→floor; CoE=Bangalore Global Business & Tech Center, MSP=Accenture/Deloitte/McKinsey confirmed, ms_standardized=false, ai_maturity_score=18) [HIGH]
 - Chevron (id=3): CVX, Integrated O&G, $193.4B rev, 40,000 employees, $458.4M mid / $668.5M high WWT addressable (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%MS+0%AI=11%→floor; CoE=Bengaluru ENGINE Center, MSP=HCL Technologies+LTIMindtree confirmed, ms_standardized=true, ai_maturity_score=13 below ≥15 threshold — AI bonus does not apply) [HIGH]
 - ConocoPhillips (id=8): COP, Upstream E&P, $56.1B rev, 11,800 employees, $1.60B WWT addressable (34%; 27%−3%OEM+5%MS+5%AI=34%; ms_standardized=true, high AI maturity confirmed) [HIGH]
@@ -48,9 +48,11 @@ Tier 1 (21 companies) — 10 enriched:
 - Targa Resources (id=53): TRGP, Midstream Pipeline & Processing, $17.0B rev, 3,570 employees, $136.4M mid / $193.7M high WWT addressable (24%; 27%−3%OEM=24%; ms_standardized=false, no MSP, no CoE) [MEDIUM_HIGH]
 - LyondellBasell (id=63): LYB, Petrochemical & Specialty Chemicals, $37.7B rev, 26,000 employees, $524.9M mid / $729.4M high WWT addressable (29%; 27%−3%OEM+5%MS=29%; ms_standardized=true, no MSP, no CoE) [MEDIUM_HIGH]
 - Sempra Energy (id=31): SRE, Energy Utilities, $13.185B rev, 16,773 employees, $291.9M mid / $507.2M high WWT addressable (21%; 27%−3%OEM−8%mismatch+5%MS=21%; ms_standardized=true, channel_mismatch=San Diego HQ outside STOLA, no MSP, no CoE) [MEDIUM_HIGH]
+- Antero Resources (id=144): AR, Upstream E&P, $4.11B rev, 632 employees, $18.0M mid / $26.0M high WWT addressable (19%; 27%−8%mismatch=19%; ms_standardized=false, no MSP, no CoE, channel_mismatch=Denver HQ outside STOLA) [MEDIUM_HIGH]
+- Chord Energy (id=150): CHRD, Upstream E&P, $5.25B rev, 762 employees, $32.5M mid / $47.0M high WWT addressable (27%; 27%=27%; ms_standardized=false, no MSP, no CoE, Houston HQ in STOLA) [MEDIUM_HIGH]
+- CVR Energy (id=345): CVI, Downstream Refining, $7.61B rev, 1,595 employees, $59.7M mid / $83.3M high WWT addressable (27%; 27%=27%; ms_standardized=false, no MSP, no CoE, Sugar Land TX in STOLA) [MEDIUM_HIGH]
 
-Tier 1 remaining (13 companies): Antero Resources (id=144),
-Chord Energy (id=150), CVR Energy (id=345), Helmerich & Payne (id=258),
+Tier 1 remaining (10 companies): Helmerich & Payne (id=258),
 HF Sinclair (id=152), NCS Multistage (id=567), Par Pacific (id=402),
 PBF Energy (id=259), Sasol (id=244), Technip Energies (id=214),
 TechnipFMC (id=110), Weatherford (id=179), Worley (id=201)
