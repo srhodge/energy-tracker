@@ -1,0 +1,37 @@
+{
+  "company_id": 214,
+  "profile": {
+    "sub_sector": "Oilfield & Energy Services",
+    "employee_count": 17000,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Nanterre",
+    "hq_country": "France",
+    "tech_decision_city": "Nanterre",
+    "tech_decision_country": "France",
+    "revenue_ttm": 7610000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 40,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ Nanterre France — significant channel mismatch. Technology decisions made in France/Europe. Channel mismatch flag applied."
+  },
+  "leadership": [],
+  "signals": [],
+  "spend_model_flags": {
+    "oem_direct_deduction": false,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "channel_mismatch": true,
+    "ms_standardized": false,
+    "high_ai_maturity": false,
+    "ai_maturity_score": 7,
+    "ai_maturity_notes": "Engineering services company — technology focus is on client-facing project/engineering tools rather than internal IT AI. CEO names digital innovation as strategic pillar. No CIO or CAIO identified publicly. Score 7.",
+    "territory": "STOLA",
+    "channel_mismatch_notes": "HQ Nanterre France — significant channel mismatch. Technology decisions made in France/Europe. Channel mismatch flag applied. Revenue below $10B in USD — no OEM deduction."
+  },
+  "enrichment_notes": "FY2024 revenue €6.9B (~$7.61B USD). 17,000 employees. Revenue below $10B USD — no OEM deduction. HQ France = channel mismatch. No CIO or technology leadership identified publicly. Engineering services company — internal IT less prominent than client-facing technology. Confidence LOW. EU country multiplier applies (Step 3). CBAM compliance = potential digital technology premium."
+}

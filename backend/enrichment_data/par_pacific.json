@@ -1,0 +1,36 @@
+{
+  "company_id": 402,
+  "profile": {
+    "sub_sector": "Downstream Refining",
+    "employee_count": 1100,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 8200000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 88,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false
+  },
+  "leadership": [],
+  "signals": [],
+  "spend_model_flags": {
+    "oem_direct_deduction": false,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "channel_mismatch": false,
+    "ms_standardized": false,
+    "high_ai_maturity": false,
+    "ai_maturity_score": 4,
+    "ai_maturity_notes": "No CIO or technology leadership identified publicly. Small refiner (~1,100 employees) with geographically dispersed operations. No public IT programs or AI initiatives found. Score 4.",
+    "territory": "STOLA",
+    "channel_mismatch_notes": "HQ Houston TX — within WWT STOLA territory. No channel conflict."
+  },
+  "enrichment_notes": "FY2024 revenue $8.2B — commodity-exposed refining. ~1,100 employees. Revenue below $10B — no OEM deduction. Houston HQ in STOLA. No technology leadership or programs identified. New CEO Will Monteleone 2024. Confidence LOW. Small refiner with limited IT discretionary spend expected."
+}

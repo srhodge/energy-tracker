@@ -37,7 +37,7 @@ Floor: 12%, Ceiling: 42%
 Full 13-step model documentation: see WWT_Energy_Spend_Model_v4.docx
 
 ## Enrichment Status (as of May 2026)
-Tier 1 (21 companies) — 13 enriched:
+Tier 1 (21 companies) — 21 enriched (COMPLETE):
 - ExxonMobil (id=2): XOM, Integrated O&G, $323.9B rev, 58,000 employees, $1.81B WWT addressable high (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%AI=11%→floor; CoE=Bangalore Global Business & Tech Center, MSP=Accenture/Deloitte/McKinsey confirmed, ms_standardized=false, ai_maturity_score=18) [HIGH]
 - Chevron (id=3): CVX, Integrated O&G, $193.4B rev, 40,000 employees, $458.4M mid / $668.5M high WWT addressable (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%MS+0%AI=11%→floor; CoE=Bengaluru ENGINE Center, MSP=HCL Technologies+LTIMindtree confirmed, ms_standardized=true, ai_maturity_score=13 below ≥15 threshold — AI bonus does not apply) [HIGH]
 - ConocoPhillips (id=8): COP, Upstream E&P, $56.1B rev, 11,800 employees, $1.60B WWT addressable (34%; 27%−3%OEM+5%MS+5%AI=34%; ms_standardized=true, high AI maturity confirmed) [HIGH]
@@ -51,11 +51,18 @@ Tier 1 (21 companies) — 13 enriched:
 - Antero Resources (id=144): AR, Upstream E&P, $4.11B rev, 632 employees, $18.0M mid / $26.0M high WWT addressable (19%; 27%−8%mismatch=19%; ms_standardized=false, no MSP, no CoE, channel_mismatch=Denver HQ outside STOLA) [MEDIUM_HIGH]
 - Chord Energy (id=150): CHRD, Upstream E&P, $5.25B rev, 762 employees, $32.5M mid / $47.0M high WWT addressable (27%; 27%=27%; ms_standardized=false, no MSP, no CoE, Houston HQ in STOLA) [MEDIUM_HIGH]
 - CVR Energy (id=345): CVI, Downstream Refining, $7.61B rev, 1,595 employees, $59.7M mid / $83.3M high WWT addressable (27%; 27%=27%; ms_standardized=false, no MSP, no CoE, Sugar Land TX in STOLA) [MEDIUM_HIGH]
+- Helmerich & Payne (id=258): HP, Oilfield & Energy Services, $2.76B rev, 6,200 employees, $26.9M mid / $38.9M high WWT addressable (19%; 27%−8%mismatch=19%; ms_standardized=false, no MSP, no CoE, channel_mismatch=Tulsa OK outside STOLA) [MEDIUM_HIGH]
+- HF Sinclair (id=152): DINO, Downstream Refining, $28.57B rev, 4,800 employees, $194.4M mid / $271.4M high WWT addressable (24%; 27%−3%OEM=24%; ms_standardized=false, no MSP, Dallas TX in STOLA) [MEDIUM_HIGH]
+- NCS Multistage (id=567): NCSM, Oilfield & Energy Services, $162.6M rev, 250 employees, $2.2M mid / $3.3M high WWT addressable (27%; 27%=27%; ms_standardized=false, Houston TX in STOLA — micro-cap, limited opportunity) [MEDIUM_HIGH]
+- Par Pacific (id=402): PARR, Downstream Refining, $8.2B rev, 1,100 employees, $61.5M mid / $85.9M high WWT addressable (27%; 27%=27%; ms_standardized=false, Houston TX in STOLA) [MEDIUM_HIGH]
+- PBF Energy (id=259): PBF, Downstream Refining, $33.12B rev, 3,800 employees, $145.5M mid / $203.2M high WWT addressable (16%; 27%−3%OEM−8%mismatch=16%; ms_standardized=false, channel_mismatch=Parsippany NJ outside STOLA) [MEDIUM_HIGH]
+- Sasol (id=244): SSL, Petrochemical & Specialty Chemicals, $13.9B rev, 27,411 employees, $249.9M mid / $351.4M high WWT addressable (21%; 27%−3%OEM−8%mismatch+5%MS=21%; ms_standardized=true, CIO confirmed, channel_mismatch=Johannesburg HQ) [MEDIUM_HIGH]
+- Technip Energies (id=214): TE, Oilfield & Energy Services, $7.61B rev, 17,000 employees, $88.4M mid / $127.7M high WWT addressable (19%; 27%−8%mismatch=19%; ms_standardized=false, channel_mismatch=France HQ) [MEDIUM_HIGH]
+- TechnipFMC (id=110): FTI, Oilfield & Energy Services, $9.08B rev, 21,000 employees, $116.9M mid / $168.9M high WWT addressable (19%; 27%−8%mismatch=19%; ms_standardized=false, channel_mismatch=UK HQ, Datagration AI acquisition) [MEDIUM_HIGH]
+- Weatherford (id=179): WFRD, Oilfield & Energy Services, $5.4B rev, 17,000 employees, $140.4M mid / $204.3M high WWT addressable (27%; 27%=27%; ms_standardized=false, Houston HQ in STOLA, Datagration AI acquisition, CEO digitalization mandate) [MEDIUM_HIGH]
+- Worley (id=201): WOR, Oilfield & Energy Services, $8.24B rev, 45,505 employees, $147.9M mid / $213.6M high WWT addressable (19%; 27%−8%mismatch=19%; ms_standardized=false, channel_mismatch=Sydney Australia HQ) [MEDIUM_HIGH]
 
-Tier 1 remaining (10 companies): Helmerich & Payne (id=258),
-HF Sinclair (id=152), NCS Multistage (id=567), Par Pacific (id=402),
-PBF Energy (id=259), Sasol (id=244), Technip Energies (id=214),
-TechnipFMC (id=110), Weatherford (id=179), Worley (id=201)
+Tier 1 remaining: NONE — all 21 companies enriched.
 
 
 ## Enrichment Workflow
@@ -66,7 +73,7 @@ TechnipFMC (id=110), Weatherford (id=179), Worley (id=201)
 5. Claude Code runs run_estimates.py --company-id N
 
 ## Pending Work
-1. Continue Tier 1 enrichment (16 remaining companies)
+1. Tier 1 enrichment COMPLETE — begin Tier 2 US companies
 2. Filter bar standardization across all pages (Analytics pattern)
 3. Intelligence tab Phase 2 enhancements (forward estimate display, opportunity scorecard)
 4. Weekly batch signal collection service

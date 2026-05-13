@@ -1,0 +1,71 @@
+{
+  "company_id": 179,
+  "profile": {
+    "sub_sector": "Oilfield & Energy Services",
+    "employee_count": 17000,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 5400000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 70,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Girish Saligram",
+      "location_city": "Houston",
+      "location_country": "United States",
+      "hire_date": "2020-01-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 8,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "m_and_a",
+      "signal_category": "Digital",
+      "signal_date": "2024-09-01",
+      "signal_title": "Weatherford acquires Datagration (PetroVisor/EcoVisor) Q3 2024 — AI production optimization",
+      "signal_description": "Weatherford acquired Datagration Solutions in Q3 2024, adding the PetroVisor AI-enabled production optimization platform and EcoVisor ESG analytics to its Digital Solutions segment. CEO Girish Saligram has named digitalization as a core strategic differentiator. Creates active post-acquisition IT integration demand.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "partnership",
+      "signal_category": "Digital",
+      "signal_date": "2025-01-01",
+      "signal_title": "Weatherford 8-year real-time digital wellsite monitoring contract with Romgaz",
+      "signal_description": "Weatherford secured an 8-year contract with Romanian gas producer Romgaz in 2025 for real-time digital wellsite monitoring, deploying its Digital Solutions capabilities. Confirms commercial AI and digital deployment at scale.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    }
+  ],
+  "spend_model_flags": {
+    "oem_direct_deduction": false,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "channel_mismatch": false,
+    "ms_standardized": false,
+    "high_ai_maturity": false,
+    "ai_maturity_score": 12,
+    "ai_maturity_notes": "Datagration acquisition (PetroVisor AI/EcoVisor) is a strong signal — dedicated AI platform for production optimization now part of product portfolio. CEO publicly drives digitalization. Digital Solutions is a standalone segment — dedicated investment. 8-year Romgaz digital contract confirms commercial AI deployment. Score 12 — approaching threshold but below ≥15.",
+    "territory": "STOLA",
+    "channel_mismatch_notes": "HQ Houston TX — within WWT STOLA territory. No channel conflict."
+  },
+  "enrichment_notes": "FY2024 revenue ~$5.4B. ~17,000 employees globally. Revenue below $10B — no OEM deduction. Houston HQ in STOLA. Datagration acquisition Q3 2024 = significant digital/AI signal. Digital Solutions standalone segment. CEO digitalization mandate. No MSP or CoE identified. Confidence MEDIUM. WWT opportunity: Houston account, no MSP, active digital transformation, AI platform integration demand post-Datagration."
+}

@@ -1,0 +1,37 @@
+{
+  "company_id": 258,
+  "profile": {
+    "sub_sector": "Oilfield & Energy Services",
+    "employee_count": 6200,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Tulsa",
+    "hq_country": "United States",
+    "tech_decision_city": "Tulsa",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 2760000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 75,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ Tulsa OK — outside WWT STOLA territory. Channel mismatch flag applied."
+  },
+  "leadership": [],
+  "signals": [],
+  "spend_model_flags": {
+    "oem_direct_deduction": false,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "channel_mismatch": true,
+    "ms_standardized": false,
+    "high_ai_maturity": false,
+    "ai_maturity_score": 10,
+    "ai_maturity_notes": "H&P Technologies subsidiary is a meaningful AI/automation signal — dedicated entity for drilling automation, AI-assisted geosteering, AutoSlide technology. Microsoft Teams + EC2 confirmed. No CAIO identified. KCA Deutag acquisition (July 2024) adds international scale and IT integration demand. Score 10 — below threshold.",
+    "territory": "STOLA",
+    "channel_mismatch_notes": "HQ Tulsa OK — outside WWT STOLA territory. Channel mismatch flag applied."
+  },
+  "enrichment_notes": "FY2024 revenue $2.76B (fiscal year ends September 30). 6,200 employees. Revenue below $10B — no OEM deduction. HQ Tulsa = channel mismatch. H&P Technologies subsidiary is key AI/automation signal. KCA Deutag acquisition July 2024 = active M&A integration demand. No CIO identified publicly. Microsoft Teams + EC2 confirmed. Confidence MEDIUM."
+}

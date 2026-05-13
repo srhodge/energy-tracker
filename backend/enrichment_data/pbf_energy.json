@@ -1,0 +1,37 @@
+{
+  "company_id": 259,
+  "profile": {
+    "sub_sector": "Downstream Refining",
+    "employee_count": 3800,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Parsippany",
+    "hq_country": "United States",
+    "tech_decision_city": "Parsippany",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 33120000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 92,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ Parsippany NJ — outside WWT STOLA territory. Primary technology decisions likely made in NJ. Channel mismatch flag applied."
+  },
+  "leadership": [],
+  "signals": [],
+  "spend_model_flags": {
+    "oem_direct_deduction": true,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "channel_mismatch": true,
+    "ms_standardized": false,
+    "high_ai_maturity": false,
+    "ai_maturity_score": 5,
+    "ai_maturity_notes": "No CIO or technology leadership identified publicly. Large refiner by throughput but lean corporate headcount (~3,800 employees). SAP probable. No public AI programs or cloud platform confirmed. Score 5.",
+    "territory": "STOLA",
+    "channel_mismatch_notes": "HQ Parsippany NJ — outside WWT STOLA territory. Primary technology decisions likely made in NJ. Channel mismatch flag applied."
+  },
+  "enrichment_notes": "FY2024 revenue $33.12B — highly commodity-exposed refining. ~3,800 employees. Revenue >$10B triggers OEM deduction. HQ Parsippany NJ = channel mismatch. No technology leadership or programs identified. Confidence LOW. Large refiner by capacity but limited public IT signal."
+}

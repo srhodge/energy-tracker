@@ -1,0 +1,61 @@
+{
+  "company_id": 244,
+  "profile": {
+    "sub_sector": "Petrochemical & Specialty Chemicals",
+    "employee_count": 27411,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Johannesburg",
+    "hq_country": "South Africa",
+    "tech_decision_city": "Johannesburg",
+    "tech_decision_country": "South Africa",
+    "revenue_ttm": 13900000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 60,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": true,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ Johannesburg South Africa — significant channel mismatch. US operations at Lake Charles LA (within STOLA reach) but primary technology decisions made in South Africa. Channel mismatch flag applied."
+  },
+  "leadership": [
+    {
+      "role": "CIO",
+      "person_name": "Lungile Mginqi",
+      "location_city": "Johannesburg",
+      "location_country": "South Africa",
+      "is_current": true,
+      "spend_category": "IT",
+      "signal_score": 12,
+      "source": "public_disclosure"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "AI",
+      "signal_date": "2023-01-01",
+      "signal_title": "Sasol CIO launches GenAI program — 10-30 use cases developed with zero initial investment",
+      "signal_description": "Group CIO Lungile Mginqi initiated a generative AI program in 2023 starting with a zero-cost phase using volunteer developers, resulting in 10-30 GenAI use cases developed internally. Microsoft Copilot deployed across enterprise. Phase 2 with investment commitment planned for 2024. CIO publicly presented at CIO Day South Africa 2023 on the AI governance and guardrails framework.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "public_disclosure"
+    }
+  ],
+  "spend_model_flags": {
+    "oem_direct_deduction": true,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "channel_mismatch": true,
+    "ms_standardized": true,
+    "ms_standardized_notes": "Microsoft Copilot and Microsoft 365 confirmed. Azure confirmed as cloud platform. SAP on Azure likely. Softchoice/WWT licensing opportunity may exist for US operations.",
+    "high_ai_maturity": false,
+    "ai_maturity_score": 13,
+    "ai_maturity_notes": "CIO Lungile Mginqi is externally active and driving GenAI agenda publicly (+2 CIO signal). Microsoft Copilot confirmed deployment (+2 MS AI platform signal). GenAI program with 10-30 use cases in production (+4 AI budget/program signal, though cost was initially zero). Score 13 — below ≥15 threshold. Notable for a South African company — above average for the region.",
+    "territory": "STOLA",
+    "channel_mismatch_notes": "HQ Johannesburg South Africa — significant channel mismatch. US operations at Lake Charles LA (within STOLA reach) but primary technology decisions made in South Africa. Channel mismatch flag applied."
+  },
+  "enrichment_notes": "FY TTM revenue ~$13.9B USD (fiscal year ends June 30). 27,411 employees. Revenue >$10B triggers OEM deduction. HQ Johannesburg = channel mismatch. CIO Lungile Mginqi confirmed and active. Microsoft Copilot + Azure + SAP confirmed. No incumbent MSP found. South Africa country multiplier applies (Step 3). AI maturity 13, below threshold. US Lake Charles chemicals complex is the main WWT entry point."
+}

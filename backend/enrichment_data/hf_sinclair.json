@@ -1,0 +1,36 @@
+{
+  "company_id": 152,
+  "profile": {
+    "sub_sector": "Downstream Refining",
+    "employee_count": 4800,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Dallas",
+    "hq_country": "United States",
+    "tech_decision_city": "Dallas",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 28570000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 90,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false
+  },
+  "leadership": [],
+  "signals": [],
+  "spend_model_flags": {
+    "oem_direct_deduction": true,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "channel_mismatch": false,
+    "ms_standardized": false,
+    "high_ai_maturity": false,
+    "ai_maturity_score": 5,
+    "ai_maturity_notes": "No CIO, CDO, or CAIO identified publicly. Formed 2022 from HollyFrontier + Sinclair merger — IT integration likely still in progress. SAP probable given refining peers. No public AI programs or cloud platform confirmed. Score 5.",
+    "territory": "STOLA",
+    "channel_mismatch_notes": "HQ Dallas TX — within WWT STOLA territory (Dallas/Houston coverage). No channel conflict."
+  },
+  "enrichment_notes": "FY2024 revenue $28.57B — highly commodity-exposed refining. ~4,800 employees. Revenue >$10B triggers OEM deduction. Dallas HQ within STOLA. No technology leadership or programs publicly identified. Confidence LOW — very limited public IT signal. Post-merger IT integration (HollyFrontier + Sinclair 2022) is likely active demand signal."
+}
