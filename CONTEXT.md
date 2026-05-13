@@ -38,7 +38,7 @@ Full 13-step model documentation: see WWT_Energy_Spend_Model_v4.docx
 
 ## Enrichment Status (as of May 2026)
 Tier 1 (21 companies) — 7 enriched:
-- ExxonMobil (id=2): XOM, Integrated O&G, $323.9B rev, 58,000 employees [HIGH]
+- ExxonMobil (id=2): XOM, Integrated O&G, $323.9B rev, 58,000 employees, $1.81B WWT addressable (12% — floor, MSP+CoE) [HIGH]
 - Chevron (id=3): CVX, Integrated O&G, $189.0B rev, 43,039 employees [HIGH]
 - ConocoPhillips (id=8): COP, Upstream E&P, $56.1B rev, 11,800 employees, $1.60B WWT addressable (34%) [HIGH]
 - Halliburton (id=67): HAL, Oilfield & Energy Services, $22.9B rev, 48,000 employees, $610.8M WWT addressable (19%) [MEDIUM_HIGH]
