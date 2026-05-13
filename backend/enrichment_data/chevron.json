@@ -14,7 +14,8 @@
     "is_pe_backed": false,
     "commodity_exposure_pct": 68,
     "revenue_denominator": "revenue",
-    "offshore_coe_confirmed": false,
+    "offshore_coe_confirmed": true,
+    "incumbent_msp": "HCL Technologies, LTIMindtree",
     "channel_mismatch_flag": false,
     "ms_standardized": true
   },
@@ -24,6 +25,11 @@
     {"role": "VP_Technology", "person_name": "Ryder Booth", "location_city": "Houston", "location_country": "United States", "is_current": true, "spend_category": "All", "signal_score": 1, "source": "press_release", "hire_date": "2025-07-01"}
   ],
   "spend_model_flags": {
+    "offshore_coe": true,
+    "offshore_coe_name": "Chevron ENGINE Centre, Bengaluru — Azure-based, supports global IT and digital operations",
+    "incumbent_msp": true,
+    "incumbent_msp_name": "HCL Technologies, LTIMindtree",
+    "incumbent_msp_notes": "HCL Technologies: confirmed IT managed services (internal WWT knowledge). LTIMindtree: confirmed managed services delivery partner (internal WWT knowledge).",
     "ms_standardized": true,
     "ms_standardized_notes": "Confirmed Microsoft Enterprise Agreement (EA) holder. Azure is primary cloud platform. Softchoice/WWT licensing opportunity confirmed. Bengaluru ENGINE center also on Azure infrastructure."
   },
