@@ -619,7 +619,7 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                       <div style={{ display: "flex", justifyContent: "space-between", padding: "3px 0", borderBottom: "1px solid #f3f4f6" }}>
                         <div style={{ fontSize: 12, color: isClamped ? AMBER : GRAY }}>Floor/ceiling applied (model bounds: 12%–42%)</div>
                         <div style={{ fontSize: 12, fontWeight: 600, color: isClamped ? AMBER : GRAY }}>
-                          {isFloor ? `${rawPct}% → floor 12%` : isCeil ? `${rawPct}% → ceiling 42%` : "Within bounds — no adjustment"}
+                          {isFloor ? `${rawPct}% → clamped to floor 12%` : isCeil ? `${rawPct}% → clamped to ceiling 42%` : "Within bounds — no adjustment"}
                         </div>
                       </div>
 
