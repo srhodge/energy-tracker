@@ -38,13 +38,13 @@ Full 13-step model documentation: see WWT_Energy_Spend_Model_v4.docx
 
 ## Enrichment Status (as of May 2026)
 Tier 1 (21 companies) — 7 enriched:
-- ExxonMobil (id=2): XOM, Integrated O&G, $323.9B rev, 58,000 employees, $1.81B WWT addressable (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%AI=11%→floor; ms_standardized=false confirmed) [HIGH]
-- Chevron (id=3): CVX, Integrated O&G, $193.4B rev, 40,000 employees, $458.4M WWT addressable mid / $668.5M high (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%MS+0%AI=11%→floor; CoE=Bengaluru ENGINE, MSP=HCL+LTIMindtree, ms_standardized=true, ai_maturity_score=13 below threshold) [HIGH]
-- ConocoPhillips (id=8): COP, Upstream E&P, $56.1B rev, 11,800 employees, $1.60B WWT addressable (34%) [HIGH]
-- Halliburton (id=67): HAL, Oilfield & Energy Services, $22.9B rev, 48,000 employees, $610.8M WWT addressable (19%) [MEDIUM_HIGH]
-- Phillips 66 (id=34): PSX, Downstream Refining, $143.1B rev, 13,000 employees, $2.62B WWT addressable (29%) [MEDIUM_HIGH]
-- Enbridge (id=12): ENB, Midstream Pipeline & Processing, $38.75B rev, 12,000 employees, $619.5M WWT addressable (21%) [MEDIUM_HIGH]
-- EOG Resources (id=21): EOG, Upstream E&P, $23.7B rev, 3,000 employees, $289.3M WWT addressable (24%) [MEDIUM_HIGH]
+- ExxonMobil (id=2): XOM, Integrated O&G, $323.9B rev, 58,000 employees, $1.81B WWT addressable high (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%AI=11%→floor; CoE=Bangalore Global Business & Tech Center, MSP=Accenture/Deloitte/McKinsey confirmed, ms_standardized=false, ai_maturity_score=18) [HIGH]
+- Chevron (id=3): CVX, Integrated O&G, $193.4B rev, 40,000 employees, $458.4M mid / $668.5M high WWT addressable (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%MS+0%AI=11%→floor; CoE=Bengaluru ENGINE Center, MSP=HCL Technologies+LTIMindtree confirmed, ms_standardized=true, ai_maturity_score=13 below ≥15 threshold — AI bonus does not apply) [HIGH]
+- ConocoPhillips (id=8): COP, Upstream E&P, $56.1B rev, 11,800 employees, $1.60B WWT addressable (34%; 27%−3%OEM+5%MS+5%AI=34%; ms_standardized=true, high AI maturity confirmed) [HIGH]
+- Halliburton (id=67): HAL, Oilfield & Energy Services, $22.9B rev, 48,000 employees, $610.8M WWT addressable (19%; 27%−3%OEM−10%MSP+5%MS=19%; MSP=Accenture confirmed, ms_standardized=true) [MEDIUM_HIGH]
+- Phillips 66 (id=34): PSX, Downstream Refining, $143.1B rev, 13,000 employees, $2.62B WWT addressable (29%; 27%−3%OEM+5%MS=29%; ms_standardized=true, no MSP) [MEDIUM_HIGH]
+- Enbridge (id=12): ENB, Midstream Pipeline & Processing, $38.75B rev, 12,000 employees, $619.5M WWT addressable (21%; 27%−3%OEM−8%mismatch+5%MS=21%; ms_standardized=true, channel_mismatch=Calgary HQ outside STOLA territory) [MEDIUM_HIGH]
+- EOG Resources (id=21): EOG, Upstream E&P, $23.7B rev, 3,000 employees, $289.3M WWT addressable (24%; 27%−3%OEM=24%; ms_standardized=false, no MSP, no CoE) [MEDIUM_HIGH]
 
 Tier 1 remaining (16 companies): Targa Resources (id=53),
 LyondellBasell (id=63), Sempra Energy (id=31), Antero Resources (id=144),
@@ -61,7 +61,7 @@ TechnipFMC (id=110), Weatherford (id=179), Worley (id=201)
 5. Claude Code runs run_estimates.py --company-id N
 
 ## Pending Work
-1. Continue Tier 1 enrichment (19 remaining companies)
+1. Continue Tier 1 enrichment (16 remaining companies)
 2. Filter bar standardization across all pages (Analytics pattern)
 3. Intelligence tab Phase 2 enhancements (forward estimate display, opportunity scorecard)
 4. Weekly batch signal collection service
