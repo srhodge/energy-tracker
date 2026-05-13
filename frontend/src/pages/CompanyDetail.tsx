@@ -486,7 +486,7 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                 </tbody>
               </table>
               {est.step1_value_chain && (
-                <div style={{ textAlign: "right", marginTop: 6 }}>
+                <div style={{ marginTop: 6 }}>
                   <button
                     onClick={() => setShowAddrPanel(p => !p)}
                     style={{ background: "none", border: "none", color: "#2563eb", fontSize: 12, cursor: "pointer", padding: 0, textDecoration: "underline" }}
