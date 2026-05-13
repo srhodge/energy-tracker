@@ -283,7 +283,6 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
   const [allLeaders, setAllLeaders] = useState<LeadershipRecord[] | null>(null);
   const [calculating, setCalculating] = useState(false);
   const [calcError, setCalcError] = useState<string | null>(null);
-  const [showAddrBreakdown, setShowAddrBreakdown] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -496,58 +495,143 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
 
                 const kd = est.key_drivers as Record<string, unknown> | undefined;
                 const matScore = typeof kd?.maturity_score === "number" ? kd.maturity_score : 0;
+                const estFlags = est.flags as Record<string, unknown> | undefined;
 
-                const addrItems: { label: string; delta: number }[] = [{ label: "Base", delta: 28 }];
-                if (p.ms_standardized) addrItems.push({ label: "MS Standardized", delta: 5 });
-                if (p.offshore_coe_confirmed) addrItems.push({ label: "Offshore CoE", delta: -8 });
-                if (p.incumbent_msp) addrItems.push({ label: "Incumbent MSP", delta: -10 });
-                if (p.channel_mismatch_flag) addrItems.push({ label: "Channel mismatch", delta: -8 });
-                if (matScore >= 15) addrItems.push({ label: "High AI maturity (15+)", delta: 5 });
-                const finalPct = Math.max(12, Math.min(42, addrItems.reduce((s, i) => s + i.delta, 0)));
+                const oemApplied      = !!(estFlags?.oem_direct_hardware) || (p.revenue_ttm != null && p.revenue_ttm >= 10_000_000_000);
+                const offshoreApplied = !!p.offshore_coe_confirmed;
+                const mspApplied      = !!(p.incumbent_msp);
+                const mismatchApplied = !!p.channel_mismatch_flag;
+                const msApplied       = !!p.ms_standardized;
+                const aiApplied       = matScore >= 15;
+
+                let rawPct = 27;
+                if (oemApplied)       rawPct -= 3;
+                if (offshoreApplied)  rawPct -= 8;
+                if (mspApplied)       rawPct -= 10;
+                if (mismatchApplied)  rawPct -= 8;
+                if (msApplied)        rawPct += 5;
+                if (aiApplied)        rawPct += 5;
+
+                const finalPct = Math.max(12, Math.min(42, rawPct));
+                const isClamped = finalPct !== rawPct;
+                const isFloor   = isClamped && finalPct > rawPct;
+                const isCeil    = isClamped && finalPct < rawPct;
+                const wwtMid    = est.total_spend_mid != null ? est.total_spend_mid * finalPct / 100 : null;
+
+                const parts: string[] = ["27%"];
+                if (oemApplied)       parts.push("− 3%");
+                if (offshoreApplied)  parts.push("− 8%");
+                if (mspApplied)       parts.push("− 10%");
+                if (mismatchApplied)  parts.push("− 8%");
+                if (msApplied)        parts.push("+ 5%");
+                if (aiApplied)        parts.push("+ 5%");
+
+                const GRAY  = "#9ca3af";
+                const RED   = "#dc2626";
+                const GREEN = "#16a34a";
+                const BLUE  = "#1d4ed8";
+                const AMBER = "#d97706";
+
+                function fRow(label: React.ReactNode, value: string, applied: boolean, valueColor: string) {
+                  return (
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "5px 0", borderBottom: "1px solid #f3f4f6" }}>
+                      <div style={{ fontSize: 12, color: applied ? "#374151" : GRAY, flex: 1, paddingRight: 12 }}>{label}</div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: applied ? valueColor : GRAY, whiteSpace: "nowrap" }}>{value}</div>
+                    </div>
+                  );
+                }
 
                 return (
                   <div style={{ marginTop: 10, fontSize: 12, color: "#6b7280", borderTop: "1px solid #f3f4f6", paddingTop: 8 }}>
                     <span style={{ fontWeight: 600 }}>Model basis:</span> {est.step1_value_chain} · {denomLabel} denominator · {est.step3_regional_multiplier}x regional
-                    {est.flags && Object.keys(est.flags).length > 0 && (
+                    {est.flags && Object.keys(est.flags as object).length > 0 && (
                       <div style={{ marginTop: 4 }}>
-                        {Object.entries(est.flags).map(([k, v]) => (
+                        {Object.entries(est.flags as Record<string, unknown>).map(([k, v]) => (
                           <span key={k} style={{ background: "#fef3c7", border: "1px solid #fde68a", borderRadius: 3, padding: "1px 6px", fontSize: 11, marginRight: 4, color: "#92400e", display: "inline-block", marginBottom: 2 }}>
                             {String(v) === "true" ? k.replace(/_/g, " ") : `${k.replace(/_/g, " ")}: ${v}`}
                           </span>
                         ))}
                       </div>
                     )}
-                    <div style={{ marginTop: 5 }}>
-                      <button
-                        onClick={() => setShowAddrBreakdown(s => !s)}
-                        style={{ background: "none", border: "none", padding: 0, color: "#2563eb", fontSize: 11, cursor: "pointer", textDecoration: "underline" }}
-                      >
-                        {showAddrBreakdown ? "hide calculation" : "show calculation"}
-                      </button>
-                    </div>
-                    {showAddrBreakdown && (() => {
-                      const rawPct = addrItems.reduce((s, i) => s + i.delta, 0);
-                      const isClamped = finalPct !== rawPct;
-                      const isFloor = isClamped && finalPct > rawPct;
-                      const isCeil  = isClamped && finalPct < rawPct;
-                      return (
-                        <div style={{ marginTop: 6, background: "#f8fafc", border: "1px solid #e5e7eb", borderRadius: 5, padding: "8px 10px", fontSize: 11, lineHeight: 1.8 }}>
-                          {addrItems.map((item, i) => (
-                            <div key={i} style={{ color: item.delta < 0 ? "#dc2626" : item.delta > 0 && i > 0 ? "#16a34a" : "#374151" }}>
-                              {i === 0 ? `Base: ${item.delta}%` : `${item.delta > 0 ? "+" : ""}${item.delta}% ${item.label}`}
-                            </div>
-                          ))}
-                          <div style={{ borderTop: "1px solid #e5e7eb", marginTop: 4, paddingTop: 4, color: "#374151" }}>
-                            = Subtotal: {rawPct}%
-                          </div>
-                          {isFloor && <div style={{ color: "#2563eb" }}>Floor applied (min 12%)</div>}
-                          {isCeil  && <div style={{ color: "#dc2626" }}>Ceiling applied (max 42%)</div>}
-                          <div style={{ fontWeight: 700, color: "#374151", marginTop: isClamped ? 0 : 2 }}>
-                            = Final: {finalPct}%
-                          </div>
+
+                    {/* ── WWT Addressable Share Panel ── */}
+                    <div style={{ marginTop: 10, background: "#f8fafc", border: "1px solid #e5e7eb", borderRadius: 7, padding: "12px 14px" }}>
+                      <div style={{ marginBottom: 8 }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: "#1a1a2e" }}>WWT Addressable Share — How We Got Here</div>
+                        <div style={{ fontSize: 11, color: GRAY, marginTop: 1 }}>All factors shown. Grayed = not applicable to this company.</div>
+                      </div>
+
+                      {fRow(
+                        "Base addressable (hardware, networking, IT security, OT security, cloud, AI infra)",
+                        "+27%", true, "#374151"
+                      )}
+                      {fRow(
+                        "Hardware OEM-direct (revenue >$10B — large enterprise buys direct)",
+                        oemApplied ? "−3%" : "−3% — not applied",
+                        oemApplied, RED
+                      )}
+                      {fRow(
+                        <>Offshore CoE confirmed (<em>India-based technology center</em>)</>,
+                        offshoreApplied ? "−8%" : "−8% — not applicable",
+                        offshoreApplied, RED
+                      )}
+                      {fRow(
+                        <>Incumbent MSP ({p.incumbent_msp
+                          ? <em>{p.incumbent_msp}</em>
+                          : "managed service provider"})</>,
+                        mspApplied ? "−10%" : "−10% — none confirmed",
+                        mspApplied, RED
+                      )}
+                      {fRow(
+                        <>
+                          Channel mismatch (tech decisions outside WWT account owner territory)
+                          {mismatchApplied && p.channel_mismatch_note && (
+                            <div style={{ fontSize: 11, color: "#6b7280", marginTop: 2 }}>{p.channel_mismatch_note}</div>
+                          )}
+                        </>,
+                        mismatchApplied ? "−8%" : "−8% — clear, no mismatch",
+                        mismatchApplied, RED
+                      )}
+                      {fRow(
+                        "Microsoft standardized — Softchoice licensing access confirmed",
+                        msApplied ? "+5%" : "+5% — not confirmed",
+                        msApplied, GREEN
+                      )}
+                      {fRow(
+                        <>
+                          High AI maturity (score ≥15 — WWT AI practice competitive advantage)
+                          <span style={{ fontSize: 11, color: GRAY, marginLeft: 4 }}>(score: {matScore})</span>
+                        </>,
+                        aiApplied ? "+5%" : "+5% — score below threshold",
+                        aiApplied, GREEN
+                      )}
+
+                      <div style={{ borderTop: "2px solid #e5e7eb", margin: "8px 0" }} />
+
+                      <div style={{ display: "flex", justifyContent: "space-between", padding: "3px 0" }}>
+                        <div style={{ fontSize: 12, color: "#374151" }}>Subtotal before floor/ceiling</div>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: "#374151" }}>{parts.join(" ")} = {rawPct}%</div>
+                      </div>
+
+                      <div style={{ display: "flex", justifyContent: "space-between", padding: "3px 0", borderBottom: "1px solid #f3f4f6" }}>
+                        <div style={{ fontSize: 12, color: isClamped ? AMBER : GRAY }}>Floor/ceiling applied (model bounds: 12%–42%)</div>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: isClamped ? AMBER : GRAY }}>
+                          {isFloor ? `${rawPct}% → floor 12%` : isCeil ? `${rawPct}% → ceiling 42%` : "Within bounds — no adjustment"}
                         </div>
-                      );
-                    })()}
+                      </div>
+
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "8px 0 2px" }}>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a2e" }}>= Final WWT addressable share</div>
+                          {wwtMid != null && (
+                            <div style={{ fontSize: 11, color: GRAY, marginTop: 2 }}>
+                              Applied to {denomLabel} → {formatCap(wwtMid)} mid addressable
+                            </div>
+                          )}
+                        </div>
+                        <div style={{ fontSize: 22, fontWeight: 800, color: BLUE, lineHeight: 1 }}>{finalPct}%</div>
+                      </div>
+                    </div>
                   </div>
                 );
               })()}
