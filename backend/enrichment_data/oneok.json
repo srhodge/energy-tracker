@@ -1,0 +1,62 @@
+{
+  "company_id": 29,
+  "profile": {
+    "sub_sector": "Midstream Pipeline & Processing",
+    "employee_count": 6326,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Tulsa",
+    "hq_country": "United States",
+    "tech_decision_city": "Tulsa",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 35200000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 15,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ Tulsa OK — outside WWT STOLA territory. Channel mismatch flag applied. Note: acquired Magellan Houston assets (Galena Park, Seabrook, Pasadena TX) which are in STOLA — potential partial coverage.",
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Pierce Norton",
+      "location_city": "Tulsa",
+      "location_country": "United States",
+      "hire_date": "2021-01-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 4,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "Digital",
+      "signal_date": "2024-01-01",
+      "signal_title": "ONEOK satellite emissions detection technology deployed — confirmed sustainability report signal",
+      "signal_description": "ONEOK confirmed deployment of satellite-based emissions detection technology across its pipeline network in its sustainability report. Represents emerging digital technology investment in environmental monitoring beyond standard SCADA.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "sustainability_report"
+    },
+    {
+      "signal_type": "m_and_a",
+      "signal_category": "Digital",
+      "signal_date": "2024-10-01",
+      "signal_title": "ONEOK simultaneous M&A integration — Magellan, EnLink, Medallion IT systems consolidation",
+      "signal_description": "ONEOK is simultaneously integrating three major acquisitions: Magellan Midstream ($18.8B, Sep 2023), EnLink Midstream controlling stake, and Medallion Midstream (both Oct 2024), plus Gulf Coast NGL Pipelines (May 2024). Four simultaneous integrations creates highest IT integration demand in the midstream sector — ERP consolidation, SCADA harmonization, and data platform unification all underway.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 1,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $35.2B — fee-based midstream (low commodity exposure). 6,326 employees (lean for revenue scale — typical midstream). HQ Tulsa = channel mismatch. No CIO identified. SAP probable. No MSP or CoE. Massive simultaneous M&A integration (Magellan + EnLink + Medallion + Gulf Coast NGL) = highest IT integration demand in midstream sector. ai_maturity_score=7 (below ≥15). WWT opportunity: active M&A IT integration is primary hook despite channel mismatch. Houston-area Magellan assets create partial STOLA coverage opportunity."
+}

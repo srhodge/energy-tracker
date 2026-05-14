@@ -1,0 +1,62 @@
+{
+  "company_id": 66,
+  "profile": {
+    "sub_sector": "Upstream E&P",
+    "employee_count": 4500,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Oklahoma City",
+    "hq_country": "United States",
+    "tech_decision_city": "Oklahoma City",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 16000000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 85,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": true,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ Oklahoma City OK — outside WWT STOLA territory. Channel mismatch flag applied.",
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CTO",
+      "person_name": "Trey Lowe",
+      "location_city": "Oklahoma City",
+      "location_country": "United States",
+      "hire_date": null,
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 8,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "AI",
+      "signal_date": "2024-01-01",
+      "signal_title": "Devon Energy AI, intelligent automation, and RPA confirmed as core competencies — LinkedIn company profile",
+      "signal_description": "Devon Energy's LinkedIn company profile explicitly names Artificial Intelligence, Intelligent Automation, and Robotic Process Automation as core organizational capabilities. Active data science hiring confirms these are operational programs, not aspirational. Confirms active AI deployment across E&P operations.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "company_website"
+    },
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "AI",
+      "signal_date": "2024-06-01",
+      "signal_title": "Devon Energy Databricks deployment for ML/analytics workloads",
+      "signal_description": "Devon Energy confirmed deployment of Databricks for data analytics and machine learning workloads on Azure. Databricks is an enterprise-grade ML platform. Confirms Azure as primary cloud and active ML infrastructure investment.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 1,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue ~$16B. ~4,500 employees. CTO Trey Lowe confirmed (RocketReach) — uses CTO rather than CIO, signals technology viewed as operational priority. Oklahoma City HQ = channel mismatch. Azure + SAP HANA + Databricks confirmed tech stack. AI, intelligent automation, RPA all named as active core capabilities. New CEO Clay Gaspar 2025 + $1B business optimization = active IT investment cycle. No MSP or CoE identified. ai_maturity_score=11 (below ≥15). Confidence MEDIUM. WWT opportunity: strong tech stack alignment (Azure, Databricks), active AI program, but OKC channel mismatch limits STOLA seller access."
+}

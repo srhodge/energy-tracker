@@ -1,0 +1,61 @@
+{
+  "company_id": 27,
+  "profile": {
+    "sub_sector": "Midstream Pipeline & Processing",
+    "employee_count": 12000,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Dallas",
+    "hq_country": "United States",
+    "tech_decision_city": "Dallas",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 92290000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 75,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Tom Long",
+      "location_city": "Dallas",
+      "location_country": "United States",
+      "hire_date": null,
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 2,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "Digital",
+      "signal_date": "2025-01-01",
+      "signal_title": "Energy Transfer positioning natural gas infrastructure as AI data center power supply",
+      "signal_description": "Energy Transfer is positioning its natural gas pipeline and storage infrastructure as a key power supply source for AI data center campuses. Active LinkedIn communications and investor messaging around behind-the-meter natural gas for data center power. Signals board awareness of AI infrastructure demand as growth opportunity.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "partnership",
+      "signal_category": "Digital",
+      "signal_date": "2024-06-01",
+      "signal_title": "Energy Transfer 20-year LNG SPA with Chevron — Lake Charles LNG digital operations",
+      "signal_description": "Energy Transfer signed a 20-year LNG Sales and Purchase Agreement with Chevron for the Lake Charles LNG export project. Large-scale LNG operations require advanced digital monitoring, process control, and safety systems — a meaningful IT investment signal for the facility.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 1,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $92.29B — highly commodity-exposed (Sunoco LP retail fuel pass-through inflates revenue). ~12,000 employees. Dallas HQ in STOLA — clean territory. No CIO, MSP, CoE, or AI programs identified. Co-CEO structure (Kelcy Warren + Tom Long) is founder-controlled and operationally focused. Confidence LOW. ai_maturity_score=5 (well below ≥15). WWT opportunity: Dallas STOLA account, no MSP displacement, but limited IT visibility and very commodity-exposed culture. Primary hook is natural gas AI data center positioning."
+}
