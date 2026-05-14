@@ -1,0 +1,60 @@
+{
+  "company_id": 73,
+  "profile": {
+    "sub_sector": "Upstream E&P",
+    "employee_count": 1461,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Pittsburgh",
+    "hq_country": "United States",
+    "tech_decision_city": "Pittsburgh",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 9360000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 90,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": true,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CIO",
+      "person_name": "Unknown (VP Information Technology)",
+      "location_city": "Pittsburgh",
+      "location_country": "United States",
+      "hire_date": null,
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 6,
+      "source": "proxy_statement_2025"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "m_and_a",
+      "signal_category": "Digital",
+      "signal_date": "2024-07-01",
+      "signal_title": "EQT completes Equitrans Midstream merger — pipeline and gathering IT integration demand",
+      "signal_description": "EQT completed its acquisition of Equitrans Midstream in July 2024, adding approximately 2,900 miles of pipeline and gathering assets. Post-merger IT integration of upstream E&P systems with midstream pipeline and gathering systems creates multi-year IT demand across ERP, SCADA, production data, and land management platforms.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "AI",
+      "signal_date": "2025-01-01",
+      "signal_title": "EQT actively positions for AI data center natural gas demand — EVP Corporate Ventures Rob Wingo",
+      "signal_description": "EQT's EVP of Corporate Ventures Rob Wingo is actively pursuing AI hyperscaler data center natural gas supply agreements. EQT is partnering on the Arch2 hydrogen hub to supply data center power from Appalachian natural gas via hydrogen. Positions EQT as key infrastructure provider for the AI energy buildout, supporting long-term capital projects and associated IT modernization.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $9.36B — largest US natural gas producer by volume, pure upstream Appalachian E&P. Only 1,461 employees — extremely lean for revenue scale. Pittsburgh PA HQ = channel mismatch (outside STOLA). CIO confirmed at VP level per 2025 proxy (name not publicly available). Digital Work Environment cloud platform confirms enterprise-wide digital infrastructure. Equitrans merger (2024) adds IT integration demand. AI data center positioning is forward revenue strategy via Corporate Ventures. No MSP or CoE. Azure/cloud platform unconfirmed. ai_maturity=8. Confidence MEDIUM. WWT opportunity limited by Pittsburgh mismatch and lean IT org."
+}

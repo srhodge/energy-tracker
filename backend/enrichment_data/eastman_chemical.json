@@ -1,0 +1,60 @@
+{
+  "company_id": 106,
+  "profile": {
+    "sub_sector": "Petrochemical & Specialty Chemicals",
+    "employee_count": 14000,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Kingsport",
+    "hq_country": "United States",
+    "tech_decision_city": "Kingsport",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 9400000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 40,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": true,
+    "channel_mismatch_flag": true,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CIO",
+      "person_name": "Aldo Noseda",
+      "location_city": "Kingsport",
+      "location_country": "United States",
+      "hire_date": "2018-01-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 16,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "AI",
+      "signal_date": "2024-10-01",
+      "signal_title": "CIO Aldo Noseda wins 2024 Tennessee Global ORBIE Award — AI/data analytics framework in production",
+      "signal_description": "Eastman CIO Aldo Noseda won the 2024 Tennessee CIO Global ORBIE Award, the premier CIO recognition program in the US. Noseda developed a multi-year digital modernization strategy, comprehensive data and analytics framework with AI, and launched digital products generating independent revenue streams. Confirms elite CIO leadership and production-deployed AI capabilities.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 4,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "Digital",
+      "signal_date": "2024-06-01",
+      "signal_title": "Eastman Kingsport methanolysis facility operational — circular economy digital platform",
+      "signal_description": "Eastman's Kingsport molecular recycling (methanolysis) facility became fully operational in 2024, with Longview TX facility approved. The circular economy platform requires sophisticated process control, digital tracking of recycled material provenance, and AI-assisted quality management. CEO Mark Costa confirms AI-driven innovation model at 2024 Circular Economy Deep Dive.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $9.4B — specialty materials manufacturer (Advanced Materials, Additives & Functional Products, Chemical Intermediates, Fibers). Not commodity pass-through — denominator = Revenue. 14,000 employees. Kingsport TN HQ = channel mismatch (outside STOLA). CIO Aldo Noseda: 2024 Tennessee Global ORBIE Award winner, highest US CIO recognition. Multi-year AI/data framework in production. Digital products generating independent revenue. Azure + SAP + M365 confirmed. ai_maturity=16 — AI bonus applies. No MSP or CoE. Sub-sector corrected from Downstream Refining to Petrochemical & Specialty Chemicals. Confidence HIGH. WWT opportunity: strong AI program, award-winning CIO, ms_standardized=true, no MSP; limited by Kingsport TN location."
+}

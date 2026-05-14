@@ -1,0 +1,60 @@
+{
+  "company_id": 174,
+  "profile": {
+    "sub_sector": "Oilfield & Energy Services",
+    "employee_count": 31605,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 8690000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 10,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Clay Williams",
+      "location_city": "Houston",
+      "location_country": "United States",
+      "hire_date": "2014-01-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 6,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "AI",
+      "signal_date": "2024-09-01",
+      "signal_title": "NOV Automation Performance Center — AI-assisted drilling service achieving record performance",
+      "signal_description": "NOV's Automation Performance Center is an AI-assisted drilling automation service delivering record-setting performance for customers. CEO Clay Williams confirms automation, digital solutions, and performance technologies as core growth drivers in 2024 earnings commentary. Commercial deployment with multiple customers confirms AI beyond POC stage.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "earnings_call"
+    },
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "Digital",
+      "signal_date": "2024-09-01",
+      "signal_title": "NOV Ideal eFrac electric simul-frac units — 40,000 HP OT automation deployed Q3 2024",
+      "signal_description": "NOV delivered Ideal eFrac Units with Power Pod electric simul-frac technology at 40,000 HP capacity in Q3 2024. Electric fracturing units require sophisticated automation, control systems, and real-time data analytics. Confirms NOV's OT automation and digital product portfolio at commercial scale across completion equipment.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "earnings_call"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $8.69B — OFS equipment manufacturer and technology provider (Energy Equipment + Energy Products & Services segments). 31,605 employees across 500+ global facilities. Houston HQ in STOLA — clean account. No CIO identified publicly. SAP probable for ERP. No cloud platform confirmed. No MSP or CoE. CEO Clay Williams actively drives digital/automation as core strategy. Automation Performance Center confirms commercial AI deployment. Ideal eFrac units confirm OT automation at scale. Also provides offshore wind vessel installation systems and geothermal equipment. ai_maturity=11. Confidence MEDIUM. WWT opportunity: Houston account, no MSP, active automation/digital program, large employee base."
+}
