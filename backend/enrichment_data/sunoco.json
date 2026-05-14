@@ -1,0 +1,49 @@
+{
+  "company_id": 158,
+  "profile": {
+    "sub_sector": "Downstream Refining",
+    "employee_count": 6000,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Dallas",
+    "hq_country": "United States",
+    "tech_decision_city": "Dallas",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 22690000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 95,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Joseph Kim",
+      "location_city": "Dallas",
+      "location_country": "United States",
+      "hire_date": "2023-01-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 2,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "m_and_a",
+      "signal_category": "Digital",
+      "signal_date": "2024-05-01",
+      "signal_title": "Sunoco LP acquires NuStar Energy — active IT integration of fuel distribution and pipeline systems",
+      "signal_description": "Sunoco LP completed its $7.3B acquisition of NuStar Energy in May 2024, adding ~9,500 miles of pipeline and 63 terminal facilities. Post-acquisition IT integration of fuel distribution, terminal management, pipeline control, and ERP systems creates near-term IT spend demand. Systems consolidation across two formerly separate companies is a multi-year effort.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $22.69B — fuel distribution MLP (Energy Transfer subsidiary), nearly all commodity pass-through. Sub-sector = Downstream Refining (fuel distribution, not manufacturing). Denominator = Gross Profit or EBITDA × 1.5 or Revenue × 0.06. ~6,000 employees post-NuStar acquisition. Dallas HQ in STOLA — clean account. Energy Transfer is general partner and controlling LP. CEO Joseph Kim confirmed. No CIO identified. No MSP, CoE, or AI programs. $7.3B NuStar acquisition (May 2024) creates IT integration demand. WWT opportunity: Dallas STOLA account, NuStar IT integration demand, but Energy Transfer parent relationship may drive IT decisions centrally."
+}

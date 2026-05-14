@@ -1,0 +1,25 @@
+{
+  "company_id": 79,
+  "profile": {
+    "sub_sector": "Petrochemical & Specialty Chemicals",
+    "employee_count": 16000,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 10980000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 50,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [],
+  "signals": [],
+  "enrichment_notes": "FY2024 revenue $10.98B — petrochemicals, PVC/chlor-alkali, and building products. Sub-sector corrected from Downstream Refining to Petrochemical & Specialty Chemicals (denominator = Revenue). ~16,000 employees. Houston HQ in STOLA — clean account. No CIO, CDO, or AI programs identified. No MSP or CoE. No MS standardization confirmed. Closely held family-controlled company (Chao family ~70% ownership) — conservative IT spending culture likely. WWT opportunity: Houston STOLA account, no MSP displacement, but limited IT leadership visibility and family-controlled structure reduces near-term engagement probability."
+}

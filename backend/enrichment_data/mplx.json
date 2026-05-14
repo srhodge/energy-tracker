@@ -1,0 +1,49 @@
+{
+  "company_id": 43,
+  "profile": {
+    "sub_sector": "Midstream Pipeline & Processing",
+    "employee_count": 6000,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Findlay",
+    "hq_country": "United States",
+    "tech_decision_city": "Findlay",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 11820000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 85,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": true,
+    "channel_mismatch_flag": true,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Maryann Mannen",
+      "location_city": "Findlay",
+      "location_country": "United States",
+      "hire_date": "2025-03-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 3,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "partnership",
+      "signal_category": "AI",
+      "signal_date": "2025-01-01",
+      "signal_title": "MPLX natural gas supply partnership with MARA Holdings for AI data center demand",
+      "signal_description": "MPLX entered a natural gas supply agreement with MARA Holdings to serve AI hyperscaler data center power demand. The deal underscores MPLX's positioning as a natural gas infrastructure provider for the AI buildout, potentially driving infrastructure expansion investments and associated IT modernization.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 4,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $11.82B — Midstream MLP, Marathon Petroleum subsidiary (general partner). Primarily fee-based natural gas gathering, processing, transportation. Denominator = EBITDA × 2.5 or Revenue × 0.12 (midstream sub-sector logic). ~6,000 employees (shared services with MPC). Findlay OH HQ — outside WWT STOLA territory, channel_mismatch=true. ms_standardized=true (inherits MPC M365/Azure stack). No CIO, CTO, or AI programs identified separately from MPC parent. MARA Holdings partnership signals AI data center natural gas demand. WWT opportunity: limited direct engagement due to Findlay HQ, but MPC parent relationship may create channel path."
+}
