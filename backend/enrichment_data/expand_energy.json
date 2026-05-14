@@ -1,0 +1,61 @@
+{
+  "company_id": 76,
+  "profile": {
+    "sub_sector": "Upstream E&P",
+    "employee_count": 2400,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 12960000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 90,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Michael Wichterich",
+      "location_city": "Houston",
+      "location_country": "United States",
+      "hire_date": "2026-02-09",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 2,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "m_and_a",
+      "signal_category": "Digital",
+      "signal_date": "2024-10-01",
+      "signal_title": "Expand Energy formed from Chesapeake + Southwestern merger — active post-merger IT integration demand",
+      "signal_description": "Expand Energy Corporation was formed in October 2024 from the merger of Chesapeake Energy and Southwestern Energy, creating the largest US independent natural gas producer. Active IT integration of two separate ERP, production data, land, and operations systems creates significant near-term IT spend demand.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "Digital",
+      "signal_date": "2026-02-09",
+      "signal_title": "Expand Energy HQ relocation to Houston — new leadership and IT infrastructure transformation",
+      "signal_description": "Expand Energy announced HQ relocation from Oklahoma City to Houston in February 2026, coinciding with CEO transition from Dell'Osso to interim CEO Wichterich and permanent CEO search. HQ move triggers IT infrastructure changes, lease and facilities transitions, and signals strategic repositioning. New permanent CEO appointment expected to reset IT budget priorities.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 4,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $12.96B — pure upstream natural gas E&P (denominator = Revenue). ~2,400 employees post-merger. Relocating HQ to Houston (announced Feb 2026) — channel_mismatch=false (future STOLA account). Interim CEO Michael Wichterich, permanent CEO search underway. Post-merger IT integration (Chesapeake + Southwestern systems) is primary near-term IT demand. No CIO, MSP, CoE, or AI programs identified. Confidence LOW — company in leadership and location transition. WWT opportunity: will be Houston STOLA account, post-merger IT integration demand, but leadership uncertainty limits near-term engagement."
+}

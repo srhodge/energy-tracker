@@ -1,0 +1,50 @@
+{
+  "company_id": 30,
+  "profile": {
+    "sub_sector": "Midstream Pipeline & Processing",
+    "employee_count": 10933,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 15100000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 20,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": true,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CIO",
+      "person_name": "Michael Pitta",
+      "location_city": "Houston",
+      "location_country": "United States",
+      "hire_date": "2024-02-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 7,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "AI",
+      "signal_date": "2025-01-01",
+      "signal_title": "Kinder Morgan CFO drives GenAI and automation strategy — regular CIO partnership for AI opportunity identification",
+      "signal_description": "Kinder Morgan's CFO is actively driving GenAI and automation strategy, meeting regularly with the CIO to identify AI deployment opportunities. AI deployment is focused on revenue generation in addition to cost reduction. Confirms C-suite AI commitment even without a standalone CIO function.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $15.1B — fee-based midstream (denominator = Revenue × 0.12 = $1.81B). 10,933 employees. Houston HQ in STOLA — clean account. IT embedded under CAO (Michael Pitta, VP/CAO since Feb 2024) — not a standalone CIO function. CFO actively drives GenAI and automation strategy. $5B+ pipeline expansion backlog for AI data center natural gas demand. No MSP or CoE. Azure + SAP + M365 confirmed. ai_maturity_score=10 (below ≥15). WWT opportunity: Houston account, no MSP, CFO AI engagement is entry angle, $5B pipeline backlog IT infrastructure demand."
+}

@@ -1,0 +1,73 @@
+{
+  "company_id": 55,
+  "profile": {
+    "sub_sector": "Petrochemical & Specialty Chemicals",
+    "employee_count": 36000,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Midland",
+    "hq_country": "United States",
+    "tech_decision_city": "Midland",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 39330000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 55,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": true,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ Midland MI — outside WWT STOLA territory. Technology decisions made in Midland. Channel mismatch flag applied.",
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CIO",
+      "person_name": "Debra Bauler",
+      "location_city": "Midland",
+      "location_country": "United States",
+      "hire_date": null,
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 15,
+      "source": "company_website"
+    },
+    {
+      "role": "CDO",
+      "person_name": "Chris Bruman",
+      "location_city": "Midland",
+      "location_country": "United States",
+      "hire_date": null,
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 12,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "AI",
+      "signal_date": "2024-06-01",
+      "signal_title": "Dow Integrated Data Hub wins 2024 CIO 100 Award — enterprise data platform for analytics at scale",
+      "signal_description": "Dow's Integrated Data Hub, led by CIO/CIDO Melanie Kalmar (now Debra Bauler), won the 2024 CIO 100 Award. The platform centralizes enterprise data for analytics across all 36,000 employees at 104 manufacturing sites globally. Confirms active, commercially deployed enterprise data infrastructure.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "AI",
+      "signal_date": "2025-06-01",
+      "signal_title": "Dow Market Intelligence Hub wins 2025 CIO 100 Award — OpenAI-assisted competitive intelligence chatbot",
+      "signal_description": "Dow's Market Intelligence Hub, developed by CDAO Chris Bruman, won the 2025 CIO 100 Award. The platform uses OpenAI to generate AI-assisted news summaries and competitive intelligence for commercial teams. Confirms production deployment of GenAI for business intelligence at enterprise scale.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 4,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $39.33B — petrochemicals and specialty materials, not commodity pass-through. Sub-sector corrected from Downstream Refining to Petrochemical & Specialty Chemicals (denominator = Revenue). CIDO Debra Bauler confirmed on Dow Leadership Team. CDAO Chris Bruman confirmed. Two consecutive CIO 100 Award wins (2024 Integrated Data Hub, 2025 Market Intelligence Hub with OpenAI). Azure + SAP confirmed. No incumbent MSP. Channel mismatch: Midland MI outside STOLA. ai_maturity=16+ (CIDO + CDAO leadership scores alone = 27, exceeds ≥15 threshold — AI bonus applies). WWT opportunity: strong AI/data program, no MSP displacement, but Midland location limits STOLA seller access."
+}
