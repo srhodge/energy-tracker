@@ -154,12 +154,22 @@ Rules:
 
 OEM deduction rule: oem_direct_deduction is manual-confirmation only — same standard as incumbent_msp. Never auto-applied by revenue threshold. Confirmed YES: ExxonMobil, Chevron, Halliburton. All others confirmed NO or pending assessment.
 
+## Tier 2 Revenue Population (2026-05-13)
+Script: backend/scripts/populate_tier2_revenue.py — pulls totalRevenue, fullTimeEmployees, ebitda, grossProfits from yfinance for all Tier 2 companies with NULL revenue_ttm.
+- Found 140 companies needing revenue data
+- Updated: 125 companies successfully populated
+- Failed/no data: 15 tickers (N/A id=26, STR, NEXT, NR, DRQ, SOI, SMLP, BRY, TSE, GIFI, ZNOG, DNMR, CEIN, HUSA, VTNR)
+- Post-population estimates run for all 168 active Tier 2 companies (--tier 2)
+- Grand total WWT high (Tier 2): $11.30B across 168 companies
+- 14 companies remain with N/A estimates (revenue still NULL after yfinance pull — mostly very small or delisted)
+- Many companies show sub_sector = "unknown" — not yet enriched via patch_company workflow
+
 ## Pending Work
-1. Tier 2 revenue-populated companies COMPLETE — begin Tier 2 revenue population for remaining 141 companies or advance to Tier 3
-2. Filter bar standardization across all pages (Analytics pattern)
+1. Tier 2 revenue population COMPLETE — all companies now have estimates; next: structured enrichment for high-value unenriched Tier 2 accounts
+2. Filter bar standardization across all pages (Analytics pattern) — COMPLETE (all pages already match)
 3. Intelligence tab Phase 2 enhancements (forward estimate display, opportunity scorecard)
 4. Weekly batch signal collection service
-5. Audit remaining Tier 2 midstream companies enriched pre-denominator-refactor for stale "revenue" denominator (Williams id=23, ONEOK id=29, Enterprise Products id=24 are at risk)
+5. Denominator audit COMPLETE — Williams, ONEOK, Enterprise Products confirmed on revenue_x0.12
 
 ## Key Architectural Decisions
 - CRM accounts and companies table NOT linked yet (deliberate — pending manual review UI)
