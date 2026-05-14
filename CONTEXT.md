@@ -103,6 +103,47 @@ Tier 2 (US companies by revenue) — enrichment begun May 2026:
 
 After every enrichment: auto-update CONTEXT.md + commit + push without being asked.
 
+## Leadership Signal Types (for enrichment)
+When researching company leadership, capture any of the following as signals on the leadership record using signal_type and notes fields. These surface in the Intelligence tab and inform the signal_score:
+
+Awards & Recognition (signal_type: "recognition"):
+- CIO/CDO/CAIO ORBIE Award wins (Global, Regional, or sector-specific)
+- Gartner Top 25 CIO recognition
+- Forbes/Fortune technology leadership lists
+- Industry association awards (HoustonCIO, ChicagoCIO, etc.)
+- Company-internal awards cited publicly (e.g. WWT Partner of Year)
+
+Career Moves (signal_type: "career_move"):
+- New CIO/CDO/CAIO hire within last 18 months — NEW badge trigger
+- Promotion to C-suite from VP level
+- External hire from high-signal company (GE, Microsoft, Amazon, NVIDIA, etc.)
+- Departure of incumbent technology leader — watch signal
+
+Public Appearances & Thought Leadership (signal_type: "thought_leadership"):
+- Keynote at Gartner, AWS re:Invent, Microsoft Ignite, SAP Sapphire, CERAWeek
+- Published interview or byline in CIO.com, MIT Sloan, HBR on technology strategy
+- Panel appearance at industry conference (HoustonCIO, Energy Thought Summit, etc.)
+- Podcast guest on technology leadership topics
+
+Strategic Commitments (signal_type: "strategic_commitment"):
+- AI budget explicitly named in earnings call or investor presentation
+- Board-level AI committee or technology committee formed
+- CAIO role created for first time at company
+- Digital transformation named as CEO strategic priority
+
+Partnership & Technology Signals (signal_type: "partnership"):
+- NVIDIA partnership or certification announced
+- Hyperscaler (Azure, AWS, GCP) strategic agreement signed
+- SAP RISE or S/4HANA migration announced
+- AI platform vendor (C3.ai, Palantir, Cognite, etc.) contract announced
+
+Rules:
+- Always include date, source URL where available, and brief description
+- signal_score impact: Recognition (+2 to +4), Career Move (+2 to +3), Thought Leadership (+1 to +2), Strategic Commitment (+3 to +5), Partnership (+2 to +4)
+- ORBIE Global winner = +4 (highest CIO recognition signal)
+- New C-suite hire from NVIDIA/Microsoft/Amazon/GE = +3
+- Earnings call AI budget mention = +4
+
 OEM deduction rule: oem_direct_deduction is manual-confirmation only — same standard as incumbent_msp. Never auto-applied by revenue threshold. Confirmed YES: ExxonMobil, Chevron, Halliburton. All others confirmed NO or pending assessment.
 
 ## Pending Work
