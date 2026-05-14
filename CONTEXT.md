@@ -109,6 +109,8 @@ Tier 2 (US companies by revenue) — enrichment begun May 2026:
 
 After every enrichment: auto-update CONTEXT.md + commit + push without being asked.
 
+Historical signal backfill complete (2026-05-13): Structured leadership and technology signals backfilled via direct SQL INSERT for 10 companies — COP (x2 ORBIE), PSX (Gartner Summit), ENB (GenAI workforce), MPC (Metis Strategy), EMN (ORBIE), DOW (x2 CIO 100 Awards), BKR (Azure MOU), SLB (NVIDIA Delfi), WFRD. Signals stored in company_tech_signals table as typed records (signal_type: recognition, thought_leadership, partnership) rather than enrichment_notes prose.
+
 ## Leadership Signal Types (for enrichment)
 When researching company leadership, capture any of the following as signals on the leadership record using signal_type and notes fields. These surface in the Intelligence tab and inform the signal_score:
 
