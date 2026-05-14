@@ -1,0 +1,37 @@
+{
+  "company_id": 81,
+  "profile": {
+    "sub_sector": "Upstream E&P",
+    "employee_count": 957,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 7350000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 90,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [],
+  "signals": [
+    {
+      "signal_type": "m_and_a",
+      "signal_category": "Digital",
+      "signal_date": "2024-11-01",
+      "signal_title": "Coterra closes two Delaware Basin acquisitions late 2024 — active IT integration demand",
+      "signal_description": "Coterra Energy closed two Delaware Basin bolt-on acquisitions in late 2024, adding Permian acreage to complement existing Marcellus and Anadarko Basin operations. Post-acquisition IT integration of production data, land, and ERP systems creates near-term IT spend demand across a multi-basin portfolio.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $7.35B — multi-basin E&P (Permian Delaware, Marcellus, Anadarko). Only 957 employees — extremely lean for revenue scale. Houston HQ in STOLA — clean account. No CIO, MSP, CoE, or AI programs identified. Two Delaware Basin acquisitions late 2024 = active IT integration demand. ai_maturity=5. Confidence LOW. WWT opportunity: Houston STOLA, no MSP — but extremely lean workforce limits IT spend scale."
+}

@@ -1,0 +1,60 @@
+{
+  "company_id": 54,
+  "profile": {
+    "sub_sector": "Petrochemical & Specialty Chemicals",
+    "employee_count": 25300,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Wilmington",
+    "hq_country": "United States",
+    "tech_decision_city": "Wilmington",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 6920000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 25,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": true,
+    "channel_mismatch_flag": true,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Lori Koch",
+      "location_city": "Wilmington",
+      "location_country": "United States",
+      "hire_date": "2024-06-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 4,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "strategic_commitment",
+      "signal_category": "Digital",
+      "signal_date": "2024-05-01",
+      "signal_title": "DuPont announces 3-way company split — major IT separation and transformation program",
+      "signal_description": "DuPont announced a 3-way split in May 2024, separating into Electronics (Qnity, spun off Nov 2025), Water & Protection, and remaining DuPont. Portfolio also includes sale of Kevlar/Nomex Aramids to Arclin Aug 2025. Each separation requires full IT divestiture — ERP carve-outs, data migration, network separation, and stand-up of independent IT infrastructure — creating multi-year transformation demand.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "Digital",
+      "signal_date": "2024-01-01",
+      "signal_title": "DuPont Digital Center — 25-person team running 40+ simultaneous digital transformation projects",
+      "signal_description": "DuPont operates a dedicated Digital Center in Wilmington with a 25-person team managing 40+ simultaneous digital transformation projects. Global Digital Innovation Leader Bernardo Tiburcio confirmed driving digital strategy. Azure-based infrastructure confirmed. Demonstrates committed digital investment above typical specialty chemicals peers.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "company_website"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $6.92B — specialty materials (Electronics/Industrial, Water/Protection). Genuine value-add, not commodity pass-through. 25,300 employees. Wilmington DE HQ = channel mismatch (outside STOLA). Digital Center confirmed (25-person, 40+ projects). Azure + SAP + M365 confirmed. Major 3-way split restructuring creates significant IT separation/transformation demand. New CEO Lori Koch June 2024 (former CFO). No MSP or CoE. Sub-sector corrected from Downstream Refining to Petrochemical & Specialty Chemicals. ai_maturity=10. Confidence MEDIUM. WWT opportunity: active IT transformation from restructuring, Azure stack, no MSP — limited by Wilmington location."
+}

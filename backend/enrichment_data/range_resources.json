@@ -1,0 +1,25 @@
+{
+  "company_id": 154,
+  "profile": {
+    "sub_sector": "Upstream E&P",
+    "employee_count": 700,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Fort Worth",
+    "hq_country": "United States",
+    "tech_decision_city": "Fort Worth",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 3210000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 90,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [],
+  "signals": [],
+  "enrichment_notes": "FY2024 revenue $3.21B — pure Appalachian natural gas/NGL E&P (Marcellus and Utica, PA operations). ~700 employees. Fort Worth TX HQ within STOLA (DFW territory). No CIO, MSP, CoE, or AI programs identified. CEO Dennis Degner. Very lean E&P, operationally conservative Appalachian focus. ai_maturity=4. Confidence LOW. WWT opportunity: STOLA-covered HQ, no MSP — minimal near-term signal."
+}

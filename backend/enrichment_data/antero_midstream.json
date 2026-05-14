@@ -1,0 +1,25 @@
+{
+  "company_id": 159,
+  "profile": {
+    "sub_sector": "Midstream Pipeline & Processing",
+    "employee_count": 300,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Denver",
+    "hq_country": "United States",
+    "tech_decision_city": "Denver",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 1290000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 80,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": true,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [],
+  "signals": [],
+  "enrichment_notes": "FY2024 revenue $1.29B — midstream MLP (denominator = Revenue×0.12=$154.8M or EBITDA×2.5). ~300 employees. Denver CO HQ = channel mismatch (outside STOLA). Single-customer MLP for Antero Resources parent. Essentially an operational IT satellite of parent — no standalone CIO or IT function expected. No MSP, CoE, or AI programs. ai_maturity=3. Confidence LOW. WWT opportunity extremely limited due to Denver mismatch, lean workforce, and parent-dependent IT."
+}

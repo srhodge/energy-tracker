@@ -1,0 +1,37 @@
+{
+  "company_id": 133,
+  "profile": {
+    "sub_sector": "Upstream E&P",
+    "employee_count": 4700,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 8370000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 90,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [],
+  "signals": [
+    {
+      "signal_type": "m_and_a",
+      "signal_category": "Digital",
+      "signal_date": "2024-04-01",
+      "signal_title": "APA completes $4.5B Callon Petroleum acquisition — active Delaware Basin IT integration",
+      "signal_description": "APA Corporation completed its $4.5B acquisition of Callon Petroleum in April 2024, adding significant Delaware Basin scale. Post-merger IT integration of E&P systems (ERP, land, production data, SCADA) creates active near-term IT spend demand. Integration coincides with $350M run-rate cost savings program targeting technology-enabled efficiency through 2027.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $8.37B — independent E&P (Permian, Egypt, North Sea, Suriname). 4,700 employees. Houston HQ in STOLA — clean account. No CIO identified publicly. SAP probable. No MSP or CoE. Callon acquisition April 2024 = active IT integration demand. $350M cost savings program = technology efficiency signal. International operations (Egypt, North Sea, Suriname) require IT coordination. ai_maturity=7. Confidence LOW. WWT opportunity: Houston STOLA, no MSP, Callon integration demand — limited by low IT leadership visibility."
+}

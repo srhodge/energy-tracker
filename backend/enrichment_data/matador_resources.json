@@ -1,0 +1,25 @@
+{
+  "company_id": 167,
+  "profile": {
+    "sub_sector": "Upstream E&P",
+    "employee_count": 700,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Dallas",
+    "hq_country": "United States",
+    "tech_decision_city": "Dallas",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 3590000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 90,
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [],
+  "signals": [],
+  "enrichment_notes": "FY2024 revenue $3.59B — pure-play Delaware Basin (Permian) E&P with San Mateo Midstream subsidiary. ~700 employees — lean for revenue scale. Dallas HQ in STOLA — clean account. No CIO, MSP, CoE, or AI programs identified. Founder-CEO Joseph Foran conservative culture. No public IT signals. ai_maturity=4. Confidence LOW. WWT opportunity: Dallas STOLA, no MSP — lean workforce limits near-term spend."
+}

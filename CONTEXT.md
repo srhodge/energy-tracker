@@ -93,6 +93,12 @@ Tier 2 (US companies by revenue) — enrichment begun May 2026:
 - EQT Corporation (id=73): EQT, Upstream E&P, $9.36B rev, 1,461 employees, $79.1M WWT addressable (19%; 27%−8%mismatch=19%; CIO confirmed VP-level per proxy (name unknown), Equitrans Midstream merger IT integration, AI data center natural gas positioning via EVP Rob Wingo, channel_mismatch=Pittsburgh PA outside STOLA, ms_standardized=false, ai_maturity=8) [MEDIUM_HIGH]
 - NOV Inc. (id=174): NOV, Oilfield & Energy Services, $8.69B rev, 31,605 employees, $276.2M WWT addressable (27%; no adjustments; CEO Clay Williams drives digital/automation as core strategy, Automation Performance Center AI-assisted drilling service, Ideal eFrac 40,000 HP OT automation, Houston HQ in STOLA, ms_standardized=false, ai_maturity=11) [MEDIUM_HIGH]
 - Eastman Chemical (id=106): EMN, Petrochemical & Specialty Chemicals, $9.4B rev, 14,000 employees, $399.1M WWT addressable (29%; 27%−8%mismatch+5%MS+5%AI=29%; CIO Aldo Noseda 2024 Tennessee Global ORBIE Award winner, AI/data analytics framework in production, digital products generating independent revenue, Azure+SAP+M365 confirmed, channel_mismatch=Kingsport TN outside STOLA, ms_standardized=true, ai_maturity=16; sub_sector corrected from Downstream Refining) [HIGH]
+- APA Corporation (id=133): APA, Upstream E&P, $8.37B rev, 4,700 employees, $93.9M WWT addressable (27%; no adjustments; no CIO identified, $4.5B Callon Petroleum acquisition April 2024 = active IT integration, $350M cost savings program, Houston HQ in STOLA, ms_standardized=false, ai_maturity=7) [MEDIUM_HIGH]
+- Coterra Energy (id=81): CTRA, Upstream E&P, $7.35B rev, 957 employees, $70.5M WWT addressable (27%; no adjustments; no CIO identified, two Delaware Basin acquisitions late 2024 = IT integration demand, Houston HQ in STOLA, ms_standardized=false, ai_maturity=5) [MEDIUM_HIGH]
+- DuPont de Nemours (id=54): DD, Petrochemical & Specialty Chemicals, $6.92B rev, 25,300 employees, $258.0M WWT addressable (24%; 27%−8%mismatch+5%MS=24%; CEO Lori Koch new June 2024, Digital Center 25-person/40+ projects, 3-way company split = major IT separation demand, Azure+SAP+M365 confirmed, channel_mismatch=Wilmington DE outside STOLA, ms_standardized=true, ai_maturity=10; sub_sector corrected from Downstream Refining) [MEDIUM_HIGH]
+- Matador Resources (id=167): MTDR, Upstream E&P, $3.59B rev, 700 employees, $33.1M WWT addressable (27%; no adjustments; no CIO identified, founder-CEO conservative culture, Dallas HQ in STOLA, ms_standardized=false, ai_maturity=4) [MEDIUM_HIGH]
+- Range Resources (id=154): RRC, Upstream E&P, $3.21B rev, 700 employees, $30.0M WWT addressable (27%; no adjustments; no CIO identified, Fort Worth TX in STOLA, Appalachian-focused operationally conservative, ms_standardized=false, ai_maturity=4) [MEDIUM_HIGH]
+- Antero Midstream (id=159): AM, Midstream Pipeline & Processing, $1.29B rev, 300 employees, $2.6M WWT addressable (19%; 27%−8%mismatch=19%; single-customer MLP for Antero Resources parent, effectively IT satellite of parent, channel_mismatch=Denver CO outside STOLA, ms_standardized=false, ai_maturity=3; denominator=Revenue×0.12=$154.8M) [MEDIUM_HIGH]
 
 ## Enrichment Workflow
 1. I (Claude in new chat) research company via web search
@@ -147,11 +153,11 @@ Rules:
 OEM deduction rule: oem_direct_deduction is manual-confirmation only — same standard as incumbent_msp. Never auto-applied by revenue threshold. Confirmed YES: ExxonMobil, Chevron, Halliburton. All others confirmed NO or pending assessment.
 
 ## Pending Work
-1. Tier 1 enrichment COMPLETE — begin Tier 2 US companies
+1. Tier 2 revenue-populated companies COMPLETE — begin Tier 2 revenue population for remaining 141 companies or advance to Tier 3
 2. Filter bar standardization across all pages (Analytics pattern)
 3. Intelligence tab Phase 2 enhancements (forward estimate display, opportunity scorecard)
 4. Weekly batch signal collection service
-5. Expand to Tier 2 US companies after Tier 1 complete
+5. Audit remaining Tier 2 midstream companies enriched pre-denominator-refactor for stale "revenue" denominator (Williams id=23, ONEOK id=29, Enterprise Products id=24 are at risk)
 
 ## Key Architectural Decisions
 - CRM accounts and companies table NOT linked yet (deliberate — pending manual review UI)
