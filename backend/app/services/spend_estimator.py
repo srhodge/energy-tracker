@@ -119,29 +119,82 @@ def estimate(company_id: int, db: Session) -> dict:
     it_pcts, ot_pcts, dig_pcts, ai_pcts = _BASELINE.get(c.sub_sector or "", _DEFAULT_BASELINE)
     step1_value_chain = c.sub_sector or "default"
 
-    # ── STEP 2: denominator ───────────────────────────────────────────────────
+    # ── STEP 2: Revenue Denominator Selection ────────────────────────────────
+    # Sub-sector-specific denominators are applied to improve accuracy.
+    # Midstream: EBITDA × 2.5 (commodity pass-through revenue is misleading)
+    # Downstream Refining: Gross Profit (thin margins make revenue a poor IT proxy;
+    #     refiners create real value but capture little of commodity cost)
+    # Regulated Utilities: EBITDA × 2.5 (rate-base model; revenue set by regulators not market)
+    # Integrated O&G: 50/50 revenue + EBITDA blend
+    # All others: Revenue (appropriate for services, E&P, chemicals)
     rev    = _f(c.revenue_ttm)
     ebitda = _f(c.ebitda_ttm)
     gp     = _f(c.gross_profit_ttm)
 
     ebitda_scales: Optional[tuple[float, float, float]] = None
     denom_used = "none"
+    denominator_basis = "none"
     denominator_low = denominator_mid = denominator_high = None
 
-    if c.revenue_denominator == "ebitda" and ebitda is not None:
-        denominator_low = denominator_mid = denominator_high = ebitda
-        ebitda_scales = (0.15, 0.175, 0.20)
-        denom_used = "ebitda"
-    elif c.revenue_denominator == "gross_profit" and gp is not None:
-        denominator_low = denominator_mid = denominator_high = gp
-        denom_used = "gross_profit"
-    elif c.revenue_denominator == "blended" and rev is not None and ebitda is not None:
-        blended = rev * 0.6 + ebitda * 0.4
-        denominator_low = denominator_mid = denominator_high = blended
-        denom_used = "blended"
-    elif rev is not None:
-        denominator_low = denominator_mid = denominator_high = rev
-        denom_used = "revenue"
+    sub = c.sub_sector or ""
+
+    if sub == "Midstream Pipeline & Processing":
+        if ebitda is not None and ebitda > 0:
+            d = ebitda * 2.5
+            denominator_low = denominator_mid = denominator_high = d
+            denom_used = "ebitda_x2.5"
+            denominator_basis = "EBITDA × 2.5"
+        elif rev is not None:
+            d = rev * 0.12
+            denominator_low = denominator_mid = denominator_high = d
+            denom_used = "revenue_x0.12"
+            denominator_basis = "Revenue × 0.12"
+
+    elif sub == "Downstream Refining":
+        if gp is not None and gp > 0:
+            denominator_low = denominator_mid = denominator_high = gp
+            denom_used = "gross_profit"
+            denominator_basis = "Gross Profit"
+        elif ebitda is not None and ebitda > 0:
+            d = ebitda * 1.5
+            denominator_low = denominator_mid = denominator_high = d
+            denom_used = "ebitda_x1.5"
+            denominator_basis = "EBITDA × 1.5"
+        elif rev is not None:
+            d = rev * 0.06
+            denominator_low = denominator_mid = denominator_high = d
+            denom_used = "revenue_x0.06"
+            denominator_basis = "Revenue × 0.06"
+
+    elif sub == "Energy Utilities":
+        if ebitda is not None and ebitda > 0:
+            d = ebitda * 2.5
+            denominator_low = denominator_mid = denominator_high = d
+            denom_used = "ebitda_x2.5"
+            denominator_basis = "EBITDA × 2.5"
+        elif rev is not None:
+            d = rev * 0.35
+            denominator_low = denominator_mid = denominator_high = d
+            denom_used = "revenue_x0.35"
+            denominator_basis = "Revenue × 0.35"
+
+    elif sub == "Integrated O&G":
+        if rev is not None and ebitda is not None:
+            d = rev * 0.5 + ebitda * 0.5
+            denominator_low = denominator_mid = denominator_high = d
+            denom_used = "blended_50_50"
+            denominator_basis = "50% Revenue + 50% EBITDA"
+        elif rev is not None:
+            denominator_low = denominator_mid = denominator_high = rev
+            denom_used = "revenue"
+            denominator_basis = "Revenue"
+
+    else:
+        # Upstream E&P, OFS, Petrochemicals, Renewable & New Energy, etc.
+        if rev is not None:
+            denominator_low = denominator_mid = denominator_high = rev
+            denom_used = "revenue"
+            denominator_basis = "Revenue"
 
     private_mult = 0.75 if c.is_pe_backed else (0.85 if c.is_private else 1.0)
 
@@ -213,7 +266,7 @@ def estimate(company_id: int, db: Session) -> dict:
         "no_country":    c.country is None,
         "is_private":    bool(c.is_private),
         "is_pe_backed":  bool(c.is_pe_backed),
-        "ebitda_mode":   denom_used == "ebitda",
+        "ebitda_mode":   denom_used not in ("revenue", "none"),
     }
 
     # ── STEP 4: employee count cross-check ────────────────────────────────────
@@ -498,6 +551,7 @@ def estimate(company_id: int, db: Session) -> dict:
         "sub_sector":       c.sub_sector,
         "country":          c.country,
         "denominator_used": denom_used,
+        "denominator_basis": denominator_basis,
         "denominator_value": denominator_mid,
         "private_mult":     private_mult,
         "regional_mult":    regional_mult,
