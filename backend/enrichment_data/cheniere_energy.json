@@ -1,0 +1,49 @@
+{
+  "company_id": 70,
+  "profile": {
+    "sub_sector": "Midstream Pipeline & Processing",
+    "employee_count": 1717,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 15100000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 65,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [],
+  "signals": [
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "Digital",
+      "signal_date": "2024-09-01",
+      "signal_title": "Cheniere Corpus Christi Stage 3 expansion — new digital infrastructure for additional LNG trains",
+      "signal_description": "Cheniere is constructing Stage 3 at Corpus Christi LNG (3 additional mid-scale trains, ~10 mtpa). New LNG train construction requires substantial digital infrastructure: DCS/PLC liquefaction control systems, SCADA integration, safety instrumented systems, and data historians. Creates near-term IT/OT demand as trains come online.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 4,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "Digital",
+      "signal_date": "2024-01-01",
+      "signal_title": "Cheniere operational excellence and reliability focus — technology in service of LNG production optimization",
+      "signal_description": "Cheniere's operational focus centers on maximizing production reliability and efficiency across its Sabine Pass and Corpus Christi facilities. Technology investment is directed toward production optimization, predictive maintenance, and safety systems. Confirms ongoing IT/OT investment aligned with operational excellence mandate.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "annual_report"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue ~$15.1B (down from 2022-2023 peak due to lower LNG spot prices). 1,717 employees — extremely lean for a Fortune 500. Houston HQ in STOLA. No CIO, technology leadership, MSP, CoE, or AI programs identified. Very lean corporate structure — IT org likely 50-100 people. Corpus Christi Stage 3 expansion is primary near-term IT/OT demand signal. ai_maturity_score=6 (below ≥15). WWT opportunity extremely limited by headcount. Confidence LOW."
+}

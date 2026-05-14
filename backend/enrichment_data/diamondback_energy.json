@@ -1,0 +1,61 @@
+{
+  "company_id": 32,
+  "profile": {
+    "sub_sector": "Upstream E&P",
+    "employee_count": 1983,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Midland",
+    "hq_country": "United States",
+    "tech_decision_city": "Midland",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 14460000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 88,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ Midland TX — outside WWT STOLA territory (West Texas, not Houston metro). Channel mismatch flag applied.",
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [],
+  "signals": [
+    {
+      "signal_type": "partnership",
+      "signal_category": "Digital",
+      "signal_date": "2024-12-01",
+      "signal_title": "Diamondback Energy electric simul-frac fleet — VoltaGrid + Halliburton 200MW partnership December 2024",
+      "signal_description": "Diamondback Energy deployed a 200MW electric simul-frac fleet in the Permian Basin via a partnership with VoltaGrid (power supply) and Halliburton (frac services) in December 2024. Electric simul-frac is a leading OT technology signal — requires significant power management, automation, and real-time monitoring infrastructure.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "Digital",
+      "signal_date": "2024-01-01",
+      "signal_title": "Diamondback continuous real-time methane monitoring — 87% of crude production covered",
+      "signal_description": "Diamondback Energy deployed continuous real-time methane monitoring covering approximately 87% of its crude oil production. Real-time environmental monitoring at this scale requires IoT sensor networks, data telemetry, and analytics infrastructure. Confirms active OT/digital investment in field operations.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "sustainability_report"
+    },
+    {
+      "signal_type": "m_and_a",
+      "signal_category": "Digital",
+      "signal_date": "2024-09-01",
+      "signal_title": "Diamondback $26B Endeavor Energy merger closed September 2024 — active post-merger IT integration",
+      "signal_description": "Diamondback closed its transformational $26B merger with Endeavor Energy Resources in September 2024, doubling its Permian Basin acreage. Post-merger IT integration across ERP, field operations systems, production data, and land records creates significant near-term IT spend demand.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $14.46B post-Endeavor merger. ~1,983 employees — very lean for revenue scale. Midland TX HQ = channel mismatch (West Texas, not Houston metro). No CIO identified. Electric operations and real-time monitoring are meaningful OT technology signals. Post-Endeavor IT integration ($26B deal) = active IT demand. No MSP or CoE. Halliburton relationship via VoltaGrid is noteworthy — WWT + Halliburton strategic alignment could be an entry point. ai_maturity_score=8 (below ≥15). Confidence MEDIUM."
+}

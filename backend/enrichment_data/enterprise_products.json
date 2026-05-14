@@ -1,0 +1,49 @@
+{
+  "company_id": 24,
+  "profile": {
+    "sub_sector": "Midstream Pipeline & Processing",
+    "employee_count": 7500,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 51560000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 70,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [],
+  "signals": [
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "Digital",
+      "signal_date": "2025-01-01",
+      "signal_title": "Enterprise Products Louisiana natural gas pipelines positioned to serve AI data center power demand — CEO Q4 2025",
+      "signal_description": "Enterprise Products CEO Jim Teague stated in Q4 2025 that the company is actively positioning its Louisiana natural gas pipeline assets to serve growing AI data center and electrification demand. This is an energy revenue play — natural gas supply to data center campuses — not internal IT AI investment. Signals board awareness of AI infrastructure opportunity.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 4,
+      "source": "earnings_call"
+    },
+    {
+      "signal_type": "ai_deployment",
+      "signal_category": "Digital",
+      "signal_date": "2024-01-01",
+      "signal_title": "Enterprise Products operational leverage investments in natural gas pipeline systems for AI and electrification",
+      "signal_description": "Enterprise Products is making capital investments to increase pipeline capacity and connectivity to serve expected demand from AI data center power and broader electrification trends. Confirms forward capital deployment toward AI-adjacent infrastructure.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "annual_report"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $51.56B — highly commodity-exposed. Fee-based EBITDA ~$7.3B is better scale indicator. ~7,500 employees estimated (lean for revenue scale — typical MLP). Houston HQ in STOLA — clean account. No CIO, MSP, CoE, or AI programs identified. Conservative MLP culture. 27th consecutive year of distribution growth. AI data center positioning is energy revenue play, not internal IT. ai_maturity_score=6 (well below ≥15). WWT opportunity: Houston account, no MSP displacement, but very limited IT discretionary spend visibility. Confidence LOW."
+}
