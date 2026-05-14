@@ -210,12 +210,15 @@ def estimate(company_id: int, db: Session) -> dict:
     ).all()
     leadership_score = sum(r.signal_score or 0 for r in leadership_rows)
 
-    cutoff_1yr = date.today() - timedelta(days=365)
+    cutoff_2yr = date.today() - timedelta(days=730)
     positive_signal_rows = db.scalars(
         select(CompanyTechSignal).where(
             CompanyTechSignal.company_id == company_id,
-            CompanyTechSignal.signal_type.in_(["partnership", "ai_announcement", "leadership_hire"]),
-            CompanyTechSignal.signal_date >= cutoff_1yr,
+            CompanyTechSignal.signal_type.in_([
+                "partnership", "ai_announcement", "leadership_hire",
+                "strategic_pivot", "earnings_signal",
+            ]),
+            CompanyTechSignal.signal_date >= cutoff_2yr,
         )
     ).all()
     signal_score = sum(max(0, r.score_points or 0) for r in positive_signal_rows)
