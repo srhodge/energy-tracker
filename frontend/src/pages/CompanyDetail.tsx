@@ -743,6 +743,21 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
           </button>
         </div>
 
+        {(() => {
+          const allDates = [
+            ...signals.map(s => s.signal_date || s.created_at?.slice(0, 10)),
+            ...visibleLeaders.map(l => l.hire_date),
+          ].filter(Boolean).map(d => new Date(d!).getTime()).filter(n => !isNaN(n));
+          if (allDates.length === 0) return null;
+          const daysSince = Math.floor((Date.now() - Math.max(...allDates)) / 86_400_000);
+          if (daysSince <= 90) return null;
+          return (
+            <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 6, padding: "9px 14px", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 14, color: "#d97706" }}>⚠</span>
+              <span style={{ fontSize: 13, color: "#92400e" }}>Most recent signal is <strong>{daysSince} days old</strong> — consider refreshing intelligence data.</span>
+            </div>
+          );
+        })()}
         {visibleLeaders.length === 0 ? (
           <p style={{ color: "#9ca3af", fontSize: 13 }}>No leadership data collected yet.</p>
         ) : (
