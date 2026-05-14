@@ -326,7 +326,7 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
   const tdV: React.CSSProperties = { padding: "7px 10px", fontSize: 13, color: "#1a1a2e", borderBottom: "1px solid #f3f4f6", textAlign: "right" };
   const tdVB: React.CSSProperties = { ...tdV, fontWeight: 700 };
 
-  function spendRow(label: string, low?: number, mid?: number, high?: number, bold = false, totalLow?: number, totalMid?: number, totalHigh?: number) {
+  function spendRow(label: string, low?: number, mid?: number, high?: number, bold = false, totalLow?: number, totalMid?: number, totalHigh?: number, fy2027e?: number) {
     const cell = bold ? tdVB : tdV;
     const rowBg = bold ? "#f8fafc" : undefined;
     const pctLow  = (!bold && totalLow  && low  != null && totalLow  > 0) ? Math.round((low  / totalLow)  * 100) : null;
@@ -343,6 +343,9 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
         </td>
         <td style={{ ...cell, color: "#16a34a" }}>
           {high != null ? <>{formatCap(high)}{pctHigh != null && <span style={{ fontSize: 10, color: "#9ca3af", marginLeft: 4 }}>({pctHigh}%)</span>}</> : "—"}
+        </td>
+        <td style={{ ...cell, color: "#F59E0B" }} title="Forward estimate based on 8% annual growth assumption applied to HIGH scenario">
+          {fy2027e != null ? formatCap(fy2027e) : "—"}
         </td>
       </tr>
     );
@@ -453,6 +456,7 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                     <th style={{ ...tdV, color: "#6b7280", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "2px solid #e5e7eb" }}>Low</th>
                     <th style={{ ...tdVB, fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "2px solid #e5e7eb" }}>Mid</th>
                     <th style={{ ...tdV, color: "#6b7280", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "2px solid #e5e7eb" }}>High</th>
+                    <th style={{ ...tdV, color: "#F59E0B", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "2px solid #e5e7eb" }}>FY2027E (est.)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -481,6 +485,9 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                       {est.wwt_addressable_high != null
                         ? <>{formatCap(est.wwt_addressable_high)}{est.wwt_addressable_pct_high != null && <span style={{ fontSize: 10, color: "#9ca3af", marginLeft: 4 }}>({est.wwt_addressable_pct_high.toFixed(0)}%)</span>}</>
                         : "—"}
+                    </td>
+                    <td style={{ ...tdV, color: "#F59E0B" }} title="Forward estimate based on 8% annual growth assumption applied to HIGH scenario">
+                      {est.wwt_addressable_high != null ? formatCap(est.wwt_addressable_high * 1.08) : "—"}
                     </td>
                   </tr>
                 </tbody>
