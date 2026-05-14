@@ -1,0 +1,51 @@
+{
+  "company_id": 23,
+  "profile": {
+    "sub_sector": "Midstream Pipeline & Processing",
+    "employee_count": 5829,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Tulsa",
+    "hq_country": "United States",
+    "tech_decision_city": "Tulsa",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 10500000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 15,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": false,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ Tulsa OK — outside WWT STOLA territory. Channel mismatch flag applied.",
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Chad Zamarin",
+      "location_city": "Tulsa",
+      "location_country": "United States",
+      "hire_date": "2025-07-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 6,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "ai_announcement",
+      "signal_category": "Digital",
+      "signal_date": "2025-01-01",
+      "signal_title": "Williams Companies $3.1B power innovation commitment for AI data center power — Socrates project $1.6B West Texas",
+      "signal_description": "Williams Companies committed $3.1B to power innovation projects to supply behind-the-meter natural gas power for AI data center campuses. Flagship Socrates project ($1.6B) is located in West Texas. CEO Chad Zamarin driving AI data center power strategy as core growth pillar. This is an energy revenue play, not internal IT AI investment — signals board-level awareness of AI infrastructure demand.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $10.5B — ~90% fee-based EBITDA (low commodity exposure). 5,829 employees. HQ Tulsa = channel mismatch. New CEO Chad Zamarin July 2025 (former EVP Corporate Strategic Development) = IT budget reset. $3.1B AI data center power commitment is major strategic signal but is energy revenue play, not internal IT AI spend. SAP confirmed. No CIO identified publicly. No MSP, no CoE. ai_maturity_score=9 (below ≥15). WWT opportunity: limited by Tulsa channel mismatch and low internal IT visibility. Best angle is power innovation infrastructure projects."
+}

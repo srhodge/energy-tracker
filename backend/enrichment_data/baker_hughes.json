@@ -1,0 +1,72 @@
+{
+  "company_id": 52,
+  "profile": {
+    "sub_sector": "Oilfield & Energy Services",
+    "employee_count": 58000,
+    "employee_count_source": "annual_report_2024",
+    "hq_city": "Houston",
+    "hq_country": "United States",
+    "tech_decision_city": "Houston",
+    "tech_decision_country": "United States",
+    "revenue_ttm": 27830000000,
+    "is_private": false,
+    "is_pe_backed": false,
+    "commodity_exposure_pct": 50,
+    "revenue_denominator": "revenue",
+    "offshore_coe_confirmed": false,
+    "incumbent_msp": null,
+    "ms_standardized": true,
+    "channel_mismatch_flag": false,
+    "oem_direct_confirmed": false,
+    "data_enrichment_tier": 2
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Lorenzo Simonelli",
+      "location_city": "Houston",
+      "location_country": "United States",
+      "hire_date": "2017-07-01",
+      "is_current": true,
+      "spend_category": "All",
+      "signal_score": 8,
+      "source": "company_website"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "partnership",
+      "signal_category": "Digital",
+      "signal_date": "2025-02-01",
+      "signal_title": "Baker Hughes Microsoft Azure expanded collaboration MOU February 2025 — Azure AI Foundry integration",
+      "signal_description": "Baker Hughes signed an expanded Microsoft Azure collaboration MOU in February 2025, integrating Azure AI Foundry into the Cordant digital platform. Cordant is now available on Azure Marketplace. Confirms Azure as strategic cloud backbone for Cordant scale-out.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "partnership",
+      "signal_category": "AI",
+      "signal_date": "2024-09-01",
+      "signal_title": "Baker Hughes Cordant enterprise subscription — bp Global Frame Agreement multi-year contract",
+      "signal_description": "Baker Hughes secured a multimillion-dollar Global Frame Agreement with bp for enterprise Cordant Asset Health subscriptions. Confirms Cordant as commercially deployed AI asset performance platform with major operator contracts, not just pilot stage.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 3,
+      "source": "press_release"
+    },
+    {
+      "signal_type": "partnership",
+      "signal_category": "AI",
+      "signal_date": "2022-09-01",
+      "signal_title": "Baker Hughes C3 AI and Accenture industrial asset management collaboration",
+      "signal_description": "Baker Hughes partnered with C3 AI and Accenture to deliver industrial asset management (IAM) solutions to energy operators. This is a customer-facing platform play, not an internal managed services arrangement. Does not trigger MSP flag but confirms AI platform ecosystem positioning.",
+      "sentiment": "positive",
+      "spend_impact_direction": "increase",
+      "score_points": 2,
+      "source": "press_release"
+    }
+  ],
+  "enrichment_notes": "FY2024 revenue $27.83B. ~58,000 employees. Houston HQ in STOLA — clean account. No MSP identified (C3 AI + Accenture collaboration is customer-facing platform, not internal managed services — no MSP deduction). Azure primary cloud confirmed via Feb 2025 MOU. Microsoft 365 confirmed. SAP ERP. Cordant platform growing with enterprise contracts. ai_maturity_score=16 (≥15 — high AI maturity bonus applies). WWT opportunity: Houston account, no MSP, NVIDIA/Azure alignment highly relevant (WWT is 7x NVIDIA Americas Partner of Year), Cordant expansion infrastructure demand, IET digital growth."
+}
