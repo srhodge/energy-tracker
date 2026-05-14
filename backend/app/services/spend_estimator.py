@@ -223,6 +223,9 @@ def estimate(company_id: int, db: Session) -> dict:
     ).all()
     signal_score = sum(max(0, r.score_points or 0) for r in positive_signal_rows)
     maturity_score = leadership_score + signal_score
+    # ai_maturity_score on company record acts as a floor — computed signal score can exceed it
+    if c.ai_maturity_score is not None:
+        maturity_score = max(maturity_score, c.ai_maturity_score)
     it_mat, ot_mat, dig_mat, ai_mat = _maturity_mults(maturity_score)
 
     # ── STEP 9: financial health ──────────────────────────────────────────────

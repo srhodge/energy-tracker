@@ -141,6 +141,7 @@ class Company(Base):
     channel_mismatch_note: Mapped[str | None] = mapped_column(Text)
     oem_direct_confirmed: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
     data_enrichment_tier: Mapped[int | None] = mapped_column(Integer)
+    ai_maturity_score: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     financials: Mapped[list["Financial"]] = relationship(back_populates="company", cascade="all, delete-orphan")
     events: Mapped[list["Event"]] = relationship(back_populates="company", cascade="all, delete-orphan")

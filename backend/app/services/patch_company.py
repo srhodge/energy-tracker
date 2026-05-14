@@ -89,7 +89,12 @@ def patch_company(data: dict, base_url: str, dry_run: bool = False) -> dict:
     summary: dict = {"company_id": company_id, "profile": None, "signals": [], "leadership": [], "errors": []}
 
     # ── Profile ───────────────────────────────────────────────────────────────
-    profile = data.get("profile")
+    profile = dict(data.get("profile") or {})
+    # Promote ai_maturity_score from spend_model_flags into profile patch
+    flags = data.get("spend_model_flags") or {}
+    if isinstance(flags, dict) and flags.get("ai_maturity_score") is not None:
+        profile["ai_maturity_score"] = int(flags["ai_maturity_score"])
+
     if profile:
         url = f"{base_url}/api/companies/{company_id}/profile"
         try:
