@@ -678,6 +678,59 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
         </div>
       </div>
 
+      {/* ── Opportunity Scorecard ── */}
+      <div className="detail-section card">
+        <h2 style={{ marginBottom: 14 }}>Opportunity Scorecard</h2>
+        {est ? (() => {
+          const kd = est.key_drivers as Record<string, unknown> | undefined;
+          const matScore = typeof kd?.maturity_score === "number" ? kd.maturity_score : 0;
+          const techMaturity = matScore >= 20 ? 5 : matScore >= 15 ? 4 : matScore >= 10 ? 3 : matScore >= 5 ? 2 : 1;
+          const rev = p.revenue_ttm ?? 0;
+          const financialCap = rev >= 100_000_000_000 ? 5 : rev >= 20_000_000_000 ? 4 : rev >= 5_000_000_000 ? 3 : rev >= 1_000_000_000 ? 2 : 1;
+          const urgentSignals = signals.filter(s => ["leadership_hire", "earnings_signal"].includes(s.signal_type)).length;
+          const strategicUrgency = urgentSignals >= 6 ? 5 : urgentSignals >= 4 ? 4 : urgentSignals >= 2 ? 3 : urgentSignals >= 1 ? 2 : 1;
+          const accessibility = (!p.channel_mismatch_flag && !p.incumbent_msp) ? 5 :
+                                (!p.channel_mismatch_flag && !!p.incumbent_msp) ? 3 :
+                                (!!p.channel_mismatch_flag && !p.incumbent_msp) ? 3 : 1;
+          const warmth = 3;
+          const factors = [
+            { label: "Tech Maturity",      score: techMaturity,     desc: `AI maturity score ${matScore}` },
+            { label: "Financial Capacity", score: financialCap,     desc: p.revenue_ttm ? formatCap(p.revenue_ttm) + " revenue" : "Revenue unknown" },
+            { label: "Strategic Urgency",  score: strategicUrgency, desc: `${urgentSignals} qualifying signal${urgentSignals !== 1 ? "s" : ""}` },
+            { label: "WWT Accessibility",  score: accessibility,    desc: p.channel_mismatch_flag ? "Channel mismatch flagged" : p.incumbent_msp ? `MSP: ${p.incumbent_msp}` : "Clean territory" },
+            { label: "Relationship Warmth", score: warmth,          desc: "No data — default" },
+          ];
+          const total = factors.reduce((sum, f) => sum + f.score, 0);
+          const barColor = (s: number) => s >= 4 ? "#16a34a" : s >= 3 ? "#f59e0b" : "#dc2626";
+          return (
+            <div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {factors.map(f => (
+                  <div key={f.label}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: "#374151" }}>{f.label}</span>
+                      <span style={{ fontSize: 11, color: "#9ca3af" }}>{f.desc}</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{ flex: 1, height: 8, background: "#f3f4f6", borderRadius: 4, overflow: "hidden" }}>
+                        <div style={{ width: `${(f.score / 5) * 100}%`, height: "100%", background: barColor(f.score), borderRadius: 4 }} />
+                      </div>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: barColor(f.score), minWidth: 24, textAlign: "right" }}>{f.score}/5</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>Total Score</span>
+                <span style={{ fontSize: 22, fontWeight: 800, color: total >= 20 ? "#16a34a" : total >= 15 ? "#f59e0b" : "#dc2626" }}>{total} / 25</span>
+              </div>
+            </div>
+          );
+        })() : (
+          <p style={{ color: "#9ca3af", fontSize: 13 }}>Run estimate first to calculate opportunity score.</p>
+        )}
+      </div>
+
       {/* ── Leadership ── */}
       <div className="detail-section card">
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
