@@ -326,15 +326,25 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
   const tdV: React.CSSProperties = { padding: "7px 10px", fontSize: 13, color: "#1a1a2e", borderBottom: "1px solid #f3f4f6", textAlign: "right" };
   const tdVB: React.CSSProperties = { ...tdV, fontWeight: 700 };
 
-  function spendRow(label: string, low?: number, mid?: number, high?: number, bold = false, totalLow?: number, totalMid?: number, totalHigh?: number, fy2027e?: number) {
+  function spendRow(label: string, low?: number, mid?: number, high?: number, bold = false, totalLow?: number, totalMid?: number, totalHigh?: number, fy2027e?: number, confidenceLevel?: string) {
     const cell = bold ? tdVB : tdV;
     const rowBg = bold ? "#f8fafc" : undefined;
     const pctLow  = (!bold && totalLow  && low  != null && totalLow  > 0) ? Math.round((low  / totalLow)  * 100) : null;
     const pctMid  = (!bold && totalMid  && mid  != null && totalMid  > 0) ? Math.round((mid  / totalMid)  * 100) : null;
     const pctHigh = (!bold && totalHigh && high != null && totalHigh > 0) ? Math.round((high / totalHigh) * 100) : null;
+    const confPill = !bold && confidenceLevel ? (
+      <span style={{
+        display: "inline-block", marginLeft: 6, padding: "1px 5px", borderRadius: 3, fontSize: 10, fontWeight: 700,
+        background: confidenceLevel === "HIGH" ? "#f0fdf4" : confidenceLevel.startsWith("MEDIUM") ? "#fffbeb" : "#f3f4f6",
+        color:      confidenceLevel === "HIGH" ? "#166534" : confidenceLevel.startsWith("MEDIUM") ? "#92400e" : "#6b7280",
+        border: `1px solid ${confidenceLevel === "HIGH" ? "#bbf7d0" : confidenceLevel.startsWith("MEDIUM") ? "#fde68a" : "#d1d5db"}`,
+      }}>
+        {confidenceLevel === "HIGH" ? "HIGH" : confidenceLevel.startsWith("MEDIUM") ? "MED" : "LOW"}
+      </span>
+    ) : null;
     return (
       <tr key={label} style={{ background: rowBg }}>
-        <td style={{ ...tdL, fontWeight: bold ? 700 : 500, paddingLeft: bold ? 10 : 14 }}>{label}</td>
+        <td style={{ ...tdL, fontWeight: bold ? 700 : 500, paddingLeft: bold ? 10 : 14 }}>{label}{confPill}</td>
         <td style={{ ...cell, color: "#6b7280" }}>
           {low != null ? <>{formatCap(low)}{pctLow != null && <span style={{ fontSize: 10, color: "#9ca3af", marginLeft: 4 }}>({pctLow}%)</span>}</> : "—"}
         </td>
@@ -460,10 +470,10 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {spendRow("IT",      est.it_spend_low,      est.it_spend_mid,      est.it_spend_high,      false, est.total_spend_low ?? undefined, est.total_spend_mid ?? undefined, est.total_spend_high ?? undefined)}
-                  {spendRow("OT",      est.ot_spend_low,      est.ot_spend_mid,      est.ot_spend_high,      false, est.total_spend_low ?? undefined, est.total_spend_mid ?? undefined, est.total_spend_high ?? undefined)}
-                  {spendRow("Digital", est.digital_spend_low, est.digital_spend_mid, est.digital_spend_high, false, est.total_spend_low ?? undefined, est.total_spend_mid ?? undefined, est.total_spend_high ?? undefined)}
-                  {spendRow("AI",      est.ai_spend_low,      est.ai_spend_mid,      est.ai_spend_high,      false, est.total_spend_low ?? undefined, est.total_spend_mid ?? undefined, est.total_spend_high ?? undefined)}
+                  {spendRow("IT",      est.it_spend_low,      est.it_spend_mid,      est.it_spend_high,      false, est.total_spend_low ?? undefined, est.total_spend_mid ?? undefined, est.total_spend_high ?? undefined, undefined, est.confidence_level ?? undefined)}
+                  {spendRow("OT",      est.ot_spend_low,      est.ot_spend_mid,      est.ot_spend_high,      false, est.total_spend_low ?? undefined, est.total_spend_mid ?? undefined, est.total_spend_high ?? undefined, undefined, est.confidence_level ?? undefined)}
+                  {spendRow("Digital", est.digital_spend_low, est.digital_spend_mid, est.digital_spend_high, false, est.total_spend_low ?? undefined, est.total_spend_mid ?? undefined, est.total_spend_high ?? undefined, undefined, est.confidence_level ?? undefined)}
+                  {spendRow("AI",      est.ai_spend_low,      est.ai_spend_mid,      est.ai_spend_high,      false, est.total_spend_low ?? undefined, est.total_spend_mid ?? undefined, est.total_spend_high ?? undefined, undefined, est.confidence_level ?? undefined)}
                   {spendRow("Total",   est.total_spend_low,   est.total_spend_mid,   est.total_spend_high,   true)}
                   <tr style={{ background: "#eff6ff" }}>
                     <td style={{ ...tdL, fontWeight: 700, color: "#1d4ed8" }}>WWT Addressable</td>
