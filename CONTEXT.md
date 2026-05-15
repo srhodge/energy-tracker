@@ -197,7 +197,7 @@ Script: backend/scripts/populate_tier2_revenue.py — pulls totalRevenue, fullTi
 - 7,878 total opportunities (deduplicated across all export files)
 - $60.35M open pipeline, $179.56M closed won, 64.4% win rate
 - Key sellers: Sam Hodge (hodges) - 25 open opps, Matthew Nalbone (nalbonem) - 30 opps, Shay Gillespie (sgill)
-- CRM linking status (2026-05-14): 18 accounts linked to companies table (energy_company_id, match_method='manual_confirmed', match_score=100)
+- CRM linking status (2026-05-14): 20 accounts linked to companies table (energy_company_id, match_method='manual_confirmed', match_score=100)
 
 Linked accounts (crm_id → company_id):
   id=14 → id=2   ExxonMobil Global Services Company → ExxonMobil
@@ -218,6 +218,8 @@ Linked accounts (crm_id → company_id):
   id=34 → id=402 Par Pacific Holdings → Par Pacific Holdings
   id=7  → id=3   Chevron Corporation → Chevron
   id=31 → id=42  Oxy → Occidental Petroleum
+  id=25 → id=168 Noble Corporation → Noble Corporation
+  id=51 → id=52  Baker Hughes Inc → Baker Hughes
 
 Unlinked CRM accounts with pipeline (pending resolution):
   id=28  OGE Energy ($1.29M open) — not in companies table
@@ -371,7 +373,6 @@ Current confirmed consulting relationships in database:
 All other enriched companies: no consulting firm relationship confirmed. Do not flag without confirmation.
 
 ## Salesforce Account to Company ID Mapping Notes
-18 accounts now linked (see CRM Data Details above). Remaining known aliases still needing mapping:
-- "Engie North America" = ENGIE (if in companies DB)
-- "Baker Hughes Inc" — check if matches Baker Hughes (id=52)
-- Noble Corporation (crm id=25) = id=168 in companies table — ready to link (no open pipeline, $0.04M won)
+20 accounts now linked (see CRM Data Details above). Remaining known aliases still needing mapping:
+- "Engie North America" (CRM) — ENGIE not found in companies table; skip or add company first
+- ONEOK (crm id=29) — companies id=29 exists ("Oneok"); ready to link — confirm and apply
