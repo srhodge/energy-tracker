@@ -10,8 +10,8 @@
     "ebitda_ttm": 1359000000,
     "sub_sector": "Energy Utilities",
     "ms_standardized": false,
-    "channel_mismatch_flag": true,
-    "channel_mismatch_note": "Oklahoma City HQ outside STOLA territory — channel mismatch applies (-8%)",
+    "channel_mismatch_flag": false,
+    "channel_mismatch_note": null,
     "incumbent_msp": null,
     "oem_direct_confirmed": false,
     "offshore_coe_confirmed": false
@@ -83,12 +83,12 @@
     "incumbent_msp": false,
     "offshore_coe": false,
     "oem_direct_confirmed": false,
-    "channel_mismatch": true,
+    "channel_mismatch": false,
     "ai_maturity_score": 9,
-    "channel_mismatch_notes": "Oklahoma City HQ outside STOLA territory. Tech decision city is OKC. -8% channel mismatch applies.",
+    "channel_mismatch_notes": "Channel mismatch cleared — OKC confirmed within WWT STOLA territory coverage. 27% base addressable applies.",
     "ai_maturity_notes": "CIO David Parker promoted 2025 (+2). SAP S/4HANA RISE landmark migration (+3 partnership signal). OpenText AI/ML document management deployed (+2). Google data center ESAs create operational urgency (+2). No AICOE, no AI at scale. Score 9 — below ≥15 threshold."
   },
   "enrichment_confidence": "HIGH",
   "enrichment_date": "2026-05-15",
-  "enrichment_notes": "Regulated electric utility serving ~915,000 customers in Oklahoma and western Arkansas. CIO David Parker promoted 2025 — led landmark SAP S/4HANA RISE migration presented at ASUG 2025 (first legacy utility to migrate 25yr work order history single go-live). OpenText AI/ML document management deployed. LANDMARK April 2026: OG&E signed ESAs to power 3 Google data centers (Muskogee x2, Stillwater $3B AI campus) — major strategic load growth, new large-load tariff filing pending OCC. $7.3B 5-year capex plan. FY2025: $3.26B revenue, $1.36B EBITDA. No MSP confirmed. No OEM direct. HQ OKC outside STOLA — channel mismatch applies (-8%). WWT opportunity: SAP RISE just completed = integration partner opening, ServiceNow + Azure stack, new CIO in seat, Google data center load growth driving grid modernization investment cycle."
+  "enrichment_notes": "Regulated electric utility serving ~915,000 customers in Oklahoma and western Arkansas. CIO David Parker promoted 2025 — led landmark SAP S/4HANA RISE migration presented at ASUG 2025 (first legacy utility to migrate 25yr work order history single go-live). OpenText AI/ML document management deployed. LANDMARK April 2026: OG&E signed ESAs to power 3 Google data centers (Muskogee x2, Stillwater $3B AI campus) — major strategic load growth, new large-load tariff filing pending OCC. $7.3B 5-year capex plan. FY2025: $3.26B revenue, $1.36B EBITDA. No MSP confirmed. No OEM direct. ms_standardized=false — no Microsoft 365/Softchoice evidence (SAP + ServiceNow + OpenText stack). Channel mismatch cleared (OKC within STOLA coverage). WWT addressable high $142.6M at 27% (EBITDA×2.5 denominator). If M365 confirmed later, ms_standardized=true would yield ~$164.9M at 32%. WWT opportunity: SAP RISE just completed = integration partner opening, new CIO in seat, Google data center load growth driving grid modernization investment cycle."
 }
