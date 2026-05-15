@@ -149,7 +149,7 @@ function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
           </div>
           <div style={rowStyle}>
             <div>
-              <label style={labelStyle}>Energy Value Chain Position</label>
+              <label style={labelStyle}>Supply Chain Position</label>
               <select style={inputStyle} value={form.supply_chain_position ?? ""} onChange={field("supply_chain_position")}>
                 <option value="">— Select —</option>
                 {SUPPLY_CHAIN_OPTIONS.map(p => <option key={p}>{p}</option>)}
