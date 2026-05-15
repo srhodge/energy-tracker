@@ -34,6 +34,16 @@ MS Standardized (Softchoice): +5%
 High AI maturity (score >=15): +5%
 Floor: 12%, Ceiling: 42%
 
+ai_maturity_score (DB column, INTEGER, added 2026-05-14 via migration 0010):
+- Stored on companies table via patch_company.py from spend_model_flags.ai_maturity_score in enrichment JSONs
+- Acts as a FLOOR for the computed maturity_score (computed from signals + leadership can exceed it)
+- 4 companies currently have stored scores: ExxonMobil=18, Chevron=13, Sasol=13, Weatherford=12
+- Score ≥15 triggers high AI maturity +5% bonus; values 12-14 are stored but do not yet trigger bonus
+
+Signal scoring window (updated 2026-05-14): 730 days (2yr) lookback, not 365 days.
+Signal types counted toward maturity_score: partnership, ai_announcement, leadership_hire, strategic_pivot, earnings_signal
+(strategic_pivot and earnings_signal added 2026-05-14; previously excluded, causing undercount for companies with data center / AI strategy pivots)
+
 Step 2 sub-sector denominator (applied automatically, updated May 2026):
 - Midstream Pipeline & Processing: EBITDA × 2.5 (fallback: Revenue × 0.12) — commodity pass-through revenue is misleading
 - Downstream Refining: Gross Profit (fallback: EBITDA × 1.5, then Revenue × 0.06) — thin margins; revenue is a poor IT proxy
@@ -167,9 +177,10 @@ Script: backend/scripts/populate_tier2_revenue.py — pulls totalRevenue, fullTi
 ## Pending Work
 1. Tier 2 revenue population COMPLETE — all companies now have estimates; next: structured enrichment for high-value unenriched Tier 2 accounts
 2. Filter bar standardization across all pages (Analytics pattern) — COMPLETE (all pages already match)
-3. Intelligence tab Phase 2 enhancements (forward estimate display, opportunity scorecard)
-4. Weekly batch signal collection service
-5. Denominator audit COMPLETE — Williams, ONEOK, Enterprise Products confirmed on revenue_x0.12
+3. Intelligence tab Phase 2 enhancements — COMPLETE (FY2027E column, Opportunity Scorecard, Signal Age Warning, per-category confidence pills)
+4. ai_maturity_score DB column — COMPLETE (migration 0010, floor override wired in estimator and patch_company)
+5. Weekly batch signal collection service — PENDING
+6. Denominator audit COMPLETE — Williams, ONEOK, Enterprise Products confirmed on revenue_x0.12
 
 ## Key Architectural Decisions
 - CRM accounts and companies table NOT linked yet (deliberate — pending manual review UI)
@@ -202,27 +213,20 @@ Dow Chemical (FEDERAL/STOLA mismatch), Bechtel (similar)
   - Pending: full filter bar standardization matching Analytics exactly
 - Company Detail page — Overview + Intelligence tabs both working
 
-## Filter Bar Standardization (PENDING TASK — HIGH PRIORITY)
-The Analytics page has the reference filter bar pattern:
-- Sticky/fixed at top of content area (below sidebar/nav)
-- Pill-style dropdown buttons
-- Reset button appears only when any filter differs from default, disappears when reset
-This pattern needs to be applied to:
-1. CrmDashboard.tsx — all 4 tabs (Companies, Opportunities, Owners, Summary)
-2. Companies page — already has filters, needs to match Analytics style exactly
-3. Territory Dashboard — same
-4. Activity Feed page
+## Filter Bar Standardization — COMPLETE
+All pages (Companies, Territory Dashboard, CrmDashboard, Activity Feed, Analytics) audited 2026-05-14 — all already match the Analytics reference pattern (sticky horizontal, pill-style dropdowns, Reset button). No changes needed.
 
-## Intelligence Tab Enhancements (PENDING)
-Phase 2 enhancements planned but not yet built:
-- Forward estimate FY2027E column (data exists in company_spend_estimates, just not displayed)
-- Opportunity Scorecard (5-factor: tech maturity, financial capacity, strategic urgency, WWT accessibility, relationship warmth)
-- Confidence indicator per category (not just overall)
+## Intelligence Tab Enhancements — Phase 2 COMPLETE (2026-05-14)
+Built and deployed:
+- FY2027E column in spend table (WWT High × 1.08, amber, tooltip)
+- Opportunity Scorecard card (5 factors: Tech Maturity, Financial Capacity, Strategic Urgency, WWT Accessibility, Relationship Warmth; 1-5 bars; total /25)
+- Signal Age Warning banner (amber, if most recent signal >90 days old)
+- Per-category confidence pills (HIGH/MED/LOW inline with IT/OT/Digital/AI rows)
+
+Still pending (Phase 3):
 - Trend arrow vs. prior estimate
-- Signal age warning banner (>90 days since last signal)
 - NEW badge for recent leadership hires (<18 months)
 - Missing role flags (grayed-out row if no CAIO identified)
-- Completeness score / data freshness indicator on profile card
 - WWT relationship context pulled from CRM (last opportunity date, pipeline, account owner)
 
 ## Weekly Batch Signal Collection (PLANNED, NOT YET BUILT)
