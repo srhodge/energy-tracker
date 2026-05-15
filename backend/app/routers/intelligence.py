@@ -54,6 +54,7 @@ def _profile(c: Company) -> dict:
         "oem_direct_confirmed":     c.oem_direct_confirmed,
         "data_enrichment_tier":     c.data_enrichment_tier,
         "ai_maturity_score":        c.ai_maturity_score,
+        "wwt_territory":            c.wwt_territory,
         "ce_name":                  c.ce_name,
         "ce_email":                 c.ce_email,
         "ce_phone":                 c.ce_phone,

@@ -259,6 +259,7 @@ export interface IntelligenceProfile {
   oem_direct_confirmed?: boolean;
   data_enrichment_tier?: number;
   ai_maturity_score?: number;
+  wwt_territory?: string | null;
   ce_name?: string;
   ce_email?: string;
   ce_phone?: string;
@@ -321,6 +322,7 @@ export interface SpendEstimate {
   total_spend_mid?: number;
   total_spend_high?: number;
   wwt_addressable_low?: number;
+  wwt_addressable_mid?: number;
   wwt_addressable_high?: number;
   wwt_addressable_pct_low?: number;
   wwt_addressable_pct_high?: number;
