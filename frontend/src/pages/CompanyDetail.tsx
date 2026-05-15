@@ -719,12 +719,16 @@ function IntelligenceTab({ companyId, companyName }: { companyId: number; compan
                                 (!!p.channel_mismatch_flag && !p.incumbent_msp) ? 3 : 1;
           const pipe3yr = crm?.linked ? (crm.pipeline_3yr ?? 0) : 0;
           const won3yr  = crm?.linked ? (crm.closed_won_3yr ?? 0) : 0;
-          const warmth = crm?.linked
-            ? pipe3yr > 5_000_000 ? 5
-              : pipe3yr >= 1_000_000 || won3yr > 5_000_000 ? 4
-              : pipe3yr >= 100_000 ? 3
-              : 2
-            : 3;
+          const wwtAddressableMid = est?.wwt_addressable_mid ?? 0;
+          const penetrationRatio = wwtAddressableMid > 0 ? pipe3yr / wwtAddressableMid : 0;
+
+          const warmth = !crm?.linked ? 3
+            : penetrationRatio > 0.10 ? 5
+            : penetrationRatio > 0.03 ? 4
+            : penetrationRatio > 0.01 ? 3
+            : penetrationRatio > 0.001 ? 2
+            : pipe3yr > 0 ? 1
+            : 2;
 
           const fmtUSD = (n: number) =>
             n >= 1e9 ? `$${(n / 1e9).toFixed(2)}B`
@@ -783,6 +787,19 @@ function IntelligenceTab({ companyId, companyName }: { companyId: number; compan
           ].filter(Boolean).join(" ");
 
           const topOpps = crm?.top_opportunities ?? [];
+          const penetrationPct = (penetrationRatio * 100).toFixed(1);
+          const penetrationNote = wwtAddressableMid > 0
+            ? `Pipeline penetration: ${penetrationPct}% of ${fmtUSD(wwtAddressableMid)} WWT addressable mid.`
+            : "";
+          const penetrationContext = penetrationRatio > 0.10
+            ? "Strong strategic penetration — account well developed."
+            : penetrationRatio > 0.03
+            ? ""
+            : penetrationRatio > 0.01
+            ? "Early-stage relationship — expand from current engagement categories."
+            : crm?.linked
+            ? "Deal sizes suggest transactional access rather than strategic partnership — executive relationship development needed."
+            : "";
           const warmthExpl = crm?.linked
             ? [
                 pipe3yr > 0
@@ -795,6 +812,8 @@ function IntelligenceTab({ companyId, companyName }: { companyId: number; compan
                 topOpps.length > 0
                   ? `Top opportunities: ${topOpps.map(o => `${o.name} ${fmtUSD(o.amount)}`).join(", ")}.`
                   : "",
+                penetrationNote,
+                penetrationContext,
                 p.ce_name ? `CE: ${p.ce_name}.` : "",
               ].filter(Boolean).join(" ")
             : [
@@ -830,7 +849,7 @@ function IntelligenceTab({ companyId, companyName }: { companyId: number; compan
               : p.channel_mismatch_flag ? "tech decisions outside WWT territory"
               : `incumbent MSP ${p.incumbent_msp} requires displacement`,
             "Relationship Warmth": crm?.linked
-              ? `${fmtUSD(pipe3yr)} active pipeline, ${crm.open_opp_count ?? 0} open opportunities`
+              ? `${fmtUSD(pipe3yr)} active pipeline (${penetrationPct}% penetration), ${crm.open_opp_count ?? 0} open opportunities`
               : "no CRM data — pending account link",
           };
           const hasAIOpps = crm?.top_opportunities?.some(o => /ai|glean|portal26|proving ground|cognition/i.test(o.name))

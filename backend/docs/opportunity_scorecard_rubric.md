@@ -78,20 +78,22 @@ UI annotation examples:
 ---
 
 ## Factor 5: Relationship Warmth (1-5)
-Measures the current state of WWT's relationship — CRM pipeline, open opportunities, recent wins, CE assignment, and executive contacts.
+Measures the current state of WWT's relationship — using pipeline penetration ratio against the WWT addressable mid estimate, not absolute deal sizes. This prevents large-revenue accounts from appearing well-penetrated when deal sizes are small relative to TAM.
 
-| Score | Meaning | Data source |
-|-------|---------|-------------|
-| 1 | No CRM data, no CE assigned, no known WWT relationship. Cold account. | No CRM link, ce_name NULL |
-| 2 | CRM account exists but $0 pipeline, placeholder only. No active seller engagement confirmed. | crm_accounts linked, $0 pipeline |
-| 3 | Default — CRM account with historical activity or open opportunities but no recent wins or executive relationship. | crm_opportunities exist, no recent closed-won |
-| 4 | Active CRM pipeline with open opportunities, CE assigned, recent activity within 12 months. | ce_name populated + active opportunities |
-| 5 | Significant open pipeline, recent closed-won, executive relationship confirmed, or internal WWT strategic alignment noted. | Large pipeline + closed-won + strategic alignment flag |
+**Penetration ratio = 3yr open pipeline / WWT addressable mid estimate.**
+
+| Score | Meaning | Penetration ratio |
+|-------|---------|-----------------|
+| 1 | CRM linked but negligible pipeline — <0.1% of WWT addressable mid. Deal sizes are a rounding error relative to TAM. | pipeline / addressable mid < 0.1% |
+| 2 | CRM linked, surface relationship — pipeline 0.1–1% of WWT addressable mid, or $0 pipeline with CRM account present. | 0.1% ≤ ratio < 1% (or $0 pipeline) |
+| 3 | No CRM link (default score), OR early-stage relationship — 1–3% penetration. Transactional access but not strategically developed. | No CRM link, or 1% ≤ ratio < 3% |
+| 4 | Active relationship — 3–10% penetration of WWT addressable mid. Meaningful engagement with growth opportunity remaining. | 3% ≤ ratio < 10% |
+| 5 | Deep strategic relationship — >10% penetration of WWT addressable mid. Account well developed at the strategic level. | ratio > 10% |
 
 UI annotation examples:
-- Score 4: "CE: Sam Hodge — 3 open opportunities, last activity March 2026"
-- Score 3: "No data — default score pending CRM link"
-- Score 5: "Halliburton strategic alignment confirmed — expressed desire for WWT partnership (internal)"
+- Score 5: "$7.1M open pipeline (5.9% penetration) of $120M WWT addressable mid — strong strategic penetration, account well developed."
+- Score 3: "$50K open pipeline (0.04%) — deal sizes suggest transactional access rather than strategic partnership — executive relationship development needed."
+- Score 3: "CRM account not yet linked — pending manual review. Pipeline data unavailable."
 
 ---
 
@@ -121,4 +123,4 @@ Example narratives:
 - Financial Capacity: derived from revenue_ttm on companies table
 - Strategic Urgency: count of active signals (strategic_pivot, career_move, partnership, earnings_signal) within 730 days in company_tech_signals
 - WWT Accessibility: derived from channel_mismatch_flag, incumbent_msp, oem_direct_confirmed, wwt_territory vs tech_decision_city
-- Relationship Warmth: derived from CRM link status, ce_name, open opportunities in crm_opportunities
+- Relationship Warmth: derived from penetration ratio (3yr open pipeline / wwt_addressable_mid from company_spend_estimates); no CRM link = 3 (default); ratio >10% = 5, 3–10% = 4, 1–3% = 3, 0.1–1% = 2, <0.1% with pipeline = 1, $0 pipeline = 2
