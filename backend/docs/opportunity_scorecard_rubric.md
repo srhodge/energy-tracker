@@ -43,17 +43,20 @@ UI annotation examples:
 ## Factor 3: Strategic Urgency (1-5)
 Measures how many near-term forcing functions exist that create IT buying pressure — M&A integration, CEO change, cost programs, competitive threats, regulatory change.
 
-| Score | Meaning | Qualifying signals |
-|-------|---------|-------------------|
-| 1 | No signals. Stable company with no announced changes. IT status quo likely to continue. | 0 active signals in company_tech_signals |
-| 2 | One minor signal — small acquisition, minor leadership change, or incremental efficiency program. | 1 low-score signal |
-| 3 | One significant signal — major acquisition integration, new CEO within 18 months, or large cost savings program. | 1 strategic_pivot or career_move signal |
-| 4 | Two significant signals — e.g. M&A + CEO change, or cost program + strategic pivot. Multiple forcing functions. | 2+ strategic_pivot or M&A signals |
-| 5 | Three or more active signals — transformational acquisition + CEO change + strategic pivot + earnings pressure. Maximum buying urgency. | 3+ high-score signals within 730 days |
+Qualifying signal types: `leadership_hire`, `earnings_signal`, `strategic_pivot`, `partnership`, `ai_announcement` — any of these five types count toward the score.
+
+| Score | Meaning | Signal count |
+|-------|---------|--------------|
+| 1 | No signals. Stable company with no announced changes. IT status quo likely to continue. | 0 qualifying signals |
+| 2 | One signal — minor leadership change, partnership announcement, or incremental efficiency signal. | 1 qualifying signal |
+| 3 | Two signals — multiple forcing functions beginning to accumulate. | 2 qualifying signals |
+| 4 | Three to four signals — M&A + CEO change, or cost program + strategic pivot + leadership hire. Meaningful buying urgency. | 3–4 qualifying signals |
+| 5 | Five or more signals — transformational acquisition + CEO change + strategic pivot + earnings pressure. Maximum buying urgency. | 5+ qualifying signals |
 
 UI annotation examples:
-- Score 4: "ChampionX acquisition July 2025 + Azure MOU Feb 2025 — active IT integration and vendor engagement"
-- Score 1: "0 qualifying signals — stable execution phase, no near-term IT forcing function identified"
+- Score 5: "7 qualifying signals in the past 730 days. Recent signals: Bangalore DC exit; ChampionX integration."
+- Score 4: "3 qualifying signals. Recent signals: ChampionX acquisition July 2025 + Azure MOU Feb 2025."
+- Score 1: "0 qualifying signals — stable execution phase, no near-term IT forcing function identified."
 
 ---
 
@@ -121,6 +124,6 @@ Example narratives:
 ## Scoring Implementation Notes
 - Tech Maturity: derived from maturity_score in company_spend_estimates.key_drivers
 - Financial Capacity: derived from revenue_ttm on companies table
-- Strategic Urgency: count of active signals (strategic_pivot, career_move, partnership, earnings_signal) within 730 days in company_tech_signals
+- Strategic Urgency: count of signals with type in (leadership_hire, earnings_signal, strategic_pivot, partnership, ai_announcement) in company_tech_signals; thresholds: 0=1, 1=2, 2=3, 3-4=4, 5+=5
 - WWT Accessibility: derived from channel_mismatch_flag, incumbent_msp, oem_direct_confirmed, wwt_territory vs tech_decision_city
 - Relationship Warmth: derived from penetration ratio (3yr open pipeline / wwt_addressable_mid from company_spend_estimates); no CRM link = 3 (default); ratio >10% = 5, 3–10% = 4, 1–3% = 3, 0.1–1% = 2, <0.1% with pipeline = 1, $0 pipeline = 2
