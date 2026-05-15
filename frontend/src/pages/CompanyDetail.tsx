@@ -712,8 +712,8 @@ function IntelligenceTab({ companyId, companyName }: { companyId: number; compan
           const qualifyingSignals = signals.filter(s =>
             ["leadership_hire", "earnings_signal", "strategic_pivot", "partnership", "ai_announcement"].includes(s.signal_type)
           );
-          const urgentSignals = signals.filter(s => ["leadership_hire", "earnings_signal"].includes(s.signal_type)).length;
-          const strategicUrgency = urgentSignals >= 6 ? 5 : urgentSignals >= 4 ? 4 : urgentSignals >= 2 ? 3 : urgentSignals >= 1 ? 2 : 1;
+          const urgencyCount = qualifyingSignals.length;
+          const strategicUrgency = urgencyCount >= 5 ? 5 : urgencyCount >= 3 ? 4 : urgencyCount >= 2 ? 3 : urgencyCount >= 1 ? 2 : 1;
           const accessibility = (!p.channel_mismatch_flag && !p.incumbent_msp) ? 5 :
                                 (!p.channel_mismatch_flag && !!p.incumbent_msp) ? 3 :
                                 (!!p.channel_mismatch_flag && !p.incumbent_msp) ? 3 : 1;
@@ -763,7 +763,6 @@ function IntelligenceTab({ companyId, companyName }: { companyId: number; compan
           const sortedQS = [...qualifyingSignals].sort((a, b) =>
             new Date(b.signal_date ?? "").getTime() - new Date(a.signal_date ?? "").getTime()
           );
-          const urgencyCount = qualifyingSignals.length;
           const urgencyExpl = urgencyCount === 0
             ? "0 qualifying signals in the past 730 days. No active forcing functions identified — stable execution phase. Monitor for M&A announcements, CEO transitions, or strategic pivot signals."
             : [
