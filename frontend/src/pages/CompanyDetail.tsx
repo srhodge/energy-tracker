@@ -341,7 +341,7 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
   if (error)   return <div className="error" style={{ marginTop: 16 }}>{error}</div>;
   if (!data)   return null;
 
-  const { profile: p, signals, leadership, latest_estimate: est } = data;
+  const { profile: p, signals, leadership, latest_estimate: est, crm_summary: crm } = data;
   const visibleLeaders = showPast ? (allLeaders ?? leadership) : leadership.filter(l => l.is_current);
 
   const tdL: React.CSSProperties = { padding: "7px 10px", fontSize: 13, color: "#374151", borderBottom: "1px solid #f3f4f6", fontWeight: 500, whiteSpace: "nowrap" };
@@ -714,13 +714,23 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
           const accessibility = (!p.channel_mismatch_flag && !p.incumbent_msp) ? 5 :
                                 (!p.channel_mismatch_flag && !!p.incumbent_msp) ? 3 :
                                 (!!p.channel_mismatch_flag && !p.incumbent_msp) ? 3 : 1;
-          const warmth = 3 + (p.ce_name ? 1 : 0);
+          const pipe3yr = crm?.linked ? (crm.pipeline_3yr ?? 0) : 0;
+          const won3yr  = crm?.linked ? (crm.closed_won_3yr ?? 0) : 0;
+          const warmth = crm?.linked
+            ? pipe3yr > 5_000_000 ? 5
+              : pipe3yr >= 1_000_000 || won3yr > 5_000_000 ? 4
+              : pipe3yr >= 100_000 ? 3
+              : 2
+            : 3;
+          const warmthDesc = crm?.linked
+            ? `$${(pipe3yr / 1e6).toFixed(1)}M pipeline · ${crm.open_opp_count ?? 0} open opps${crm.primary_seller ? ` · ${crm.primary_seller}` : ""}`
+            : p.ce_name ? `CE: ${p.ce_name} — no CRM link` : "No CRM link";
           const factors = [
             { label: "Tech Maturity",      score: techMaturity,     desc: `AI maturity score ${matScore}` },
             { label: "Financial Capacity", score: financialCap,     desc: p.revenue_ttm ? formatCap(p.revenue_ttm) + " revenue" : "Revenue unknown" },
             { label: "Strategic Urgency",  score: strategicUrgency, desc: `${urgentSignals} qualifying signal${urgentSignals !== 1 ? "s" : ""}` },
             { label: "WWT Accessibility",  score: accessibility,    desc: p.channel_mismatch_flag ? "Channel mismatch flagged" : p.incumbent_msp ? `MSP: ${p.incumbent_msp}` : "Clean territory" },
-            { label: "Relationship Warmth", score: warmth,          desc: p.ce_name ? `CE: ${p.ce_name}` : "No CE assigned" },
+            { label: "Relationship Warmth", score: warmth,          desc: warmthDesc },
           ];
           const total = factors.reduce((sum, f) => sum + f.score, 0);
           const barColor = (s: number) => s >= 4 ? "#16a34a" : s >= 3 ? "#f59e0b" : "#dc2626";

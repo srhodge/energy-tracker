@@ -1,4 +1,5 @@
-from datetime import date, datetime
+from collections import Counter
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import Any, Optional
 
@@ -7,7 +8,9 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Company, CompanyTechSignal, CompanySpendEstimate, CompanyLeadership, CompanyAsset
+from app.models import Company, CompanyTechSignal, CompanySpendEstimate, CompanyLeadership, CompanyAsset, CrmAccount, CrmOpportunity
+
+_CRM_LOOKBACK_DAYS = 3 * 365  # rolling 3-year window
 
 router = APIRouter(prefix="/api/companies", tags=["intelligence"])
 
@@ -156,6 +159,59 @@ def _estimate(e: CompanySpendEstimate) -> dict:
     }
 
 
+def _crm_summary(company_id: int, db: Session) -> dict:
+    """Return 3-year-filtered CRM pipeline summary for a company, or {linked: False}."""
+    account = db.scalars(
+        select(CrmAccount).where(CrmAccount.energy_company_id == company_id)
+    ).first()
+    if not account:
+        return {"linked": False}
+
+    cutoff = date.today() - timedelta(days=_CRM_LOOKBACK_DAYS)
+
+    opps = db.scalars(
+        select(CrmOpportunity).where(CrmOpportunity.account_id == account.id)
+    ).all()
+
+    def _is_open(o: CrmOpportunity) -> bool:
+        return bool(o.stage and "closed" not in o.stage.lower())
+
+    def _in_window(o: CrmOpportunity) -> bool:
+        return bool(o.close_date and o.close_date >= cutoff)
+
+    open_opps = [o for o in opps if _is_open(o)]
+
+    # pipeline_3yr: all open opps (they have future close dates by definition) PLUS any
+    # open opps whose close_date is >= cutoff (captures edge cases); effectively = all open opps
+    pipeline_3yr = sum(o.amount or 0 for o in open_opps if _in_window(o) or not o.close_date or o.close_date >= date.today())
+    # Simpler: just sum all open opps — open stage already means it isn't closed
+    pipeline_3yr = sum(o.amount or 0 for o in open_opps)
+
+    # closed_won_3yr: won opps with close_date >= cutoff
+    closed_won_3yr = sum(
+        o.amount or 0 for o in opps
+        if o.stage and "won" in o.stage.lower() and _in_window(o)
+    )
+
+    # sellers from opps in 3yr window (open + recent closed-won)
+    relevant_opps = [o for o in opps if _is_open(o) or _in_window(o)]
+    seller_counts: Counter = Counter(
+        o.opportunity_owner for o in relevant_opps if o.opportunity_owner
+    )
+    primary_seller = seller_counts.most_common(1)[0][0] if seller_counts else None
+
+    return {
+        "linked": True,
+        "account_id": account.id,
+        "account_name": account.name,
+        "pipeline_3yr": round(pipeline_3yr, 2),
+        "closed_won_3yr": round(closed_won_3yr, 2),
+        "open_opp_count": len(open_opps),
+        "sellers": [name for name, _ in seller_counts.most_common()],
+        "primary_seller": primary_seller,
+    }
+
+
 def _get_company_or_404(company_id: int, db: Session) -> Company:
     c = db.get(Company, company_id)
     if not c:
@@ -194,6 +250,7 @@ def get_intelligence(company_id: int, db: Session = Depends(get_db)):
         "signals":          [_signal(s) for s in signals],
         "leadership":       [_leadership(l) for l in leadership],
         "latest_estimate":  _estimate(latest_estimate) if latest_estimate else None,
+        "crm_summary":      _crm_summary(company_id, db),
     }
 
 

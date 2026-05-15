@@ -335,9 +335,21 @@ export interface SpendEstimate {
   created_at?: string;
 }
 
+export interface CrmSummary {
+  linked: boolean;
+  account_id?: number;
+  account_name?: string;
+  pipeline_3yr?: number;
+  closed_won_3yr?: number;
+  open_opp_count?: number;
+  sellers?: string[];
+  primary_seller?: string;
+}
+
 export interface IntelligenceData {
   profile: IntelligenceProfile;
   signals: TechSignal[];
   leadership: LeadershipRecord[];
   latest_estimate: SpendEstimate | null;
+  crm_summary?: CrmSummary;
 }
