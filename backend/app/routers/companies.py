@@ -505,7 +505,7 @@ def update_company(company_id: int, req: CompanyUpdateRequest, db: Session = Dep
 
     for field in ("name", "exchange", "country", "website", "description",
                   "wwt_territory", "wwt_model", "energy_maturity", "industry",
-                  "value_chain_position", "supply_chain_position",
+                  "value_chain_position", "supply_chain_position", "sub_sector",
                   "status", "acquired_by", "acquisition_notes", "skip_market_poll",
                   "revenue_manually_set", "ce_name", "ce_email", "ce_phone"):
         val = getattr(req, field)

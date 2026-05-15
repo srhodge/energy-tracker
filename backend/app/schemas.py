@@ -54,6 +54,7 @@ class CompanyBase(BaseModel):
     industry: Optional[str] = None
     value_chain_position: Optional[ValueChainPosition] = None
     supply_chain_position: Optional[str] = None
+    sub_sector: Optional[str] = None
     status: Optional[CompanyStatus] = CompanyStatus.active
     acquired_by: Optional[str] = None
     acquisition_notes: Optional[str] = None
@@ -172,6 +173,7 @@ class CompanyUpdateRequest(BaseModel):
     industry: Optional[str] = None
     value_chain_position: Optional[ValueChainPosition] = None
     supply_chain_position: Optional[str] = None
+    sub_sector: Optional[str] = None
     status: Optional[CompanyStatus] = None
     acquired_by: Optional[str] = None
     acquisition_notes: Optional[str] = None
