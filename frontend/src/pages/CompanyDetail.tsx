@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { fetchCompany, fetchCompanyByTicker, updateCompany, deleteCompany, setRevenue, fetchCompanyIntelligence, calculateSpendEstimate, fetchCompanyLeadership } from "../api/client";
-import type { CompanyDetail as CompanyDetailType, CompanyUpdateRequest, ValueChainPosition, CompanyStatus, IntelligenceData, LeadershipRecord } from "../types";
+import type { CompanyDetail as CompanyDetailType, CompanyUpdateRequest, CompanyStatus, IntelligenceData, LeadershipRecord } from "../types";
 import { formatCap, formatPrice } from "../components/FormatCap";
 
 const SUPPLY_CHAIN_OPTIONS = ["Upstream", "Midstream", "Downstream", "Integrated", "Petrochemicals", "Services", "Energy Utilities", "Renewable & New Energy", "Energy Infrastructure & Power", "Carbon Management", "LNG & Gas Trading"];
-const VALUE_CHAIN_OPTIONS: ValueChainPosition[] = ["Upstream", "Midstream", "Downstream", "Integrated", "Services"];
 const SUB_SECTOR_OPTIONS = [
   "Integrated O&G",
   "Upstream E&P",
@@ -161,15 +160,6 @@ function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
               <select style={inputStyle} value={form.sub_sector ?? ""} onChange={field("sub_sector")}>
                 <option value="">— Select —</option>
                 {SUB_SECTOR_OPTIONS.map(p => <option key={p}>{p}</option>)}
-              </select>
-            </div>
-          </div>
-          <div style={rowStyle}>
-            <div>
-              <label style={labelStyle}>Value Chain Position</label>
-              <select style={inputStyle} value={form.value_chain_position ?? ""} onChange={field("value_chain_position")}>
-                <option value="">— Select —</option>
-                {VALUE_CHAIN_OPTIONS.map(p => <option key={p}>{p}</option>)}
               </select>
             </div>
           </div>
