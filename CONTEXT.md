@@ -55,7 +55,7 @@ Full 13-step model documentation: see WWT_Energy_Spend_Model_v4.docx
 
 ## Enrichment Status (as of May 2026)
 Tier 1 (21 companies) — 21 enriched (COMPLETE):
-- ExxonMobil (id=2): XOM, Integrated O&G, $323.9B rev, 58,000 employees, $1.81B WWT addressable high (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%AI=11%→floor; CoE=Bangalore Global Business & Tech Center, MSP=Accenture/Deloitte/McKinsey confirmed, ms_standardized=false, ai_maturity_score=18) [HIGH]
+- ExxonMobil (id=2): XOM, Integrated O&G, $323.9B rev, 58,000 employees, $1.20B WWT addressable high (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%AI=11%→floor; CoE=Bangalore Global Business & Tech Center [DC exit evaluation active — WWT opportunity], MSP=Accenture/Deloitte/McKinsey confirmed, ms_standardized=false, ai_maturity_score=18; CRM linked: crm_accounts id=14 "ExxonMobil Global Services Company" → energy_company_id=2, manual_confirmed, score=100; CRM 3yr: $7.14M open pipeline, $5.73M closed won, 76 open opps; Relationship Warmth=5/5) [HIGH]
 - Chevron (id=3): CVX, Integrated O&G, $193.4B rev, 40,000 employees, $458.4M mid / $668.5M high WWT addressable (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%MS+0%AI=11%→floor; CoE=Bengaluru ENGINE Center, MSP=HCL Technologies+LTIMindtree confirmed, ms_standardized=true, ai_maturity_score=13 below ≥15 threshold — AI bonus does not apply) [HIGH]
 - ConocoPhillips (id=8): COP, Upstream E&P, $56.1B rev, 11,800 employees, $1.74B WWT addressable (37%; 27%+5%MS+5%AI=37%; ms_standardized=true, high AI maturity confirmed, oem_direct_confirmed=false) [HIGH]
 - Halliburton (id=67): HAL, Oilfield & Energy Services, $22.9B rev, 48,000 employees, $1.11B WWT addressable (19%; 27%−3%OEM−10%MSP+5%MS+5%AI=24%→19% floor from MSP — AI bonus now applies; MSP=Accenture confirmed, ms_standardized=true, ai_maturity≥15 confirmed) [MEDIUM_HIGH]
@@ -224,7 +224,9 @@ All pages (Companies, Territory Dashboard, CrmDashboard, Activity Feed, Analytic
 Built and deployed:
 - FY2027E column in spend table (WWT High × 1.08, amber, tooltip)
 - Opportunity Scorecard card (5 factors: Tech Maturity, Financial Capacity, Strategic Urgency, WWT Accessibility, Relationship Warmth; 1-5 bars; total /25)
-  - Relationship Warmth: base 3 + 1 if ce_name is set (max 4); annotation shows "CE: [name]" or "No CE assigned"
+  - Relationship Warmth: NOW wired to CRM data (3yr filter). Pipeline >$5M=5, $1-5M or won>$5M=4, $100K-$1M=3, linked/$0=2, no link=3.
+  - Per-factor explanation paragraphs below each bar (12px gray, data-derived)
+  - Total score narrative (italic, 12px): tier label + strongest/weakest factor + recommended action
 - Signal Age Warning banner (amber, if most recent signal >90 days old)
 - Per-category confidence pills (HIGH/MED/LOW inline with IT/OT/Digital/AI rows)
 
@@ -245,16 +247,24 @@ Still pending (Phase 3):
 Full rubric: backend/docs/opportunity_scorecard_rubric.md
 Five factors scored 1-5, total out of 25:
 - Tech Maturity: derived from maturity_score in spend estimates key_drivers (ai_maturity_score floor override via migration 0010)
-- Financial Capacity: derived from revenue_ttm
-- Strategic Urgency: count of active signals within 730 days (strategic_pivot, career_move, partnership, earnings_signal types)
+- Financial Capacity: derived from revenue_ttm; denominator basis from est.step2_denominator_used
+- Strategic Urgency: count of qualifying signals (leadership_hire, earnings_signal, strategic_pivot, partnership, ai_announcement) from fetched signals
 - WWT Accessibility: channel_mismatch_flag + incumbent_msp + oem_direct_confirmed + territory vs tech_decision_city comparison
-- Relationship Warmth: CRM link + ce_name + open opportunities
+- Relationship Warmth: wired to CRM data via crm_accounts.energy_company_id; 3-year filter (rolling, cutoff = today − 3yr)
+  - Pipeline >$5M=5, $1-5M or won>$5M=4, $100K-$1M=3, linked/$0=2, no link=3
+
+CRM integration (2026-05-14):
+- All CRM data filtered to 3-year rolling window (open pipeline + closed won >= cutoff)
+- crm_summary field added to GET /api/companies/{id}/intelligence: linked, pipeline_3yr, closed_won_3yr, open_opp_count, sellers, primary_seller, top_opportunities (top 2 open opps by amount)
+- CRM accounts linked via crm_accounts.energy_company_id (FK to companies.id)
+- ExxonMobil CRM link: crm_accounts id=14 → energy_company_id=2, match_method=manual_confirmed, match_score=100
+- ExxonMobil Bangalore DC Exit signal added (strategic_pivot, score=4, date=2026-01-01, source=crm_internal) — if exit confirmed, offshore CoE penalty (-8%) should be removed
 
 Territory note: WWT Accessibility is evaluated against wwt_territory and tech_decision_city — NOT fixed to STOLA. Diamondback (Midland TX) = NTOLA, not a mismatch if NTOLA-assigned.
 
 Score interpretation: 20-25 Immediate Priority, 15-19 Near-term Opportunity, 10-14 Medium-term Watch, 5-9 Low Priority.
 
-Total score narrative synthesizes pattern across factors — same total with different factor distribution tells different story. See rubric doc for full detail and UI annotation examples.
+Per-factor explanatory text: each factor renders a 12px gray explanation paragraph below the bar with data-derived context (signal count, denominator, MSP name, top opps, etc.). Total score renders a 3-sentence italic narrative: tier + strongest factor + constraint + recommended action.
 
 ## Weekly Batch Signal Collection (PLANNED, NOT YET BUILT)
 Planned architecture:
