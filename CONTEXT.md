@@ -18,7 +18,7 @@
 - G:\WWT\Energy Tracker\wwt_energy_spend_model_v4.html — HTML version of methodology
 
 ## Database Tables (key new ones added this session)
-- companies — 42 columns including all enrichment fields
+- companies — 45 columns including all enrichment fields + ce_name/ce_email/ce_phone (migration 0011, 2026-05-14)
 - company_tech_signals — weekly batch signals per company
 - company_spend_estimates — model output per company (v4.0)
 - company_leadership — CIO/CDO/CAIO/CTO records with signal scores
@@ -180,9 +180,10 @@ Script: backend/scripts/populate_tier2_revenue.py — pulls totalRevenue, fullTi
 3. Intelligence tab Phase 2 (FY2027E column, Opportunity Scorecard, Signal Age Warning, confidence pills) — COMPLETE
 4. ai_maturity_score DB column (migration 0010, floor override) — COMPLETE
 5. Denominator audit — COMPLETE
-6. Weekly batch signal collection service — PENDING (requires Anthropic API key in Railway)
-7. Structured enrichment for high-value unenriched Tier 2 accounts — PENDING
-8. Intelligence tab Phase 3 (trend arrows, NEW badge for recent hires, CRM context panel) — PENDING
+6. Client Executive fields (ce_name, ce_email, ce_phone) — COMPLETE (migration 0011, 2026-05-14)
+7. Weekly batch signal collection service — PENDING (requires Anthropic API key in Railway)
+8. Structured enrichment for high-value unenriched Tier 2 accounts — PENDING
+9. Intelligence tab Phase 3 (trend arrows, NEW badge for recent hires, CRM context panel) — PENDING
 
 ## Key Architectural Decisions
 - CRM accounts and companies table NOT linked yet (deliberate — pending manual review UI)
@@ -223,8 +224,16 @@ All pages (Companies, Territory Dashboard, CrmDashboard, Activity Feed, Analytic
 Built and deployed:
 - FY2027E column in spend table (WWT High × 1.08, amber, tooltip)
 - Opportunity Scorecard card (5 factors: Tech Maturity, Financial Capacity, Strategic Urgency, WWT Accessibility, Relationship Warmth; 1-5 bars; total /25)
+  - Relationship Warmth: base 3 + 1 if ce_name is set (max 4); annotation shows "CE: [name]" or "No CE assigned"
 - Signal Age Warning banner (amber, if most recent signal >90 days old)
 - Per-category confidence pills (HIGH/MED/LOW inline with IT/OT/Digital/AI rows)
+
+## Client Executive Fields — COMPLETE (2026-05-14)
+ce_name VARCHAR(200), ce_email VARCHAR(200), ce_phone VARCHAR(50) added to companies table (migration 0011).
+- Exposed in intelligence profile API (GET/PATCH /api/companies/{id}/profile) and companies API (GET/PUT /api/companies/{id})
+- Overview tab: CE contact rows shown in Company Info card when ce_name is populated (email as mailto link)
+- Edit modal: CLIENT EXECUTIVE section with name/email/phone inputs (no admin gating — no auth in frontend)
+- Set values via Edit modal (PUT /api/companies/{id}) or via PATCH /api/companies/{id}/profile
 
 Still pending (Phase 3):
 - Trend arrow vs. prior estimate
