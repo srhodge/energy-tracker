@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { fetchCompany, fetchCompanyByTicker, updateCompany, deleteCompany, setRevenue, fetchCompanyIntelligence, calculateSpendEstimate, fetchCompanyLeadership } from "../api/client";
 import type { CompanyDetail as CompanyDetailType, CompanyUpdateRequest, ValueChainPosition, CompanyStatus, IntelligenceData, LeadershipRecord } from "../types";
 import { formatCap, formatPrice } from "../components/FormatCap";
@@ -1024,10 +1024,15 @@ function IntelligenceTab({ companyId, companyName }: { companyId: number; compan
 export default function CompanyDetail() {
   const { id, ticker } = useParams<{ id?: string; ticker?: string }>();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [company, setCompany] = useState<CompanyDetailType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [tab, setTab] = useState<"overview" | "intelligence">("overview");
+  const rawTab = searchParams.get("tab");
+  const tab: "overview" | "intelligence" = rawTab === "intelligence" ? "intelligence" : "overview";
+  function setTab(t: "overview" | "intelligence") {
+    setSearchParams(prev => { const p = new URLSearchParams(prev); p.set("tab", t); return p; }, { replace: true });
+  }
   const [showEdit, setShowEdit] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
