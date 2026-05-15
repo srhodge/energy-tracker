@@ -169,10 +169,13 @@ Script: backend/scripts/populate_tier2_revenue.py — pulls totalRevenue, fullTi
 - Found 140 companies needing revenue data
 - Updated: 125 companies successfully populated
 - Failed/no data: 15 tickers (N/A id=26, STR, NEXT, NR, DRQ, SOI, SMLP, BRY, TSE, GIFI, ZNOG, DNMR, CEIN, HUSA, VTNR)
-- Post-population estimates run for all 168 active Tier 2 companies (--tier 2)
-- Grand total WWT high (Tier 2): $11.30B across 168 companies
-- 14 companies remain with N/A estimates (revenue still NULL after yfinance pull — mostly very small or delisted)
 - Many companies show sub_sector = "unknown" — not yet enriched via patch_company workflow
+
+Tier 2 estimates run (2026-05-15, --tier 2): 168 companies estimated, 0 errors
+- Grand total mid (Tier 2): $30.24B across 168 companies
+- Grand total WWT high (Tier 2): $12.86B across 168 companies
+- 15 companies remain with N/A estimates (revenue NULL after yfinance pull — mostly very small or delisted)
+- Top 10 by WWT addressable high: SLB $2,695M, Baker Hughes $1,507M, Dow $1,305M, OXY $530M, Plains All American $418M, Eastman Chemical $399M, PPG Industries $339M, NOV $304M, DuPont $258M, Westlake Chemical $243M
 
 ## Pending Work
 1. Tier 2 revenue population — COMPLETE
@@ -181,9 +184,11 @@ Script: backend/scripts/populate_tier2_revenue.py — pulls totalRevenue, fullTi
 4. ai_maturity_score DB column (migration 0010, floor override) — COMPLETE
 5. Denominator audit — COMPLETE
 6. Client Executive fields (ce_name, ce_email, ce_phone) — COMPLETE (migration 0011, 2026-05-14)
-7. Weekly batch signal collection service — PENDING (requires Anthropic API key in Railway)
-8. Structured enrichment for high-value unenriched Tier 2 accounts — PENDING
-9. Intelligence tab Phase 3 (trend arrows, NEW badge for recent hires, CRM context panel) — PENDING
+7. Tier 2 spend estimates — COMPLETE (2026-05-15): 168 companies estimated, 0 errors; $30.24B total mid, $12.86B WWT high
+8. CRM account linking — COMPLETE (2026-05-15): 21 of 28 accounts linked; 7 unlinked (not in companies table or $0 pipeline)
+9. Weekly batch signal collection service — PENDING (requires Anthropic API key in Railway)
+10. Structured enrichment for high-value unenriched Tier 2 accounts — PENDING
+11. Intelligence tab Phase 3 (trend arrows, NEW badge for recent hires, CRM context panel) — PENDING
 
 ## Key Architectural Decisions
 - CRM accounts linked to companies table via manual review (energy_company_id FK) — see CRM Data Details below
