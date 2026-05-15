@@ -344,6 +344,7 @@ export interface CrmSummary {
   open_opp_count?: number;
   sellers?: string[];
   primary_seller?: string;
+  top_opportunities?: Array<{ name: string; amount: number }>;
 }
 
 export interface IntelligenceData {

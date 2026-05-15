@@ -200,6 +200,11 @@ def _crm_summary(company_id: int, db: Session) -> dict:
     )
     primary_seller = seller_counts.most_common(1)[0][0] if seller_counts else None
 
+    top_opportunities = sorted(
+        [{"name": o.opportunity_name or "", "amount": o.amount or 0} for o in open_opps if (o.amount or 0) > 0],
+        key=lambda x: x["amount"], reverse=True
+    )[:2]
+
     return {
         "linked": True,
         "account_id": account.id,
@@ -209,6 +214,7 @@ def _crm_summary(company_id: int, db: Session) -> dict:
         "open_opp_count": len(open_opps),
         "sellers": [name for name, _ in seller_counts.most_common()],
         "primary_seller": primary_seller,
+        "top_opportunities": top_opportunities,
     }
 
 

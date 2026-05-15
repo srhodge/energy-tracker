@@ -297,7 +297,7 @@ function NC() {
   return <span style={{ color: "#9ca3af", fontSize: 13 }}>Not collected</span>;
 }
 
-function IntelligenceTab({ companyId }: { companyId: number }) {
+function IntelligenceTab({ companyId, companyName }: { companyId: number; companyName: string }) {
   const [data, setData]           = useState<IntelligenceData | null>(null);
   const [loading, setLoading]     = useState(true);
   const [error, setError]         = useState<string | null>(null);
@@ -709,6 +709,9 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
           const techMaturity = matScore >= 20 ? 5 : matScore >= 15 ? 4 : matScore >= 10 ? 3 : matScore >= 5 ? 2 : 1;
           const rev = p.revenue_ttm ?? 0;
           const financialCap = rev >= 100_000_000_000 ? 5 : rev >= 20_000_000_000 ? 4 : rev >= 5_000_000_000 ? 3 : rev >= 1_000_000_000 ? 2 : 1;
+          const qualifyingSignals = signals.filter(s =>
+            ["leadership_hire", "earnings_signal", "strategic_pivot", "partnership", "ai_announcement"].includes(s.signal_type)
+          );
           const urgentSignals = signals.filter(s => ["leadership_hire", "earnings_signal"].includes(s.signal_type)).length;
           const strategicUrgency = urgentSignals >= 6 ? 5 : urgentSignals >= 4 ? 4 : urgentSignals >= 2 ? 3 : urgentSignals >= 1 ? 2 : 1;
           const accessibility = (!p.channel_mismatch_flag && !p.incumbent_msp) ? 5 :
@@ -722,21 +725,124 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
               : pipe3yr >= 100_000 ? 3
               : 2
             : 3;
-          const warmthDesc = crm?.linked
-            ? `$${(pipe3yr / 1e6).toFixed(1)}M pipeline · ${crm.open_opp_count ?? 0} open opps${crm.primary_seller ? ` · ${crm.primary_seller}` : ""}`
-            : p.ce_name ? `CE: ${p.ce_name} — no CRM link` : "No CRM link";
+
+          // ── Per-factor explanatory text ─────────────────────────────────────
+          const topSignal = [...signals].sort((a, b) => (b.score_points ?? 0) - (a.score_points ?? 0))[0];
+          const techExpl = [
+            `${matScore} signal score from leadership and technology signals.`,
+            matScore >= 15
+              ? "Exceeds WWT high AI maturity threshold — +5% addressable bonus applied."
+              : `Below ≥15 threshold — ${15 - matScore} point${15 - matScore !== 1 ? "s" : ""} needed for AI bonus.`,
+            topSignal?.signal_title ? `Top signal: "${topSignal.signal_title}".` : "",
+          ].filter(Boolean).join(" ");
+
+          const denominatorBasis = est.step2_denominator_used
+            ? `${est.step2_denominator_used} denominator applied.`
+            : "Revenue denominator applied.";
+          const maSignal = signals.find(s =>
+            s.signal_type === "strategic_pivot" && /acqui|merger|m&a/i.test(s.signal_title ?? "")
+          );
+          const finExpl = [
+            p.revenue_ttm ? `${formatCap(p.revenue_ttm)} TTM revenue — ${p.sub_sector ?? p.revenue_denominator ?? "unknown sub-sector"}.` : "Revenue unknown.",
+            denominatorBasis,
+            maSignal ? "Active M&A signal present — near-term IT integration demand likely." : "",
+          ].filter(Boolean).join(" ");
+
+          const sortedQS = [...qualifyingSignals].sort((a, b) =>
+            new Date(b.signal_date ?? "").getTime() - new Date(a.signal_date ?? "").getTime()
+          );
+          const urgencyExpl = qualifyingSignals.length === 0
+            ? `${qualifyingSignals.length} qualifying signals in the past 730 days. No active forcing functions — stable execution phase. Monitor for M&A, CEO change, or strategic pivot.`
+            : [
+                `${qualifyingSignals.length} qualifying signal${qualifyingSignals.length !== 1 ? "s" : ""} in the past 730 days.`,
+                sortedQS.slice(0, 2).map(s => `"${s.signal_title}"`).join("; ") + ".",
+              ].join(" ");
+
+          const accessExpl = [
+            p.wwt_territory ? `${p.wwt_territory} territory.` : "Territory unknown.",
+            p.channel_mismatch_flag
+              ? `Tech decisions in ${p.tech_decision_city ?? "unknown city"} — outside WWT account territory.`
+              : "",
+            p.incumbent_msp ? `Incumbent MSP: ${p.incumbent_msp} — displacement required.` : "",
+            p.oem_direct_confirmed ? "OEM-direct purchasing confirmed." : "",
+            !p.channel_mismatch_flag && !p.incumbent_msp && !p.oem_direct_confirmed
+              ? "No barriers — clean account access."
+              : "",
+            p.ce_name ? `CE: ${p.ce_name} assigned.` : "",
+          ].filter(Boolean).join(" ");
+
+          const topOpps = crm?.top_opportunities ?? [];
+          const warmthExpl = crm?.linked
+            ? [
+                `$${(pipe3yr / 1e6).toFixed(1)}M open pipeline (3yr), ${crm.open_opp_count ?? 0} open opportunities.`,
+                crm.sellers && crm.sellers.length > 0
+                  ? `Primary seller${crm.sellers.slice(0, 3).length > 1 ? "s" : ""}: ${crm.sellers.slice(0, 3).join(", ")}.`
+                  : "",
+                `Closed won (3yr): $${(won3yr / 1e6).toFixed(1)}M.`,
+                topOpps.length > 0
+                  ? `Top opps: ${topOpps.map(o => `${o.name} ($${(o.amount / 1000).toFixed(0)}K)`).join("; ")}.`
+                  : "",
+                p.ce_name ? `CE: ${p.ce_name}.` : "",
+              ].filter(Boolean).join(" ")
+            : [
+                "CRM not yet linked — pending manual review. Pipeline data unavailable.",
+                p.ce_name ? `CE: ${p.ce_name} assigned.` : "",
+              ].filter(Boolean).join(" ");
+
           const factors = [
-            { label: "Tech Maturity",      score: techMaturity,     desc: `AI maturity score ${matScore}` },
-            { label: "Financial Capacity", score: financialCap,     desc: p.revenue_ttm ? formatCap(p.revenue_ttm) + " revenue" : "Revenue unknown" },
-            { label: "Strategic Urgency",  score: strategicUrgency, desc: `${urgentSignals} qualifying signal${urgentSignals !== 1 ? "s" : ""}` },
-            { label: "WWT Accessibility",  score: accessibility,    desc: p.channel_mismatch_flag ? "Channel mismatch flagged" : p.incumbent_msp ? `MSP: ${p.incumbent_msp}` : "Clean territory" },
-            { label: "Relationship Warmth", score: warmth,          desc: warmthDesc },
+            { label: "Tech Maturity",       score: techMaturity,     desc: `Score ${matScore}`,                                                              explanation: techExpl },
+            { label: "Financial Capacity",  score: financialCap,     desc: p.revenue_ttm ? formatCap(p.revenue_ttm) + " rev" : "Unknown",                    explanation: finExpl },
+            { label: "Strategic Urgency",   score: strategicUrgency, desc: `${qualifyingSignals.length} signal${qualifyingSignals.length !== 1 ? "s" : ""}`, explanation: urgencyExpl },
+            { label: "WWT Accessibility",   score: accessibility,    desc: p.channel_mismatch_flag ? "Mismatch" : p.incumbent_msp ? `MSP: ${p.incumbent_msp}` : "Clean", explanation: accessExpl },
+            { label: "Relationship Warmth", score: warmth,           desc: crm?.linked ? `$${(pipe3yr / 1e6).toFixed(1)}M pipeline` : "No CRM link",         explanation: warmthExpl },
           ];
           const total = factors.reduce((sum, f) => sum + f.score, 0);
           const barColor = (s: number) => s >= 4 ? "#16a34a" : s >= 3 ? "#f59e0b" : "#dc2626";
+
+          // ── Total score narrative ───────────────────────────────────────────
+          const maxFactor = factors.reduce((a, b) => a.score >= b.score ? a : b);
+          const minFactor = factors.reduce((a, b) => a.score <= b.score ? a : b);
+          const factorShortDesc: Record<string, string> = {
+            "Tech Maturity": matScore >= 15
+              ? `AI maturity score ${matScore} — high AI threshold confirmed, +5% addressable bonus applied`
+              : `Signal score ${matScore} — ${15 - matScore} points below high AI maturity threshold`,
+            "Financial Capacity": p.revenue_ttm ? `${formatCap(p.revenue_ttm)} TTM revenue` : "Revenue unknown",
+            "Strategic Urgency": qualifyingSignals.length > 0
+              ? `${qualifyingSignals.length} qualifying signals — ${sortedQS[0]?.signal_title ?? ""}`
+              : "No active forcing functions — stable execution phase",
+            "WWT Accessibility": !p.channel_mismatch_flag && !p.incumbent_msp
+              ? "Clean territory, no MSP incumbency"
+              : p.channel_mismatch_flag && p.incumbent_msp
+              ? `Channel mismatch and MSP (${p.incumbent_msp}) — dual barriers`
+              : p.channel_mismatch_flag ? "Tech decisions outside WWT territory"
+              : `MSP incumbency (${p.incumbent_msp}) — displacement required`,
+            "Relationship Warmth": crm?.linked
+              ? `$${(pipe3yr / 1e6).toFixed(1)}M active pipeline, ${crm.open_opp_count ?? 0} open opportunities`
+              : "No CRM data — pending account link",
+          };
+          const hasAIEngagement = crm?.top_opportunities?.some(o => /ai|glean|portal26|proving ground|cognition/i.test(o.name))
+            || signals.some(s => /ai|artificial|machine learning/i.test(s.signal_title ?? ""));
+          const recommendedAction = (() => {
+            if (p.incumbent_msp && pipe3yr > 0) {
+              const aiOpp = crm?.top_opportunities?.find(o => /ai|glean|portal26|proving ground/i.test(o.name));
+              return aiOpp
+                ? `leverage existing AI engagement (${aiOpp.name.slice(0, 60)}) to build strategic relationship for MSP displacement`
+                : `identify displacement opportunity via active engagement categories — OT security and infrastructure renewals are current touch-points`;
+            }
+            if (strategicUrgency <= 2 && !hasAIEngagement) {
+              return `relationship-building now, positioned for next trigger event (M&A, CEO transition, or strategic pivot)`;
+            }
+            if (hasAIEngagement) {
+              return `leverage existing AI engagement to expand into cloud modernization and OT security categories`;
+            }
+            return `expand from current ${crm?.linked ? "active" : "initial"} engagement into strategic infrastructure and AI categories`;
+          })();
+          const tierLabel = total >= 20 ? "Immediate Priority" : total >= 15 ? "Near-term Opportunity" : total >= 10 ? "Medium-term Watch" : "Low Near-term Priority";
+          const narrative = `${companyName} scores ${total}/25 (${tierLabel}). Strongest signal: ${maxFactor.label} (${maxFactor.score}/5) — ${factorShortDesc[maxFactor.label] ?? ""}. Primary constraint: ${minFactor.label} (${minFactor.score}/5) — ${factorShortDesc[minFactor.label] ?? ""}. Recommended action: ${recommendedAction}.`;
+
           return (
             <div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 {factors.map(f => (
                   <div key={f.label}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
@@ -749,13 +855,15 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
                       </div>
                       <span style={{ fontSize: 12, fontWeight: 700, color: barColor(f.score), minWidth: 24, textAlign: "right" }}>{f.score}/5</span>
                     </div>
+                    <p style={{ margin: "5px 0 0", fontSize: 12, color: "#6b7280", lineHeight: 1.5 }}>{f.explanation}</p>
                   </div>
                 ))}
               </div>
-              <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ marginTop: 16, paddingTop: 12, borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>Total Score</span>
                 <span style={{ fontSize: 22, fontWeight: 800, color: total >= 20 ? "#16a34a" : total >= 15 ? "#f59e0b" : "#dc2626" }}>{total} / 25</span>
               </div>
+              <p style={{ margin: "10px 0 0", fontSize: 12, color: "#6b7280", fontStyle: "italic", lineHeight: 1.6 }}>{narrative}</p>
             </div>
           );
         })() : (
@@ -1059,7 +1167,7 @@ export default function CompanyDetail() {
         </div>
 
         {tab === "intelligence" && company && (
-          <IntelligenceTab companyId={company.id} />
+          <IntelligenceTab companyId={company.id} companyName={company.name} />
         )}
 
         {tab === "overview" && <div className="detail-grid">
