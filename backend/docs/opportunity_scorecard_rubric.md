@@ -81,21 +81,24 @@ UI annotation examples:
 ---
 
 ## Factor 5: Relationship Warmth (1-5)
-Measures the current state of WWT's relationship — using pipeline penetration ratio against the WWT addressable mid estimate, not absolute deal sizes. This prevents large-revenue accounts from appearing well-penetrated when deal sizes are small relative to TAM.
+Measures the current state of WWT's relationship using pipeline penetration ratio against WWT addressable mid — not absolute deal sizes. This prevents large-revenue accounts from appearing well-penetrated when deal sizes are small relative to TAM.
 
-**Penetration ratio = 3yr open pipeline / WWT addressable mid estimate.**
+**Penetration ratio = 3-year rolling open pipeline / wwt_addressable_mid (computed on-the-fly as total_spend_mid × addressable_pct / 100).**
 
-| Score | Meaning | Penetration ratio |
-|-------|---------|-----------------|
-| 1 | CRM linked but negligible pipeline — <0.1% of WWT addressable mid. Deal sizes are a rounding error relative to TAM. | pipeline / addressable mid < 0.1% |
-| 2 | CRM linked, surface relationship — pipeline 0.1–1% of WWT addressable mid, or $0 pipeline with CRM account present. | 0.1% ≤ ratio < 1% (or $0 pipeline) |
-| 3 | No CRM link (default score), OR early-stage relationship — 1–3% penetration. Transactional access but not strategically developed. | No CRM link, or 1% ≤ ratio < 3% |
-| 4 | Active relationship — 3–10% penetration of WWT addressable mid. Meaningful engagement with growth opportunity remaining. | 3% ≤ ratio < 10% |
-| 5 | Deep strategic relationship — >10% penetration of WWT addressable mid. Account well developed at the strategic level. | ratio > 10% |
+Fallback chain when estimate unavailable: mid → wwt_addressable_high → absolute thresholds ($10M/$5M/$1M/$0).
+CRM data filtered to 3-year rolling window (today − 3yr). No CRM link defaults to 3 — unknown, not penalized.
+
+| Score | Condition | Meaning |
+|-------|-----------|---------|
+| 5 | Penetration > 10% of WWT addressable mid | Deep strategic relationship — significant share of wallet captured |
+| 4 | Penetration 3–10% | Active relationship — meaningful engagement, clear growth opportunity |
+| 3 | Penetration 1–3% OR no CRM link (default) | Early relationship — transactional access, limited executive reach |
+| 2 | Penetration 0.1–1% OR CRM linked with $0 pipeline | Surface relationship — present but not penetrating the account |
+| 1 | Penetration <0.1% with pipeline, OR unenriched absolute fallback | Negligible — deal sizes suggest no real relationship |
 
 UI annotation examples:
-- Score 5: "$7.1M open pipeline (5.9% penetration) of $120M WWT addressable mid — strong strategic penetration, account well developed."
-- Score 3: "$50K open pipeline (0.04%) — deal sizes suggest transactional access rather than strategic partnership — executive relationship development needed."
+- Score 4: "$14.7M open pipeline (7.0% of $210M WWT addressable mid) — active relationship, clear growth opportunity."
+- Score 2: "$7.1M open pipeline (0.9% of $814M WWT addressable mid) — surface relationship, not penetrating account relative to TAM."
 - Score 3: "CRM account not yet linked — pending manual review. Pipeline data unavailable."
 
 ---
@@ -126,4 +129,20 @@ Example narratives:
 - Financial Capacity: derived from revenue_ttm on companies table
 - Strategic Urgency: count of signals with type in (leadership_hire, earnings_signal, strategic_pivot, partnership, ai_announcement) in company_tech_signals; thresholds: 0=1, 1=2, 2=3, 3-4=4, 5+=5
 - WWT Accessibility: derived from channel_mismatch_flag, incumbent_msp, oem_direct_confirmed, wwt_territory vs tech_decision_city
-- Relationship Warmth: derived from penetration ratio (3yr open pipeline / wwt_addressable_mid from company_spend_estimates); no CRM link = 3 (default); ratio >10% = 5, 3–10% = 4, 1–3% = 3, 0.1–1% = 2, <0.1% with pipeline = 1, $0 pipeline = 2
+- Relationship Warmth: penetration ratio = 3yr open pipeline / wwt_addressable_mid (computed on-the-fly in _estimate() serializer; not a DB column); fallback chain: mid → wwt_addressable_high → absolute thresholds; no CRM link = 3; >10% = 5, 3–10% = 4, 1–3% = 3, 0.1–1% = 2, <0.1% with pipeline = 1, $0 pipeline = 2
+
+---
+
+## Real Account Examples (as of May 2026)
+
+| Company | Pipeline | WWT Mid | Penetration | Score | Interpretation |
+|---------|----------|---------|-------------|-------|----------------|
+| Sempra Energy | $14.7M | $210M | 7.0% | 4/5 | Active relationship — best-penetrated large account in portfolio |
+| Halliburton | $8.9M | $595M | 1.5% | 3/5 | Early relationship — transactional but growing |
+| Worley | $2.3M | $148M | 1.6% | 3/5 | Early relationship — consistent small engagement |
+| Weatherford | $1.9M | $160M | 1.2% | 3/5 | Early relationship — consistent small engagement |
+| ExxonMobil | $7.1M | $814M | 0.9% | 2/5 | Surface relationship — $7.1M vs $814M TAM = 0.9% penetration |
+| ConocoPhillips | $9.5M | $1.18B | 0.8% | 2/5 | Surface relationship — largest open pipeline, lowest % penetration |
+| SLB | $2.8M | $1.84B | 0.15% | 2/5 | Surface relationship — highest TAM account, least penetrated |
+
+**Key insight:** WWT has better penetration at mid-size accounts (Sempra, Halliburton, Worley) than at the largest TAM accounts (SLB, COP, XOM). The largest white space opportunity in the portfolio is SLB ($1.84B TAM, 0.15% penetrated) and ConocoPhillips ($1.18B TAM, 0.8% penetrated) — both Houston STOLA accounts with no MSP displacement required.
