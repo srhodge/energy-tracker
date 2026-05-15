@@ -53,7 +53,7 @@ Step 2 sub-sector denominator (applied automatically, updated May 2026):
 
 Full 13-step model documentation: see WWT_Energy_Spend_Model_v4.docx
 
-## Enrichment Status (as of May 2026)
+## Enrichment Status (as of May 14, 2026)
 Tier 1 (21 companies) — 21 enriched (COMPLETE):
 - ExxonMobil (id=2): XOM, Integrated O&G, $323.9B rev, 58,000 employees, $1.20B WWT addressable high (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%AI=11%→floor; CoE=Bangalore Global Business & Tech Center [DC exit evaluation active — WWT opportunity], MSP=Accenture/Deloitte/McKinsey confirmed, ms_standardized=false, ai_maturity_score=18; CRM linked: crm_accounts id=14 "ExxonMobil Global Services Company" → energy_company_id=2, manual_confirmed, score=100; CRM 3yr: $7.14M open pipeline, $5.73M closed won, 76 open opps; Relationship Warmth=5/5) [HIGH]
 - Chevron (id=3): CVX, Integrated O&G, $193.4B rev, 40,000 employees, $458.4M mid / $668.5M high WWT addressable (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%MS+0%AI=11%→floor; CoE=Bengaluru ENGINE Center, MSP=HCL Technologies+LTIMindtree confirmed, ms_standardized=true, ai_maturity_score=13 below ≥15 threshold — AI bonus does not apply) [HIGH]
@@ -178,17 +178,24 @@ Tier 2 estimates run (2026-05-15, --tier 2): 168 companies estimated, 0 errors
 - Top 10 by WWT addressable high: SLB $2,695M, Baker Hughes $1,507M, Dow $1,305M, OXY $530M, Plains All American $418M, Eastman Chemical $399M, PPG Industries $339M, NOV $304M, DuPont $258M, Westlake Chemical $243M
 
 ## Pending Work
-1. Tier 2 revenue population — COMPLETE
-2. Filter bar standardization — COMPLETE
-3. Intelligence tab Phase 2 (FY2027E column, Opportunity Scorecard, Signal Age Warning, confidence pills) — COMPLETE
-4. ai_maturity_score DB column (migration 0010, floor override) — COMPLETE
-5. Denominator audit — COMPLETE
-6. Client Executive fields (ce_name, ce_email, ce_phone) — COMPLETE (migration 0011, 2026-05-14)
-7. Tier 2 spend estimates — COMPLETE (2026-05-15): 168 companies estimated, 0 errors; $30.24B total mid, $12.86B WWT high
-8. CRM account linking — COMPLETE (2026-05-15): 27/27 accounts linked; 6 stub companies added (ids 587–592, Tier 3) to cover previously unlinked pipeline accounts
-9. Weekly batch signal collection service — PENDING (requires Anthropic API key in Railway)
-10. Structured enrichment for high-value unenriched Tier 2 accounts — PENDING
-11. Intelligence tab Phase 3 (trend arrows, NEW badge for recent hires, CRM context panel) — PENDING
+Completed this session (May 14–15, 2026):
+- Tier 2 revenue population — COMPLETE
+- Filter bar standardization — COMPLETE
+- Intelligence tab Phase 2 (FY2027E column, Opportunity Scorecard, Signal Age Warning, confidence pills) — COMPLETE
+- ai_maturity_score DB column (migration 0010, floor override) — COMPLETE
+- Denominator audit — COMPLETE
+- Client Executive fields (ce_name, ce_email, ce_phone) — COMPLETE (migration 0011)
+- Tier 2 spend estimates — COMPLETE: 168 companies, 0 errors; $30.24B mid, $12.86B WWT high
+- CRM account linking — COMPLETE: 27/27 accounts linked; 6 stub companies added (ids 587–592)
+- Fluor Corporation enriched (id=589, Tier 2) — Kyndryl MSP confirmed (WWT internal, May 2026)
+
+Active pending:
+1. OGE Energy (id=587) — needs full enrichment: Oklahoma utility, $39.7M TAM, 3.2% CRM penetration (Warmth 3/5)
+2. Client Executive field UI — migration 0011 built and API wired; UI verification pending
+3. Remaining Tier 2 enrichment — 141 companies have revenue_ttm but no full enrichment profile
+4. Financial Capacity scoring for regulated utilities — Sempra $48B capex plan understated by revenue-based scoring; may warrant denominator adjustment
+5. Weekly batch signal collection service — planned, not yet built (requires Anthropic API key in Railway)
+6. Intelligence tab Phase 3 — trend arrows vs. prior estimate, NEW badge for recent hires (<18 months), CRM context panel (last opp date, account owner)
 
 ## Key Architectural Decisions
 - CRM accounts linked to companies table via manual review (energy_company_id FK) — see CRM Data Details below
@@ -196,6 +203,7 @@ Tier 2 estimates run (2026-05-15, --tier 2): 168 companies estimated, 0 errors
 - All batch processes filter WHERE status = 'active' (567 active, 18 non-active)
 - No Anthropic API key available locally or in Railway for automated enrichment
 - ai_maturity_score is now a real DB column (migration 0010) acting as a floor override. Computed dynamically from signals (strategic_pivot + earnings_signal types, 730-day window) then max() applied against stored floor. Companies with stored scores: XOM=18, CVX=13, COP=18, HAL=16, SLB=19, BKR=16, DOW=16, EMN=16, Sasol=13, Weatherford=12, MPC=13, OXY=13.
+- Kyndryl added to confirmed MSP list (May 2026): Fluor Corporation (id=589) — WWT internal intelligence confirmed.
 
 ## CRM Data Details
 - 83 Salesforce accounts loaded (48 with real opportunity data, 35 named placeholders with $0)
