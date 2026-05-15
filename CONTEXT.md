@@ -186,7 +186,7 @@ Script: backend/scripts/populate_tier2_revenue.py — pulls totalRevenue, fullTi
 9. Intelligence tab Phase 3 (trend arrows, NEW badge for recent hires, CRM context panel) — PENDING
 
 ## Key Architectural Decisions
-- CRM accounts and companies table NOT linked yet (deliberate — pending manual review UI)
+- CRM accounts linked to companies table via manual review (energy_company_id FK) — see CRM Data Details below
 - Enrichment research done by Claude (web search) -> JSON -> Claude Code pushes via API
 - All batch processes filter WHERE status = 'active' (567 active, 18 non-active)
 - No Anthropic API key available locally or in Railway for automated enrichment
@@ -197,9 +197,36 @@ Script: backend/scripts/populate_tier2_revenue.py — pulls totalRevenue, fullTi
 - 7,878 total opportunities (deduplicated across all export files)
 - $60.35M open pipeline, $179.56M closed won, 64.4% win rate
 - Key sellers: Sam Hodge (hodges) - 25 open opps, Matthew Nalbone (nalbonem) - 30 opps, Shay Gillespie (sgill)
-- CRM data is in crm_accounts and crm_opportunities tables — NOT linked to companies table yet (deliberate)
-- Fuzzy matching script exists (match_crm_accounts.py) but was NOT run — manual review UI planned first
-- The 83 CRM accounts were used only to set data_enrichment_tier=1 via exact name match (21 matched)
+- CRM linking status (2026-05-14): 18 accounts linked to companies table (energy_company_id, match_method='manual_confirmed', match_score=100)
+
+Linked accounts (crm_id → company_id):
+  id=14 → id=2   ExxonMobil Global Services Company → ExxonMobil
+  id=9  → id=8   ConocoPhillips → ConocoPhillips
+  id=36 → id=34  Phillips 66 → Phillips 66
+  id=41 → id=31  Sempra Energy → Sempra Energy
+  id=19 → id=67  Halliburton → Halliburton
+  id=48 → id=201 Worley → Worley
+  id=47 → id=179 Weatherford International → Weatherford International
+  id=11 → id=40  ENI Petroleum → ENI
+  id=39 → id=28  Schlumberger Ltd. → SLB
+  id=43 → id=214 Technip Energies → Technip Energies
+  id=44 → id=110 TechnipFMC → TechnipFMC
+  id=40 → id=291 Seadrill Limited → Seadrill
+  id=21 → id=63  LyondellBasell → LyondellBasell
+  id=8  → id=150 Chord Energy → Chord Energy
+  id=24 → id=567 NCS Multistage → NCS Multistage
+  id=34 → id=402 Par Pacific Holdings → Par Pacific Holdings
+  id=7  → id=3   Chevron Corporation → Chevron
+  id=31 → id=42  Oxy → Occidental Petroleum
+
+Unlinked CRM accounts with pipeline (pending resolution):
+  id=28  OGE Energy ($1.29M open) — not in companies table
+  id=15  Fidelis New Energy ($1.06M open) — not in companies table
+  id=16  Fluor Corporation ($1.08M open) — not in companies table (Gujarat Fluorochemicals is unrelated)
+  id=45  Terraflow Energy ($0.27M open) — not in companies table
+  id=20  Independence Power Holdings ($0.14M open) — not in companies table
+  id=10  Continental Resources ($0.07M open) — not in companies table (CLR delisted after Hamm buyout)
+  id=25  Noble Corporation ($0 open, $0.04M won) — IS in companies table as id=168 (Noble Corporation / Diamond Offshore acquisition) — linkable
 
 ## WWT Territory Structure (for channel mismatch logic)
 Territories in the database: STOLA (Houston/TX), EURO, MENA, APAC, CALA, FEDERAL, and others
@@ -224,7 +251,7 @@ All pages (Companies, Territory Dashboard, CrmDashboard, Activity Feed, Analytic
 Built and deployed:
 - FY2027E column in spend table (WWT High × 1.08, amber, tooltip)
 - Opportunity Scorecard card (5 factors: Tech Maturity, Financial Capacity, Strategic Urgency, WWT Accessibility, Relationship Warmth; 1-5 bars; total /25)
-  - Relationship Warmth: NOW wired to CRM data (3yr filter). Pipeline >$5M=5, $1-5M or won>$5M=4, $100K-$1M=3, linked/$0=2, no link=3.
+  - Relationship Warmth: wired to CRM data (3yr filter). Scored by penetration ratio (pipe3yr / wwt_addressable_mid): >10%=5, 3-10%=4, 1-3%=3, 0.1-1%=2, <0.1% with pipeline=1, $0/no link=3.
   - Per-factor explanation paragraphs below each bar (12px gray, data-derived)
   - Total score narrative (italic, 12px): tier label + strongest/weakest factor + recommended action
 - Signal Age Warning banner (amber, if most recent signal >90 days old)
@@ -251,7 +278,7 @@ Five factors scored 1-5, total out of 25:
 - Strategic Urgency: count of qualifying signals (leadership_hire, earnings_signal, strategic_pivot, partnership, ai_announcement) from fetched signals
 - WWT Accessibility: channel_mismatch_flag + incumbent_msp + oem_direct_confirmed + territory vs tech_decision_city comparison
 - Relationship Warmth: wired to CRM data via crm_accounts.energy_company_id; 3-year filter (rolling, cutoff = today − 3yr)
-  - Pipeline >$5M=5, $1-5M or won>$5M=4, $100K-$1M=3, linked/$0=2, no link=3
+  - Scored by penetration ratio = 3yr open pipeline / wwt_addressable_mid: >10%=5, 3-10%=4, 1-3%=3, 0.1-1%=2, <0.1% with pipeline=1, $0 linked=2, no CRM link=3
 
 CRM integration (2026-05-14):
 - All CRM data filtered to 3-year rolling window (open pipeline + closed won >= cutoff)
@@ -344,11 +371,7 @@ Current confirmed consulting relationships in database:
 All other enriched companies: no consulting firm relationship confirmed. Do not flag without confirmation.
 
 ## Salesforce Account to Company ID Mapping Notes
-The 83 CRM accounts use slightly different names than the 585 companies database.
-Known aliases needing manual mapping when ready:
-- "Oxy" = Occidental Petroleum
-- "ExxonMobil Global Services Company" = ExxonMobil (id=2)
-- "Engie North America" = ENGIE
-- "ONEOK" = ONEOK (may not exist in companies DB)
-- "Baker Hughes Inc" vs "Baker Hughes"
-- "Schlumberger Ltd." vs "Schlumberger/SLB"
+18 accounts now linked (see CRM Data Details above). Remaining known aliases still needing mapping:
+- "Engie North America" = ENGIE (if in companies DB)
+- "Baker Hughes Inc" — check if matches Baker Hughes (id=52)
+- Noble Corporation (crm id=25) = id=168 in companies table — ready to link (no open pipeline, $0.04M won)
