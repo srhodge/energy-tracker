@@ -37,7 +37,7 @@ Floor: 12%, Ceiling: 42%
 ai_maturity_score (DB column, INTEGER, added 2026-05-14 via migration 0010):
 - Stored on companies table via patch_company.py from spend_model_flags.ai_maturity_score in enrichment JSONs
 - Acts as a FLOOR for the computed maturity_score (computed from signals + leadership can exceed it)
-- 4 companies currently have stored scores: ExxonMobil=18, Chevron=13, Sasol=13, Weatherford=12
+- 12 companies currently have stored scores: XOM=18, CVX=13, COP=18, HAL=16, SLB=19, BKR=16, DOW=16, EMN=16, Sasol=13, Weatherford=12, MPC=13, OXY=13
 - Score ≥15 triggers high AI maturity +5% bonus; values 12-14 are stored but do not yet trigger bonus
 
 Signal scoring window (updated 2026-05-14): 730 days (2yr) lookback, not 365 days.
@@ -236,7 +236,7 @@ Linked accounts (crm_id → company_id):
   id=29 → id=29  ONEOK → Oneok
   id=28 → id=587 OGE Energy → OGE Energy (stub, Tier 3)
   id=15 → id=588 Fidelis New Energy → Fidelis New Energy (stub, Tier 3)
-  id=16 → id=589 Fluor Corporation → Fluor Corporation (stub, Tier 3)
+  id=16 → id=589 Fluor Corporation → Fluor Corporation (ENRICHED, Tier 2, Kyndryl MSP)
   id=45 → id=590 Terraflow Energy → Terraflow Energy (stub, Tier 3)
   id=20 → id=591 Independence Power Holdings → Independence Power Holdings (stub, Tier 3)
   id=10 → id=592 Continental Resources → Continental Resources (stub, Tier 3)
@@ -248,7 +248,7 @@ Note: 6 stub/enriched company records added 2026-05-15 (ids 587–592).
   Fidelis New Energy (id=588), Terraflow Energy (id=590), Independence Power Holdings (id=591): no revenue data; CRM pipeline only.
 
 Pipeline for newly linked accounts (3yr rolling):
-  OGE Energy: $1.29M (3.2% of $39.7M → Warmth 3/5) | Fluor Corporation: $1.08M (0.18% of $611.2M → Warmth 2/5) | Fidelis New Energy: $1.06M (fallback → Warmth 2/5)
+  OGE Energy: $1.29M (3.2% of $39.7M → Warmth 3/5) | Fluor Corporation: $1.08M (0.26% of $420.2M WWT addressable high → Warmth 2/5) | Fidelis New Energy: $1.06M (fallback → Warmth 2/5)
   Terraflow Energy: $0.27M (fallback → Warmth 1/5) | Independence Power Holdings: $0.14M (fallback → Warmth 1/5) | Continental Resources: $0.07M (fallback → Warmth 1/5)
 
 All CRM accounts are now linked (27/27). No unlinked accounts with pipeline remain.
@@ -337,9 +337,9 @@ New segments to add (not yet in DB):
 - Energy Infrastructure & Power, Carbon Management, LNG & Gas Trading
 
 ## Enrichment JSON Files Location
-backend/enrichment_data/
-- exxonmobil.json (company_id=2) — COMPLETE
-- chevron.json (company_id=3) — COMPLETE
+backend/enrichment_data/ — all enrichment JSON files are stored here.
+Complete Tier 1 (21 files): exxonmobil.json, chevron.json, conocophillips.json, halliburton.json, phillips66.json, enbridge.json, eog_resources.json, targa_resources.json, lyondellbasell.json, sempra.json, antero_resources.json, chord_energy.json, cvr_energy.json, helmerich_payne.json, hf_sinclair.json, ncs_multistage.json, par_pacific.json, pbf_energy.json, sasol.json, technip_energies.json, technipfmc.json, weatherford.json, worley.json
+Tier 2 enriched: marathon_petroleum.json, valero_energy.json, slb.json, occidental_petroleum.json, baker_hughes.json, williams_companies.json, oneok.json, energy_transfer.json, devon_energy.json, enterprise_products.json, cheniere_energy.json, diamondback_energy.json, dow.json, kinder_morgan.json, expand_energy.json, mplx.json, westlake.json, sunoco.json, eqt_corporation.json, nov.json, eastman_chemical.json, apa_corporation.json, coterra_energy.json, dupont.json, matador_resources.json, range_resources.json, antero_midstream.json, fluor_corporation.json
 
 ## Key WWT Commercial Context (for model/enrichment work)
 - WWT acquired Softchoice in 2024 — adds Microsoft licensing addressability (+5% Step 10)
