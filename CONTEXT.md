@@ -241,6 +241,21 @@ Still pending (Phase 3):
 - Missing role flags (grayed-out row if no CAIO identified)
 - WWT relationship context pulled from CRM (last opportunity date, pipeline, account owner)
 
+## Opportunity Scorecard
+Full rubric: backend/docs/opportunity_scorecard_rubric.md
+Five factors scored 1-5, total out of 25:
+- Tech Maturity: derived from maturity_score in spend estimates key_drivers (ai_maturity_score floor override via migration 0010)
+- Financial Capacity: derived from revenue_ttm
+- Strategic Urgency: count of active signals within 730 days (strategic_pivot, career_move, partnership, earnings_signal types)
+- WWT Accessibility: channel_mismatch_flag + incumbent_msp + oem_direct_confirmed + territory vs tech_decision_city comparison
+- Relationship Warmth: CRM link + ce_name + open opportunities
+
+Territory note: WWT Accessibility is evaluated against wwt_territory and tech_decision_city — NOT fixed to STOLA. Diamondback (Midland TX) = NTOLA, not a mismatch if NTOLA-assigned.
+
+Score interpretation: 20-25 Immediate Priority, 15-19 Near-term Opportunity, 10-14 Medium-term Watch, 5-9 Low Priority.
+
+Total score narrative synthesizes pattern across factors — same total with different factor distribution tells different story. See rubric doc for full detail and UI annotation examples.
+
 ## Weekly Batch Signal Collection (PLANNED, NOT YET BUILT)
 Planned architecture:
 - Backend scheduled job collects signals weekly from news/LinkedIn/SEC
