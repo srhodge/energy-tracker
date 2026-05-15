@@ -19,7 +19,7 @@ const SUB_SECTOR_OPTIONS = [
   "LNG & Gas Trading",
 ];
 const STATUS_OPTIONS: CompanyStatus[] = ["Active", "Acquired", "Merged", "Delisted", "Unknown", "Sanctioned", "Non-Equity"];
-const WWT_MODELS = ["Chemicals", "Services", "EPC", "Refining", "LNG", "Retail"];
+const WWT_MODELS = ["Upstream / E&P", "Midstream", "Integrated O&G", "Refining", "Chemicals", "Utilities", "Renewables", "LNG", "EPC", "Services", "Retail"];
 
 interface EditModalProps {
   company: CompanyDetailType;
