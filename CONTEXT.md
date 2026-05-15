@@ -282,6 +282,8 @@ Five factors scored 1-5, total out of 25:
 - WWT Accessibility: channel_mismatch_flag + incumbent_msp + oem_direct_confirmed + territory vs tech_decision_city comparison
 - Relationship Warmth: wired to CRM data via crm_accounts.energy_company_id; 3-year filter (rolling, cutoff = today − 3yr)
   - Scored by penetration ratio = 3yr open pipeline / wwt_addressable_mid: >10%=5, 3-10%=4, 1-3%=3, 0.1-1%=2, <0.1% with pipeline=1, $0 linked=2, no CRM link=3
+  - wwt_addressable_mid is NOT a DB column — computed on-the-fly in _estimate() serializer as total_spend_mid × wwt_addressable_pct_low / 100
+  - Frontend fallback chain: mid → wwt_addressable_high → absolute thresholds ($10M/5M/1M/0) for unenriched companies
 
 CRM integration (2026-05-14):
 - All CRM data filtered to 3-year rolling window (open pipeline + closed won >= cutoff)
