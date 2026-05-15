@@ -1,0 +1,83 @@
+{
+  "company_id": 589,
+  "ticker": "FLR",
+  "full_legal_name": "Fluor Corporation",
+  "hq_city": "Irving",
+  "hq_state_province": "TX",
+  "hq_country": "US",
+  "hq_address": "6700 Las Colinas Boulevard, Irving, TX 75039",
+  "employee_count": 27000,
+  "annual_revenue_usd": 16300000000,
+  "fiscal_year_end": "2024-12-31",
+  "sub_sector": "Oilfield & Energy Services",
+  "value_chain_position": "Oilfield & Energy Services",
+  "is_public": true,
+  "stock_exchange": "NYSE",
+  "website": "https://www.fluor.com",
+  "description": "Fluor Corporation is the largest publicly traded engineering and construction company in the US (Fortune 500 #265). Three segments: Energy Solutions (oil, gas, chemicals, power), Urban Solutions (infrastructure, mining, advanced technologies), and Mission Solutions (government/defense). Founded 1912, HQ Irving TX. New CEO Jim Breuer effective May 1 2025 succeeding David Constable. Revenue $16.3B FY2024, ~27,000 employees globally.",
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Jim Breuer",
+      "linkedin_url": null,
+      "hire_date": "2025-05-01",
+      "is_current": true,
+      "signal_score": 6,
+      "source": "web_search"
+    },
+    {
+      "role": "CPO",
+      "person_name": "Raj Desai",
+      "linkedin_url": null,
+      "hire_date": "2024-10-01",
+      "is_current": true,
+      "signal_score": 8,
+      "source": "web_search"
+    }
+  ],
+  "tech_signals": {
+    "cloud_platforms": ["Microsoft Azure"],
+    "collaboration": ["Microsoft 365", "Microsoft Dynamics 365"],
+    "erp_systems": ["SAP", "Microsoft Dynamics 365"],
+    "ot_platforms": ["Engineering and project delivery software", "CFIHOS data standards implementation"],
+    "ai_initiatives": [
+      "Microsoft Dynamics 365 FastTrack AI and Copilot program — confirmed via LinkedIn IT team",
+      "AI and digitalization named as CPO mandate since October 2024",
+      "Fluor ranked #1 on Data Centre Magazine top construction companies building data centers — active in data center EPC",
+      "CFIHOS (Capital Facilities Information HandOver Specification) digital standards — active implementation"
+    ],
+    "digital_twin_program": false,
+    "cloud_primary": "Azure",
+    "ai_maturity_score": 10,
+    "ai_maturity_notes": "No standalone CIO — IT under CPO Raj Desai since October 2024 (+2 new IT leadership signal). Microsoft Dynamics 365 + Copilot AI program confirmed (+3). Data center EPC market leadership signals technology investment capacity (+2). New CEO May 2025 = IT budget reset (+2). Kyndryl mentioned in IT LinkedIn context — possible MSP relationship but unconfirmed. Score 10 — below ≥15 threshold."
+  },
+  "profile": {
+    "employee_count": 27000,
+    "hq_city": "Irving",
+    "hq_country": "US",
+    "revenue_ttm": 16300000000,
+    "ms_standardized": true,
+    "channel_mismatch_flag": false,
+    "channel_mismatch_note": "HQ Irving TX — within WWT STOLA territory (Dallas/Fort Worth metro). No channel conflict.",
+    "incumbent_msp": null,
+    "oem_direct_confirmed": false,
+    "offshore_coe_confirmed": false
+  },
+  "spend_model_flags": {
+    "oem_direct_confirmed": false,
+    "offshore_coe": false,
+    "incumbent_msp": false,
+    "incumbent_msp_name": null,
+    "channel_mismatch": false,
+    "ms_standardized": true,
+    "high_ai_maturity": false,
+    "territory": "STOLA",
+    "ai_maturity_score": 10,
+    "channel_mismatch_notes": "HQ Irving TX — within WWT STOLA territory (Dallas/Fort Worth metro). No channel conflict.",
+    "ms_standardized_notes": "Microsoft Dynamics 365 confirmed. Microsoft 365 confirmed. Azure confirmed as cloud platform. Softchoice/WWT licensing opportunity exists.",
+    "incumbent_msp_notes": "Kyndryl mentioned in IT LinkedIn context — possible MSP relationship but NOT confirmed. Do not flag until confirmed via WWT internal intelligence."
+  },
+  "enrichment_confidence": "MEDIUM",
+  "enrichment_date": "2026-05-14",
+  "enrichment_notes": "FY2024 revenue $16.3B. ~27,000 employees. Irving TX HQ in STOLA. No standalone CIO — IT under CPO Raj Desai since October 2024 following Robert Taylor retirement March 2025. Microsoft Dynamics 365 + Copilot confirmed. Azure confirmed. SAP probable as EPC backbone. New CEO Jim Breuer May 2025 = IT budget reset signal. Kyndryl mentioned in IT context — flag for WWT internal verification before marking as MSP. Active in AI/digitalization per CPO mandate. Fluor is #1 data center construction company per Data Centre Magazine — strong alignment with WWT data center infrastructure practice. WWT opportunity: Irving STOLA clean account, Microsoft stack, active AI program, new CEO reset cycle, data center EPC alignment."
+}

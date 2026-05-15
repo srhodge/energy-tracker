@@ -233,14 +233,14 @@ Linked accounts (crm_id → company_id):
   id=20 → id=591 Independence Power Holdings → Independence Power Holdings (stub, Tier 3)
   id=10 → id=592 Continental Resources → Continental Resources (stub, Tier 3)
 
-Note: 6 stub company records added 2026-05-15 (ids 587–592). Created to surface CRM pipeline in the Opportunity Scorecard.
-  Fluor Corporation (id=589, FLR): PRIORITY Tier 2 enrichment — $15.18B rev, Irving TX (STOLA), sub_sector=Oilfield & Energy Services, WWT addressable high $225.5M, $1.08M active pipeline. Major EPC/engineering firm (~60,000 employees globally). Promoted to data_enrichment_tier=2.
-  OGE Energy (id=587, OGE): Future enrichment candidate — Oklahoma utility, $3.26B rev, 2,248 emp, WWT addressable high $39.7M, $1.29M pipeline (3.2% penetration → Warmth 3/5). HQ Oklahoma City outside STOLA.
+Note: 6 stub/enriched company records added 2026-05-15 (ids 587–592).
+  Fluor Corporation (id=589, FLR): ENRICHED (2026-05-15) — $16.3B rev FY2024, 27,000 emp, Irving TX (STOLA), sub_sector=Oilfield & Energy Services, ms_standardized=true, ai_maturity=10, Tier 2. WWT addressable high $611.2M. CEO Jim Breuer (new May 2025), CPO Raj Desai (oversees IT+AI, Oct 2024). No standalone CIO. Kyndryl possible MSP — UNCONFIRMED, pending WWT internal verification. Microsoft Dynamics 365 + Copilot + Azure confirmed. #1 data center construction company (Data Centre Magazine). CRM: $1.08M pipeline (0.18% of $611.2M → Warmth 2/5). Fortune 500 #265.
+  OGE Energy (id=587, OGE): Future enrichment — Oklahoma utility, $3.26B rev, 2,248 emp, WWT addressable high $39.7M, $1.29M pipeline (3.2% of $39.7M → Warmth 3/5). HQ Oklahoma City — outside STOLA.
   Continental Resources (id=592): is_private=TRUE, ticker=NULL — taken private by Harold Hamm Oct 2022. No financial enrichment possible. CRM retained for relationship tracking only ($0.07M pipeline).
-  Fidelis New Energy (id=588), Terraflow Energy (id=590), Independence Power Holdings (id=591): no revenue data available; CRM pipeline only.
+  Fidelis New Energy (id=588), Terraflow Energy (id=590), Independence Power Holdings (id=591): no revenue data; CRM pipeline only.
 
 Pipeline for newly linked accounts (3yr rolling):
-  OGE Energy: $1.29M (3.2% of $39.7M → Warmth 3/5) | Fluor Corporation: $1.08M (0.5% of $225.5M → Warmth 2/5) | Fidelis New Energy: $1.06M (fallback → Warmth 2/5)
+  OGE Energy: $1.29M (3.2% of $39.7M → Warmth 3/5) | Fluor Corporation: $1.08M (0.18% of $611.2M → Warmth 2/5) | Fidelis New Energy: $1.06M (fallback → Warmth 2/5)
   Terraflow Energy: $0.27M (fallback → Warmth 1/5) | Independence Power Holdings: $0.14M (fallback → Warmth 1/5) | Continental Resources: $0.07M (fallback → Warmth 1/5)
 
 All CRM accounts are now linked (27/27). No unlinked accounts with pipeline remain.
