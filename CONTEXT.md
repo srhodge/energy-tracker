@@ -234,7 +234,7 @@ Linked accounts (crm_id → company_id):
   id=10 → id=592 Continental Resources → Continental Resources (stub, Tier 3)
 
 Note: 6 stub/enriched company records added 2026-05-15 (ids 587–592).
-  Fluor Corporation (id=589, FLR): ENRICHED (2026-05-15) — $16.3B rev FY2024, 27,000 emp, Irving TX (STOLA), sub_sector=Oilfield & Energy Services, ms_standardized=true, ai_maturity=10, Tier 2. WWT addressable high $611.2M. CEO Jim Breuer (new May 2025), CPO Raj Desai (oversees IT+AI, Oct 2024). No standalone CIO. Kyndryl possible MSP — UNCONFIRMED, pending WWT internal verification. Microsoft Dynamics 365 + Copilot + Azure confirmed. #1 data center construction company (Data Centre Magazine). CRM: $1.08M pipeline (0.18% of $611.2M → Warmth 2/5). Fortune 500 #265.
+  Fluor Corporation (id=589, FLR): ENRICHED (2026-05-15) — $16.3B rev FY2024, 27,000 emp, Irving TX (STOLA), sub_sector=Oilfield & Energy Services, ms_standardized=true, incumbent_msp=Kyndryl (CONFIRMED May 2026, WWT internal), ai_maturity=10, Tier 2. WWT addressable high $420.2M (32% − 10% Kyndryl = 22% effective). CEO Jim Breuer (new May 2025), CPO Raj Desai (oversees IT+AI, Oct 2024). No standalone CIO. Microsoft Dynamics 365 + Copilot + Azure confirmed. #1 data center construction company (Data Centre Magazine). CRM: $1.08M pipeline (0.26% of $420.2M → Warmth 2/5). Fortune 500 #265. Displacement path: new CEO/CPO reset cycle + WWT data center practice alignment.
   OGE Energy (id=587, OGE): Future enrichment — Oklahoma utility, $3.26B rev, 2,248 emp, WWT addressable high $39.7M, $1.29M pipeline (3.2% of $39.7M → Warmth 3/5). HQ Oklahoma City — outside STOLA.
   Continental Resources (id=592): is_private=TRUE, ticker=NULL — taken private by Harold Hamm Oct 2022. No financial enrichment possible. CRM retained for relationship tracking only ($0.07M pipeline).
   Fidelis New Energy (id=588), Terraflow Energy (id=590), Independence Power Holdings (id=591): no revenue data; CRM pipeline only.
@@ -358,6 +358,7 @@ Current confirmed MSP relationships in database:
 - ExxonMobil (id=2): Accenture, Deloitte, McKinsey — WWT internal confirmed
 - Chevron (id=3): HCL Technologies, LTIMindtree — WWT internal confirmed
 - Halliburton (id=67): Accenture — confirmed public sources (Azure migration partner + SAP S/4HANA implementation partner)
+- Fluor Corporation (id=589): Kyndryl — WWT internal intelligence confirmed May 2026. Kyndryl (IBM IT infrastructure spinoff) manages IT operations. -10% addressable applied.
 
 All other enriched companies: no MSP confirmed. Do not flag without confirmation.
 

@@ -49,7 +49,7 @@
     "digital_twin_program": false,
     "cloud_primary": "Azure",
     "ai_maturity_score": 10,
-    "ai_maturity_notes": "No standalone CIO — IT under CPO Raj Desai since October 2024 (+2 new IT leadership signal). Microsoft Dynamics 365 + Copilot AI program confirmed (+3). Data center EPC market leadership signals technology investment capacity (+2). New CEO May 2025 = IT budget reset (+2). Kyndryl mentioned in IT LinkedIn context — possible MSP relationship but unconfirmed. Score 10 — below ≥15 threshold."
+    "ai_maturity_notes": "No standalone CIO — IT under CPO Raj Desai since October 2024 (+2 new IT leadership signal). Microsoft Dynamics 365 + Copilot AI program confirmed (+3). Data center EPC market leadership signals technology investment capacity (+2). New CEO May 2025 = IT budget reset (+2). Kyndryl confirmed as incumbent MSP (May 2026). Score 10 — below ≥15 threshold."
   },
   "profile": {
     "employee_count": 27000,
@@ -59,15 +59,15 @@
     "ms_standardized": true,
     "channel_mismatch_flag": false,
     "channel_mismatch_note": "HQ Irving TX — within WWT STOLA territory (Dallas/Fort Worth metro). No channel conflict.",
-    "incumbent_msp": null,
+    "incumbent_msp": "Kyndryl",
     "oem_direct_confirmed": false,
     "offshore_coe_confirmed": false
   },
   "spend_model_flags": {
     "oem_direct_confirmed": false,
     "offshore_coe": false,
-    "incumbent_msp": false,
-    "incumbent_msp_name": null,
+    "incumbent_msp": true,
+    "incumbent_msp_name": "Kyndryl",
     "channel_mismatch": false,
     "ms_standardized": true,
     "high_ai_maturity": false,
@@ -75,9 +75,9 @@
     "ai_maturity_score": 10,
     "channel_mismatch_notes": "HQ Irving TX — within WWT STOLA territory (Dallas/Fort Worth metro). No channel conflict.",
     "ms_standardized_notes": "Microsoft Dynamics 365 confirmed. Microsoft 365 confirmed. Azure confirmed as cloud platform. Softchoice/WWT licensing opportunity exists.",
-    "incumbent_msp_notes": "Kyndryl mentioned in IT LinkedIn context — possible MSP relationship but NOT confirmed. Do not flag until confirmed via WWT internal intelligence."
+    "incumbent_msp_notes": "Kyndryl confirmed as incumbent MSP at Fluor Corporation — WWT internal intelligence confirmed May 2026. Kyndryl (IBM IT infrastructure spinoff) manages IT operations. Reduces WWT addressable by -10%."
   },
   "enrichment_confidence": "MEDIUM",
   "enrichment_date": "2026-05-14",
-  "enrichment_notes": "FY2024 revenue $16.3B. ~27,000 employees. Irving TX HQ in STOLA. No standalone CIO — IT under CPO Raj Desai since October 2024 following Robert Taylor retirement March 2025. Microsoft Dynamics 365 + Copilot confirmed. Azure confirmed. SAP probable as EPC backbone. New CEO Jim Breuer May 2025 = IT budget reset signal. Kyndryl mentioned in IT context — flag for WWT internal verification before marking as MSP. Active in AI/digitalization per CPO mandate. Fluor is #1 data center construction company per Data Centre Magazine — strong alignment with WWT data center infrastructure practice. WWT opportunity: Irving STOLA clean account, Microsoft stack, active AI program, new CEO reset cycle, data center EPC alignment."
+  "enrichment_notes": "FY2024 revenue $16.3B. ~27,000 employees. Irving TX HQ in STOLA. No standalone CIO — IT under CPO Raj Desai since October 2024 following Robert Taylor retirement March 2025. Microsoft Dynamics 365 + Copilot confirmed. Azure confirmed. SAP probable as EPC backbone. New CEO Jim Breuer May 2025 = IT budget reset signal. Kyndryl confirmed as incumbent MSP (WWT internal intelligence, May 2026) — applies -10% addressable deduction. Active in AI/digitalization per CPO mandate. Fluor is #1 data center construction company per Data Centre Magazine — strong alignment with WWT data center infrastructure practice. WWT opportunity: Irving STOLA, Microsoft stack, active AI program, new CEO reset cycle, data center EPC alignment. MSP displacement path: Kyndryl (IBM spinoff) — WWT infrastructure and managed services pitch to new CEO/CPO."
 }
