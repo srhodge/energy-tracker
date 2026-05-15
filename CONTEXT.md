@@ -58,9 +58,9 @@ Tier 1 (21 companies) — 21 enriched (COMPLETE):
 - ExxonMobil (id=2): XOM, Integrated O&G, $323.9B rev, 58,000 employees, $1.81B WWT addressable high (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%AI=11%→floor; CoE=Bangalore Global Business & Tech Center, MSP=Accenture/Deloitte/McKinsey confirmed, ms_standardized=false, ai_maturity_score=18) [HIGH]
 - Chevron (id=3): CVX, Integrated O&G, $193.4B rev, 40,000 employees, $458.4M mid / $668.5M high WWT addressable (12% — floor; 27%−3%OEM−8%CoE−10%MSP+5%MS+0%AI=11%→floor; CoE=Bengaluru ENGINE Center, MSP=HCL Technologies+LTIMindtree confirmed, ms_standardized=true, ai_maturity_score=13 below ≥15 threshold — AI bonus does not apply) [HIGH]
 - ConocoPhillips (id=8): COP, Upstream E&P, $56.1B rev, 11,800 employees, $1.74B WWT addressable (37%; 27%+5%MS+5%AI=37%; ms_standardized=true, high AI maturity confirmed, oem_direct_confirmed=false) [HIGH]
-- Halliburton (id=67): HAL, Oilfield & Energy Services, $22.9B rev, 48,000 employees, $610.8M WWT addressable (19%; 27%−3%OEM−10%MSP+5%MS=19%; MSP=Accenture confirmed, ms_standardized=true) [MEDIUM_HIGH]
-- Phillips 66 (id=34): PSX, Downstream Refining, $143.1B rev, 13,000 employees, $279.0M WWT addressable (32%; 27%+5%MS=32%; ms_standardized=true, no MSP, oem_direct_confirmed=false; denominator=Revenue×0.06=$8.59B) [MEDIUM_HIGH]
-- Enbridge (id=12): ENB, Midstream Pipeline & Processing, $38.75B rev, 12,000 employees, $155.7M WWT addressable (24%; 27%−8%mismatch+5%MS=24%; ms_standardized=true, channel_mismatch=Calgary HQ outside STOLA territory, oem_direct_confirmed=false; denominator=Revenue×0.12=$4.65B) [MEDIUM_HIGH]
+- Halliburton (id=67): HAL, Oilfield & Energy Services, $22.9B rev, 48,000 employees, $1.11B WWT addressable (19%; 27%−3%OEM−10%MSP+5%MS+5%AI=24%→19% floor from MSP — AI bonus now applies; MSP=Accenture confirmed, ms_standardized=true, ai_maturity≥15 confirmed) [MEDIUM_HIGH]
+- Phillips 66 (id=34): PSX, Downstream Refining, $143.1B rev, 13,000 employees, $474M WWT addressable (37%; 27%+5%MS+5%AI=37%; ms_standardized=true, no MSP, oem_direct_confirmed=false, ai_maturity≥15 confirmed — high AI bonus now applies; denominator=Revenue×0.06=$8.59B) [MEDIUM_HIGH]
+- Enbridge (id=12): ENB, Midstream Pipeline & Processing, $38.75B rev, 12,000 employees, $236M WWT addressable (29%; 27%−8%mismatch+5%MS+5%AI=29%; ms_standardized=true, channel_mismatch=Calgary HQ outside STOLA territory, oem_direct_confirmed=false, ai_maturity≥15 confirmed — high AI bonus now applies; denominator=Revenue×0.12=$4.65B) [MEDIUM_HIGH]
 - EOG Resources (id=21): EOG, Upstream E&P, $23.7B rev, 3,000 employees, $325.4M WWT addressable (27%; 27%=27%; ms_standardized=false, no MSP, no CoE, oem_direct_confirmed=false) [MEDIUM_HIGH]
 - Targa Resources (id=53): TRGP, Midstream Pipeline & Processing, $17.0B rev, 3,570 employees, $49.4M WWT addressable (27%; 27%=27%; ms_standardized=false, no MSP, no CoE, oem_direct_confirmed=false; denominator=Revenue×0.12=$2.04B) [MEDIUM_HIGH]
 - LyondellBasell (id=63): LYB, Petrochemical & Specialty Chemicals, $37.7B rev, 26,000 employees, $804.9M WWT addressable (32%; 27%+5%MS=32%; ms_standardized=true, no MSP, no CoE, oem_direct_confirmed=false) [MEDIUM_HIGH]
@@ -84,9 +84,9 @@ Tier 1 remaining: NONE — all 21 companies enriched.
 Tier 2 (US companies by revenue) — enrichment begun May 2026:
 - Marathon Petroleum (id=38): MPC, Downstream Refining, $135.95B rev, 16,738 employees, $176.6M WWT addressable (24%; 27%−8%mismatch+5%MS=24%; CDO Ehren Powell confirmed since 2020, new CEO Maryann Mannen Aug 2024 from TechnipFMC, ms_standardized=true, channel_mismatch=Findlay OH outside STOLA, Imubit AI deployed, MPLX AI data center pivot 2025, ai_maturity=13; denominator=Revenue×0.06=$8.16B) [HIGH]
 - Valero Energy (id=50): VLO, Downstream Refining, $117.84B rev, 9,811 employees, $138.2M WWT addressable (27%; 27%=27%; no CIO/CDO — VP Technology only, no cloud/MSP/AI programs confirmed, San Antonio TX in STOLA, ai_maturity=6; denominator=Revenue×0.06=$7.07B) [MEDIUM_HIGH]
-- SLB (id=28): SLB, Oilfield & Energy Services, $35.94B rev, 113,000 employees, $1.61B WWT addressable (37%; 27%+5%MS+5%AI=37%; CEO Olivier Le Peuch drives digital-first, $2.44B digital revenue FY2024, NVIDIA partnership, ChampionX acquisition July 2025, ms_standardized=true, Houston HQ in STOLA, ai_maturity=19 — highest in Tier 2 set) [HIGH]
+- SLB (id=28): SLB, Oilfield & Energy Services, $35.94B rev, 113,000 employees, $3.42B WWT addressable (37%; 27%+5%MS+5%AI=37%; CEO Olivier Le Peuch drives digital-first, $2.44B digital revenue FY2024, NVIDIA partnership, ChampionX acquisition July 2025, ms_standardized=true, Houston HQ in STOLA, ai_maturity≥15 confirmed — high AI bonus applies) [HIGH]
 - Occidental Petroleum (id=42): OXY, Upstream E&P, $26.72B rev, 12,000 employees, $529.9M WWT addressable (32%; 27%+5%MS=32%; CEO Vicki Hollub, ruthless automation 40% Permian production automated, CrownRock acquisition Aug 2024 IT integration demand, ms_standardized=true, Houston HQ in STOLA, ai_maturity=13) [MEDIUM_HIGH]
-- Baker Hughes (id=52): BKR, Oilfield & Energy Services, $27.83B rev, 58,000 employees, $1.16B WWT addressable (37%; 27%+5%MS+5%AI=37%; CEO Lorenzo Simonelli, Azure MOU Feb 2025 + AI Foundry integration, Cordant bp enterprise contract, C3 AI partnership, ms_standardized=true, Houston HQ in STOLA, ai_maturity=16) [HIGH]
+- Baker Hughes (id=52): BKR, Oilfield & Energy Services, $27.83B rev, 58,000 employees, $1.82B WWT addressable (37%; 27%+5%MS+5%AI=37%; CEO Lorenzo Simonelli, Azure MOU Feb 2025 + AI Foundry integration, Cordant bp enterprise contract, C3 AI partnership, ms_standardized=true, Houston HQ in STOLA, ai_maturity≥15 confirmed — high AI bonus applies) [HIGH]
 - Williams Companies (id=23): WMB, Midstream Pipeline & Processing, $10.5B rev, 5,829 employees, $39.6M WWT addressable (19%; 27%−8%mismatch=19%; new CEO Chad Zamarin July 2025, $3.1B AI data center power commitment Socrates project, ms_standardized=false, channel_mismatch=Tulsa OK outside STOLA, ai_maturity=9; denominator=Revenue×0.12=$1.26B) [MEDIUM_HIGH]
 - ONEOK (id=29): OKE, Midstream Pipeline & Processing, $35.2B rev, 6,326 employees, $68.7M WWT addressable (19%; 27%−8%mismatch=19%; CEO Pierce Norton, satellite emissions detection deployed, 4 simultaneous M&A integrations (Magellan/EnLink/Medallion/Gulf Coast NGL) = highest IT integration demand in midstream, channel_mismatch=Tulsa OK, ms_standardized=false, ai_maturity=7; denominator=Revenue×0.12=$4.22B) [MEDIUM_HIGH]
 - Energy Transfer (id=27): ET, Midstream Pipeline & Processing, $92.29B rev, 12,000 employees, $192.5M WWT addressable (27%; 27%=27%; Co-CEO Tom Long, AI data center power positioning, Lake Charles LNG 20-yr Chevron SPA, Dallas TX in STOLA, ms_standardized=false, ai_maturity=5; denominator=Revenue×0.12=$11.07B) [MEDIUM_HIGH]
@@ -175,18 +175,21 @@ Script: backend/scripts/populate_tier2_revenue.py — pulls totalRevenue, fullTi
 - Many companies show sub_sector = "unknown" — not yet enriched via patch_company workflow
 
 ## Pending Work
-1. Tier 2 revenue population COMPLETE — all companies now have estimates; next: structured enrichment for high-value unenriched Tier 2 accounts
-2. Filter bar standardization across all pages (Analytics pattern) — COMPLETE (all pages already match)
-3. Intelligence tab Phase 2 enhancements — COMPLETE (FY2027E column, Opportunity Scorecard, Signal Age Warning, per-category confidence pills)
-4. ai_maturity_score DB column — COMPLETE (migration 0010, floor override wired in estimator and patch_company)
-5. Weekly batch signal collection service — PENDING
-6. Denominator audit COMPLETE — Williams, ONEOK, Enterprise Products confirmed on revenue_x0.12
+1. Tier 2 revenue population — COMPLETE
+2. Filter bar standardization — COMPLETE
+3. Intelligence tab Phase 2 (FY2027E column, Opportunity Scorecard, Signal Age Warning, confidence pills) — COMPLETE
+4. ai_maturity_score DB column (migration 0010, floor override) — COMPLETE
+5. Denominator audit — COMPLETE
+6. Weekly batch signal collection service — PENDING (requires Anthropic API key in Railway)
+7. Structured enrichment for high-value unenriched Tier 2 accounts — PENDING
+8. Intelligence tab Phase 3 (trend arrows, NEW badge for recent hires, CRM context panel) — PENDING
 
 ## Key Architectural Decisions
 - CRM accounts and companies table NOT linked yet (deliberate — pending manual review UI)
 - Enrichment research done by Claude (web search) -> JSON -> Claude Code pushes via API
 - All batch processes filter WHERE status = 'active' (567 active, 18 non-active)
 - No Anthropic API key available locally or in Railway for automated enrichment
+- ai_maturity_score is now a real DB column (migration 0010) acting as a floor override. Computed dynamically from signals (strategic_pivot + earnings_signal types, 730-day window) then max() applied against stored floor. Companies with stored scores: XOM=18, CVX=13, COP=18, HAL=16, SLB=19, BKR=16, DOW=16, EMN=16, Sasol=13, Weatherford=12, MPC=13, OXY=13.
 
 ## CRM Data Details
 - 83 Salesforce accounts loaded (48 with real opportunity data, 35 named placeholders with $0)
