@@ -19,6 +19,7 @@ export interface Company {
   industry?: string;
   value_chain_position?: ValueChainPosition;
   supply_chain_position?: string;
+  sub_sector?: string;
   status?: CompanyStatus;
   acquired_by?: string;
   acquisition_notes?: string;
@@ -223,6 +224,7 @@ export interface CompanyUpdateRequest {
   industry?: string;
   value_chain_position?: ValueChainPosition;
   supply_chain_position?: string;
+  sub_sector?: string;
   status?: CompanyStatus;
   acquired_by?: string;
   acquisition_notes?: string;

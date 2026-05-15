@@ -4,8 +4,21 @@ import { fetchCompany, fetchCompanyByTicker, updateCompany, deleteCompany, setRe
 import type { CompanyDetail as CompanyDetailType, CompanyUpdateRequest, ValueChainPosition, CompanyStatus, IntelligenceData, LeadershipRecord } from "../types";
 import { formatCap, formatPrice } from "../components/FormatCap";
 
-const SUPPLY_CHAIN_OPTIONS = ["Upstream", "Midstream", "Downstream", "Integrated", "Petrochemicals", "Services"];
+const SUPPLY_CHAIN_OPTIONS = ["Upstream", "Midstream", "Downstream", "Integrated", "Petrochemicals", "Services", "Energy Utilities", "Renewable & New Energy", "Energy Infrastructure & Power", "Carbon Management", "LNG & Gas Trading"];
 const VALUE_CHAIN_OPTIONS: ValueChainPosition[] = ["Upstream", "Midstream", "Downstream", "Integrated", "Services"];
+const SUB_SECTOR_OPTIONS = [
+  "Integrated O&G",
+  "Upstream E&P",
+  "Midstream Pipeline & Processing",
+  "Downstream Refining",
+  "Petrochemical & Specialty Chemicals",
+  "Oilfield & Energy Services",
+  "Energy Utilities",
+  "Renewable & New Energy",
+  "Energy Infrastructure & Power",
+  "Carbon Management",
+  "LNG & Gas Trading",
+];
 const STATUS_OPTIONS: CompanyStatus[] = ["Active", "Acquired", "Merged", "Delisted", "Unknown", "Sanctioned", "Non-Equity"];
 const WWT_MODELS = ["Chemicals", "Services", "EPC", "Refining", "LNG", "Retail"];
 
@@ -28,6 +41,7 @@ function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
     industry: company.industry ?? "",
     value_chain_position: company.value_chain_position,
     supply_chain_position: company.supply_chain_position ?? "",
+    sub_sector: company.sub_sector,
     status: company.status,
     acquired_by: company.acquired_by ?? "",
     acquisition_notes: company.acquisition_notes ?? "",
@@ -142,6 +156,15 @@ function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
                 {SUPPLY_CHAIN_OPTIONS.map(p => <option key={p}>{p}</option>)}
               </select>
             </div>
+            <div>
+              <label style={labelStyle}>Sub-Sector (Spend Model)</label>
+              <select style={inputStyle} value={form.sub_sector ?? ""} onChange={field("sub_sector")}>
+                <option value="">— Select —</option>
+                {SUB_SECTOR_OPTIONS.map(p => <option key={p}>{p}</option>)}
+              </select>
+            </div>
+          </div>
+          <div style={rowStyle}>
             <div>
               <label style={labelStyle}>Value Chain Position</label>
               <select style={inputStyle} value={form.value_chain_position ?? ""} onChange={field("value_chain_position")}>
