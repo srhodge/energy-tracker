@@ -139,6 +139,7 @@ def _estimate(e: CompanySpendEstimate) -> dict:
         "total_spend_mid":          _d(e.total_spend_mid),
         "total_spend_high":         _d(e.total_spend_high),
         "wwt_addressable_low":      _d(e.wwt_addressable_low),
+        "wwt_addressable_mid":      float(e.total_spend_mid * e.wwt_addressable_pct_low / 100) if e.total_spend_mid and e.wwt_addressable_pct_low else None,
         "wwt_addressable_high":     _d(e.wwt_addressable_high),
         "wwt_addressable_pct_low":  _d(e.wwt_addressable_pct_low),
         "wwt_addressable_pct_high": _d(e.wwt_addressable_pct_high),
