@@ -185,7 +185,7 @@ Tier 2 estimates run (2026-05-15, --tier 2): 168 companies estimated, 0 errors
 5. Denominator audit — COMPLETE
 6. Client Executive fields (ce_name, ce_email, ce_phone) — COMPLETE (migration 0011, 2026-05-14)
 7. Tier 2 spend estimates — COMPLETE (2026-05-15): 168 companies estimated, 0 errors; $30.24B total mid, $12.86B WWT high
-8. CRM account linking — COMPLETE (2026-05-15): 21 of 28 accounts linked; 7 unlinked (not in companies table or $0 pipeline)
+8. CRM account linking — COMPLETE (2026-05-15): 27/27 accounts linked; 6 stub companies added (ids 587–592, Tier 3) to cover previously unlinked pipeline accounts
 9. Weekly batch signal collection service — PENDING (requires Anthropic API key in Railway)
 10. Structured enrichment for high-value unenriched Tier 2 accounts — PENDING
 11. Intelligence tab Phase 3 (trend arrows, NEW badge for recent hires, CRM context panel) — PENDING
@@ -202,7 +202,7 @@ Tier 2 estimates run (2026-05-15, --tier 2): 168 companies estimated, 0 errors
 - 7,878 total opportunities (deduplicated across all export files)
 - $60.35M open pipeline, $179.56M closed won, 64.4% win rate
 - Key sellers: Sam Hodge (hodges) - 25 open opps, Matthew Nalbone (nalbonem) - 30 opps, Shay Gillespie (sgill)
-- CRM linking status (2026-05-15): 21 accounts linked to companies table (energy_company_id, match_method='manual_confirmed', match_score=100)
+- CRM linking status (2026-05-15): 27 accounts linked to companies table (energy_company_id, match_method='manual_confirmed', match_score=100)
 
 Linked accounts (crm_id → company_id):
   id=14 → id=2   ExxonMobil Global Services Company → ExxonMobil
@@ -226,15 +226,20 @@ Linked accounts (crm_id → company_id):
   id=25 → id=168 Noble Corporation → Noble Corporation
   id=51 → id=52  Baker Hughes Inc → Baker Hughes
   id=29 → id=29  ONEOK → Oneok
+  id=28 → id=587 OGE Energy → OGE Energy (stub, Tier 3)
+  id=15 → id=588 Fidelis New Energy → Fidelis New Energy (stub, Tier 3)
+  id=16 → id=589 Fluor Corporation → Fluor Corporation (stub, Tier 3)
+  id=45 → id=590 Terraflow Energy → Terraflow Energy (stub, Tier 3)
+  id=20 → id=591 Independence Power Holdings → Independence Power Holdings (stub, Tier 3)
+  id=10 → id=592 Continental Resources → Continental Resources (stub, Tier 3)
 
-Unlinked CRM accounts with pipeline (pending resolution):
-  id=28  OGE Energy ($1.29M open) — not in companies table
-  id=15  Fidelis New Energy ($1.06M open) — not in companies table
-  id=16  Fluor Corporation ($1.08M open) — not in companies table (Gujarat Fluorochemicals is unrelated)
-  id=45  Terraflow Energy ($0.27M open) — not in companies table
-  id=20  Independence Power Holdings ($0.14M open) — not in companies table
-  id=10  Continental Resources ($0.07M open) — not in companies table (CLR delisted after Hamm buyout)
-  id=25  Noble Corporation ($0 open, $0.04M won) — IS in companies table as id=168 (Noble Corporation / Diamond Offshore acquisition) — linkable
+Note: 6 stub company records added 2026-05-15 (ids 587–592) — minimal profile (name, ticker where known, status=Active, Tier 3, STOLA). Created solely to surface CRM pipeline in the Opportunity Scorecard; full enrichment not planned.
+
+Pipeline for newly linked accounts (3yr rolling):
+  OGE Energy: $1.29M | Fluor Corporation: $1.08M | Fidelis New Energy: $1.06M
+  Terraflow Energy: $0.27M | Independence Power Holdings: $0.14M | Continental Resources: $0.07M
+
+All CRM accounts are now linked (27/27). No unlinked accounts with pipeline remain.
 
 ## WWT Territory Structure (for channel mismatch logic)
 Territories in the database: STOLA (Houston/TX), EURO, MENA, APAC, CALA, FEDERAL, and others
