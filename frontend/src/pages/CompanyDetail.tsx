@@ -31,6 +31,9 @@ function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
     status: company.status,
     acquired_by: company.acquired_by ?? "",
     acquisition_notes: company.acquisition_notes ?? "",
+    ce_name: company.ce_name ?? "",
+    ce_email: company.ce_email ?? "",
+    ce_phone: company.ce_phone ?? "",
   });
   const [revLocked, setRevLocked] = useState(company.revenue_manually_set ?? false);
   const [revAmount, setRevAmount] = useState(
@@ -166,6 +169,25 @@ function EditCompanyModal({ company, onClose, onSaved }: EditModalProps) {
           <div>
             <label style={labelStyle}>Notes</label>
             <input style={inputStyle} value={form.acquisition_notes ?? ""} onChange={field("acquisition_notes")} placeholder="e.g. Acquired Q2 2024" />
+          </div>
+          <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: 14 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#374151", marginBottom: 8 }}>
+              CLIENT EXECUTIVE <span style={{ fontWeight: 400, color: "#9ca3af", fontSize: 11 }}>Admin only</span>
+            </div>
+            <div style={rowStyle}>
+              <div>
+                <label style={labelStyle}>Name</label>
+                <input style={inputStyle} value={form.ce_name ?? ""} onChange={field("ce_name")} placeholder="e.g. Jane Smith" />
+              </div>
+              <div>
+                <label style={labelStyle}>Phone</label>
+                <input style={inputStyle} value={form.ce_phone ?? ""} onChange={field("ce_phone")} placeholder="e.g. +1 314 555 0100" />
+              </div>
+            </div>
+            <div style={{ marginTop: 10 }}>
+              <label style={labelStyle}>Email</label>
+              <input style={inputStyle} value={form.ce_email ?? ""} onChange={field("ce_email")} placeholder="e.g. jane.smith@wwt.com" type="email" />
+            </div>
           </div>
           <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: 14 }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: "#374151", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
@@ -692,13 +714,13 @@ function IntelligenceTab({ companyId }: { companyId: number }) {
           const accessibility = (!p.channel_mismatch_flag && !p.incumbent_msp) ? 5 :
                                 (!p.channel_mismatch_flag && !!p.incumbent_msp) ? 3 :
                                 (!!p.channel_mismatch_flag && !p.incumbent_msp) ? 3 : 1;
-          const warmth = 3;
+          const warmth = 3 + (p.ce_name ? 1 : 0);
           const factors = [
             { label: "Tech Maturity",      score: techMaturity,     desc: `AI maturity score ${matScore}` },
             { label: "Financial Capacity", score: financialCap,     desc: p.revenue_ttm ? formatCap(p.revenue_ttm) + " revenue" : "Revenue unknown" },
             { label: "Strategic Urgency",  score: strategicUrgency, desc: `${urgentSignals} qualifying signal${urgentSignals !== 1 ? "s" : ""}` },
             { label: "WWT Accessibility",  score: accessibility,    desc: p.channel_mismatch_flag ? "Channel mismatch flagged" : p.incumbent_msp ? `MSP: ${p.incumbent_msp}` : "Clean territory" },
-            { label: "Relationship Warmth", score: warmth,          desc: "No data — default" },
+            { label: "Relationship Warmth", score: warmth,          desc: p.ce_name ? `CE: ${p.ce_name}` : "No CE assigned" },
           ];
           const total = factors.reduce((sum, f) => sum + f.score, 0);
           const barColor = (s: number) => s >= 4 ? "#16a34a" : s >= 3 ? "#f59e0b" : "#dc2626";
@@ -1061,6 +1083,18 @@ export default function CompanyDetail() {
                 <dd>{company.wwt_territory ?? "—"}</dd>
                 <dt>WWT Model</dt>
                 <dd>{company.wwt_model ?? "—"}</dd>
+                {company.ce_name && <>
+                  <dt>Client Executive</dt>
+                  <dd>{company.ce_name}</dd>
+                  {company.ce_email && <>
+                    <dt>CE Email</dt>
+                    <dd><a href={`mailto:${company.ce_email}`} style={{ color: "#2563eb" }}>{company.ce_email}</a></dd>
+                  </>}
+                  {company.ce_phone && <>
+                    <dt>CE Phone</dt>
+                    <dd>{company.ce_phone}</dd>
+                  </>}
+                </>}
               </dl>
               {company.description && (
                 <p style={{ marginTop: 14, fontSize: 13, color: "#4b5563", lineHeight: 1.6 }}>

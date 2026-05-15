@@ -51,6 +51,9 @@ def _profile(c: Company) -> dict:
         "oem_direct_confirmed":     c.oem_direct_confirmed,
         "data_enrichment_tier":     c.data_enrichment_tier,
         "ai_maturity_score":        c.ai_maturity_score,
+        "ce_name":                  c.ce_name,
+        "ce_email":                 c.ce_email,
+        "ce_phone":                 c.ce_phone,
     }
 
 
@@ -331,6 +334,7 @@ _PROFILE_FIELDS = {
     "ms_standardized", "offshore_coe_confirmed", "incumbent_msp",
     "channel_mismatch_flag", "channel_mismatch_note", "oem_direct_confirmed", "data_enrichment_tier",
     "ai_maturity_score",
+    "ce_name", "ce_email", "ce_phone",
 }
 
 

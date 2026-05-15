@@ -142,6 +142,9 @@ class Company(Base):
     oem_direct_confirmed: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
     data_enrichment_tier: Mapped[int | None] = mapped_column(Integer)
     ai_maturity_score: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    ce_name: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    ce_email: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    ce_phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
     financials: Mapped[list["Financial"]] = relationship(back_populates="company", cascade="all, delete-orphan")
     events: Mapped[list["Event"]] = relationship(back_populates="company", cascade="all, delete-orphan")

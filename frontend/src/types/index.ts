@@ -29,6 +29,9 @@ export interface Company {
   latest_quarterly_revenue?: number;
   latest_quarter_label?: string;
   latest_fiscal_year_label?: string;
+  ce_name?: string;
+  ce_email?: string;
+  ce_phone?: string;
 }
 
 export interface StatusSummary {
@@ -224,6 +227,9 @@ export interface CompanyUpdateRequest {
   acquired_by?: string;
   acquisition_notes?: string;
   revenue_manually_set?: boolean;
+  ce_name?: string;
+  ce_email?: string;
+  ce_phone?: string;
 }
 
 // ── Intelligence ──────────────────────────────────────────────────────────────
@@ -250,7 +256,12 @@ export interface IntelligenceProfile {
   incumbent_msp?: string;
   channel_mismatch_flag?: boolean;
   channel_mismatch_note?: string;
+  oem_direct_confirmed?: boolean;
   data_enrichment_tier?: number;
+  ai_maturity_score?: number;
+  ce_name?: string;
+  ce_email?: string;
+  ce_phone?: string;
 }
 
 export interface TechSignal {

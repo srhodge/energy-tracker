@@ -69,6 +69,9 @@ class CompanyOut(CompanyBase):
     latest_quarterly_revenue: Optional[float] = None
     latest_quarter_label: Optional[str] = None
     latest_fiscal_year_label: Optional[str] = None
+    ce_name: Optional[str] = None
+    ce_email: Optional[str] = None
+    ce_phone: Optional[str] = None
 
 
 class CompanyDetail(CompanyOut):
@@ -174,3 +177,6 @@ class CompanyUpdateRequest(BaseModel):
     acquisition_notes: Optional[str] = None
     skip_market_poll: Optional[bool] = None
     revenue_manually_set: Optional[bool] = None
+    ce_name: Optional[str] = None
+    ce_email: Optional[str] = None
+    ce_phone: Optional[str] = None
