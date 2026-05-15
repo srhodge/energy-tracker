@@ -1,0 +1,94 @@
+{
+  "company_id": 587,
+  "ticker": "OGE",
+  "profile": {
+    "employee_count": 2248,
+    "hq_city": "Oklahoma City",
+    "hq_country": "US",
+    "tech_decision_city": "Oklahoma City",
+    "revenue_ttm": 3260100000,
+    "ebitda_ttm": 1359000000,
+    "sub_sector": "Energy Utilities",
+    "ms_standardized": false,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "Oklahoma City HQ outside STOLA territory — channel mismatch applies (-8%)",
+    "incumbent_msp": null,
+    "oem_direct_confirmed": false,
+    "offshore_coe_confirmed": false
+  },
+  "leadership": [
+    {
+      "role": "CIO",
+      "person_name": "David A. Parker",
+      "hire_date": "2025-01-01",
+      "is_current": true,
+      "signal_score": 6,
+      "source": "OGE Energy 2025 Annual Report / ARS proxy filing"
+    },
+    {
+      "role": "CEO",
+      "person_name": "Sean Trauschke",
+      "hire_date": "2014-01-01",
+      "is_current": true,
+      "signal_score": 3,
+      "source": "web_search"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "strategic_pivot",
+      "signal_category": "Infrastructure",
+      "signal_title": "OG&E signs ESAs for 3 Google data centers in Oklahoma",
+      "signal_date": "2026-04-30",
+      "signal_description": "OG&E signed landmark Electric Service Agreements to power 3 Google data centers in Oklahoma (Muskogee x2, Stillwater $3B AI campus). Google pays 100% of grid interconnection costs. New large-load tariff filing pending OCC approval. Major load growth and grid investment catalyst — operational urgency for utility IT modernization.",
+      "signal_url": "https://www.oge.com/web/portal/-/200-press-release",
+      "spend_impact_direction": "up",
+      "score_points": 5,
+      "source": "oge.com press release"
+    },
+    {
+      "signal_type": "partnership",
+      "signal_category": "ERP",
+      "signal_title": "SAP S/4HANA RISE go-live — first legacy utility to migrate 25yr work order history",
+      "signal_date": "2025-06-01",
+      "signal_description": "SAP S/4HANA Cloud Private Edition (RISE) go-live confirmed. OG&E presented at ASUG 2025 as first legacy utility to migrate 25 years of work order history in a single cutover alongside CX 1.0 and EAM modernization. OpenText AI/ML document management and vendor invoice automation deployed simultaneously.",
+      "signal_url": "https://www.asug.com/insights/making-the-most-of-sap-for-utilities-presented-by-asug-your-inside-track-for-the-2025-conference",
+      "spend_impact_direction": "up",
+      "score_points": 4,
+      "source": "ASUG 2025 conference"
+    },
+    {
+      "signal_type": "earnings_signal",
+      "signal_category": "Capex",
+      "signal_title": "$7.3B five-year capital investment plan — 5-7% annual EPS growth target",
+      "signal_date": "2026-02-18",
+      "signal_description": "$7.3B five-year capital investment plan disclosed in Q1 2026 investor presentation. Includes generation, transmission, and Frontier Energy Storage 300MW project (pre-approval filed). 5-7% annual EPS growth target confirmed.",
+      "spend_impact_direction": "up",
+      "score_points": 3,
+      "source": "OGE Energy Q1 2026 investor slides"
+    },
+    {
+      "signal_type": "leadership_hire",
+      "signal_category": "IT Leadership",
+      "signal_title": "David Parker promoted to CIO of OG&E",
+      "signal_date": "2025-01-01",
+      "signal_description": "David Parker promoted from VP Technology, Data and Security to Chief Information Officer of OG&E in 2025. Led SAP S/4HANA RISE migration — presented at ASUG 2025 as landmark deployment. Deep utility IT background since 2020.",
+      "spend_impact_direction": "up",
+      "score_points": 2,
+      "source": "OGE Energy 2025 Annual Report / ARS proxy filing"
+    }
+  ],
+  "spend_model_flags": {
+    "ms_standardized": false,
+    "incumbent_msp": false,
+    "offshore_coe": false,
+    "oem_direct_confirmed": false,
+    "channel_mismatch": true,
+    "ai_maturity_score": 9,
+    "channel_mismatch_notes": "Oklahoma City HQ outside STOLA territory. Tech decision city is OKC. -8% channel mismatch applies.",
+    "ai_maturity_notes": "CIO David Parker promoted 2025 (+2). SAP S/4HANA RISE landmark migration (+3 partnership signal). OpenText AI/ML document management deployed (+2). Google data center ESAs create operational urgency (+2). No AICOE, no AI at scale. Score 9 — below ≥15 threshold."
+  },
+  "enrichment_confidence": "HIGH",
+  "enrichment_date": "2026-05-15",
+  "enrichment_notes": "Regulated electric utility serving ~915,000 customers in Oklahoma and western Arkansas. CIO David Parker promoted 2025 — led landmark SAP S/4HANA RISE migration presented at ASUG 2025 (first legacy utility to migrate 25yr work order history single go-live). OpenText AI/ML document management deployed. LANDMARK April 2026: OG&E signed ESAs to power 3 Google data centers (Muskogee x2, Stillwater $3B AI campus) — major strategic load growth, new large-load tariff filing pending OCC. $7.3B 5-year capex plan. FY2025: $3.26B revenue, $1.36B EBITDA. No MSP confirmed. No OEM direct. HQ OKC outside STOLA — channel mismatch applies (-8%). WWT opportunity: SAP RISE just completed = integration partner opening, ServiceNow + Azure stack, new CIO in seat, Google data center load growth driving grid modernization investment cycle."
+}

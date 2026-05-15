@@ -190,7 +190,7 @@ Completed this session (May 14–15, 2026):
 - Fluor Corporation enriched (id=589, Tier 2) — Kyndryl MSP confirmed (WWT internal, May 2026)
 
 Active pending:
-1. OGE Energy (id=587) — needs full enrichment: Oklahoma utility, $39.7M TAM, 3.2% CRM penetration (Warmth 3/5)
+1. OGE Energy (id=587) — ENRICHED (2026-05-15): $106.9M WWT addressable high, 1.2% CRM penetration (Warmth 3/5) — see stub/enriched section below
 2. Client Executive field UI — migration 0011 built and API wired; UI verification pending
 3. Remaining Tier 2 enrichment — 141 companies have revenue_ttm but no full enrichment profile
 4. Financial Capacity scoring for regulated utilities — Sempra $48B capex plan understated by revenue-based scoring; may warrant denominator adjustment
@@ -234,7 +234,7 @@ Linked accounts (crm_id → company_id):
   id=25 → id=168 Noble Corporation → Noble Corporation
   id=51 → id=52  Baker Hughes Inc → Baker Hughes
   id=29 → id=29  ONEOK → Oneok
-  id=28 → id=587 OGE Energy → OGE Energy (stub, Tier 3)
+  id=28 → id=587 OGE Energy → OGE Energy (ENRICHED, Tier 3)
   id=15 → id=588 Fidelis New Energy → Fidelis New Energy (stub, Tier 3)
   id=16 → id=589 Fluor Corporation → Fluor Corporation (ENRICHED, Tier 2, Kyndryl MSP)
   id=45 → id=590 Terraflow Energy → Terraflow Energy (stub, Tier 3)
@@ -243,12 +243,12 @@ Linked accounts (crm_id → company_id):
 
 Note: 6 stub/enriched company records added 2026-05-15 (ids 587–592).
   Fluor Corporation (id=589, FLR): ENRICHED (2026-05-15) — $16.3B rev FY2024, 27,000 emp, Irving TX (STOLA), sub_sector=Oilfield & Energy Services, ms_standardized=true, incumbent_msp=Kyndryl (CONFIRMED May 2026, WWT internal), ai_maturity=10, Tier 2. WWT addressable high $420.2M (32% − 10% Kyndryl = 22% effective). CEO Jim Breuer (new May 2025), CPO Raj Desai (oversees IT+AI, Oct 2024). No standalone CIO. Microsoft Dynamics 365 + Copilot + Azure confirmed. #1 data center construction company (Data Centre Magazine). CRM: $1.08M pipeline (0.26% of $420.2M → Warmth 2/5). Fortune 500 #265. Displacement path: new CEO/CPO reset cycle + WWT data center practice alignment.
-  OGE Energy (id=587, OGE): Future enrichment — Oklahoma utility, $3.26B rev, 2,248 emp, WWT addressable high $39.7M, $1.29M pipeline (3.2% of $39.7M → Warmth 3/5). HQ Oklahoma City — outside STOLA.
+  OGE Energy (id=587, OGE): ENRICHED (2026-05-15) — $3.26B rev, $1.36B EBITDA, 2,248 emp, Oklahoma City (channel_mismatch=true, outside STOLA), sub_sector=Energy Utilities, ai_maturity=9, Tier 3. WWT addressable high $106.9M (EBITDA×2.5 denominator; 27%−8%mismatch=19% effective). CIO David Parker (promoted 2025, led SAP S/4HANA RISE go-live — ASUG 2025 showcase). LANDMARK April 2026: Google data center ESAs signed (3 DCs, Muskogee x2 + Stillwater $3B AI campus). $7.3B 5-yr capex plan. CRM: $1.29M pipeline (1.2% of $106.9M → Warmth 3/5). No MSP. WWT opportunity: SAP RISE just completed = integration partner opening; Google DC load growth driving grid modernization investment cycle.
   Continental Resources (id=592): is_private=TRUE, ticker=NULL — taken private by Harold Hamm Oct 2022. No financial enrichment possible. CRM retained for relationship tracking only ($0.07M pipeline).
   Fidelis New Energy (id=588), Terraflow Energy (id=590), Independence Power Holdings (id=591): no revenue data; CRM pipeline only.
 
 Pipeline for newly linked accounts (3yr rolling):
-  OGE Energy: $1.29M (3.2% of $39.7M → Warmth 3/5) | Fluor Corporation: $1.08M (0.26% of $420.2M WWT addressable high → Warmth 2/5) | Fidelis New Energy: $1.06M (fallback → Warmth 2/5)
+  OGE Energy: $1.29M (1.2% of $106.9M → Warmth 3/5) | Fluor Corporation: $1.08M (0.26% of $420.2M WWT addressable high → Warmth 2/5) | Fidelis New Energy: $1.06M (fallback → Warmth 2/5)
   Terraflow Energy: $0.27M (fallback → Warmth 1/5) | Independence Power Holdings: $0.14M (fallback → Warmth 1/5) | Continental Resources: $0.07M (fallback → Warmth 1/5)
 
 All CRM accounts are now linked (27/27). No unlinked accounts with pipeline remain.
@@ -340,6 +340,7 @@ New segments to add (not yet in DB):
 backend/enrichment_data/ — all enrichment JSON files are stored here.
 Complete Tier 1 (21 files): exxonmobil.json, chevron.json, conocophillips.json, halliburton.json, phillips66.json, enbridge.json, eog_resources.json, targa_resources.json, lyondellbasell.json, sempra.json, antero_resources.json, chord_energy.json, cvr_energy.json, helmerich_payne.json, hf_sinclair.json, ncs_multistage.json, par_pacific.json, pbf_energy.json, sasol.json, technip_energies.json, technipfmc.json, weatherford.json, worley.json
 Tier 2 enriched: marathon_petroleum.json, valero_energy.json, slb.json, occidental_petroleum.json, baker_hughes.json, williams_companies.json, oneok.json, energy_transfer.json, devon_energy.json, enterprise_products.json, cheniere_energy.json, diamondback_energy.json, dow.json, kinder_morgan.json, expand_energy.json, mplx.json, westlake.json, sunoco.json, eqt_corporation.json, nov.json, eastman_chemical.json, apa_corporation.json, coterra_energy.json, dupont.json, matador_resources.json, range_resources.json, antero_midstream.json, fluor_corporation.json
+Other enriched: oge_energy.json (id=587, Tier 3 utility — CRM-linked account)
 
 ## Key WWT Commercial Context (for model/enrichment work)
 - WWT acquired Softchoice in 2024 — adds Microsoft licensing addressability (+5% Step 10)
