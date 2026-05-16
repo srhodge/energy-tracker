@@ -1,0 +1,81 @@
+{
+  "company_id": 60,
+  "ticker": "PPG",
+  "profile": {
+    "employee_count": 50000,
+    "hq_city": "Pittsburgh",
+    "hq_country": "US",
+    "tech_decision_city": "Pittsburgh",
+    "revenue_ttm": 15875000000,
+    "ebitda_ttm": 2270000000,
+    "sub_sector": "Petrochemical & Specialty Chemicals",
+    "ms_standardized": true,
+    "channel_mismatch_flag": true,
+    "channel_mismatch_note": "HQ Pittsburgh PA — STOLA territory; PPG is a global chemicals manufacturer, not energy sector. Channel mismatch flagged.",
+    "incumbent_msp": null,
+    "oem_direct_confirmed": false,
+    "offshore_coe_confirmed": false
+  },
+  "leadership": [
+    {
+      "role": "CIO",
+      "person_name": "Bhaskar Ramachandran",
+      "hire_date": "2020-01-01",
+      "is_current": true,
+      "signal_score": 3,
+      "source": "web_search"
+    },
+    {
+      "role": "CEO",
+      "person_name": "Tim Knavish",
+      "hire_date": "2023-01-01",
+      "is_current": true,
+      "signal_score": 2,
+      "source": "web_search"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "leadership",
+      "signal_category": "CIO",
+      "signal_title": "CIO Bhaskar Ramachandran recognized as top 100 CIO",
+      "signal_date": "2024-06-01",
+      "signal_description": "Bhaskar Ramachandran, PPG CIO, recognized by CIO Magazine as a top 100 CIO for 2024, highlighting digital transformation leadership across PPG's global manufacturing operations.",
+      "spend_impact_direction": "up",
+      "score_points": 3,
+      "source": "CIO Magazine 2024"
+    },
+    {
+      "signal_type": "earnings_signal",
+      "signal_category": "Capex",
+      "signal_title": "FY2024 revenue $15.9B; restructuring program targets $175M savings",
+      "signal_date": "2025-01-23",
+      "signal_description": "FY2024 net sales $15.875B, down ~4% YoY. Ongoing restructuring program targeting $175M in annual savings by end of 2025 through headcount and footprint optimization. IT consolidation part of savings program.",
+      "spend_impact_direction": "neutral",
+      "score_points": 1,
+      "source": "PPG FY2024 earnings release"
+    },
+    {
+      "signal_type": "tech_investment",
+      "signal_category": "Digital Transformation",
+      "signal_title": "SAP S/4HANA global rollout ongoing",
+      "signal_date": "2024-03-01",
+      "signal_description": "PPG continuing global rollout of SAP S/4HANA across manufacturing sites and regional operations. Microsoft 365 standardized globally. Cloud migration to Azure underway.",
+      "spend_impact_direction": "up",
+      "score_points": 2,
+      "source": "PPG investor day 2024"
+    }
+  ],
+  "spend_model_flags": {
+    "ms_standardized": true,
+    "incumbent_msp": false,
+    "offshore_coe": false,
+    "oem_direct_confirmed": false,
+    "channel_mismatch": true,
+    "ai_maturity_score": 14,
+    "ai_maturity_notes": "CIO Bhaskar Ramachandran recognized as top 100 CIO. Active SAP S/4HANA global rollout. M365 standardized. Azure cloud migration. AI pilot programs in manufacturing quality control. Score 14 — just below ≥15 high-AI threshold."
+  },
+  "enrichment_confidence": "MEDIUM",
+  "enrichment_date": "2026-05-16",
+  "enrichment_notes": "Global paints, coatings and specialty materials manufacturer. HQ One PPG Place Pittsburgh PA (STOLA territory — channel mismatch flagged). FY2024 revenue $15.875B. EBITDA ~$2.27B. ~50,000 employees globally. M365 standardized. CIO Bhaskar Ramachandran (top 100 CIO recognition). CEO Tim Knavish (appointed Jan 2023). Active restructuring targeting $175M savings. SAP S/4HANA global rollout. Azure cloud migration in progress. AI maturity score 14 — near high-AI threshold. WWT angle: SAP/Azure modernization, manufacturing OT/IT convergence, network infrastructure for global sites."
+}

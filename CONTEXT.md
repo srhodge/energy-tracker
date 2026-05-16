@@ -104,7 +104,7 @@ Tier 2 (US companies by revenue) — enrichment begun May 2026:
 - NOV Inc. (id=174): NOV, Oilfield & Energy Services, $8.69B rev, 31,605 employees, $276.2M WWT addressable (27%; no adjustments; CEO Clay Williams drives digital/automation as core strategy, Automation Performance Center AI-assisted drilling service, Ideal eFrac 40,000 HP OT automation, Houston HQ in STOLA, ms_standardized=false, ai_maturity=11) [MEDIUM_HIGH]
 - Eastman Chemical (id=106): EMN, Petrochemical & Specialty Chemicals, $9.4B rev, 14,000 employees, $399.1M WWT addressable (29%; 27%−8%mismatch+5%MS+5%AI=29%; CIO Aldo Noseda 2024 Tennessee Global ORBIE Award winner, AI/data analytics framework in production, digital products generating independent revenue, Azure+SAP+M365 confirmed, channel_mismatch=Kingsport TN outside STOLA, ms_standardized=true, ai_maturity=16; sub_sector corrected from Downstream Refining) [HIGH]
 - APA Corporation (id=133): APA, Upstream E&P, $8.37B rev, 4,700 employees, $93.9M WWT addressable (27%; no adjustments; no CIO identified, $4.5B Callon Petroleum acquisition April 2024 = active IT integration, $350M cost savings program, Houston HQ in STOLA, ms_standardized=false, ai_maturity=7) [MEDIUM_HIGH]
-- Coterra Energy (id=81): CTRA, Upstream E&P, $7.35B rev, 957 employees, $70.5M WWT addressable (27%; no adjustments; no CIO identified, two Delaware Basin acquisitions late 2024 = IT integration demand, Houston HQ in STOLA, ms_standardized=false, ai_maturity=5) [MEDIUM_HIGH]
+- Coterra Energy (id=81): CTRA — **ACQUIRED by Devon Energy (May 7, 2026)**. Status=Acquired, acquired_by="Devon Energy". Upstream E&P, last known $7.35B rev, 957 employees. Coterra delisted from NYSE. No further enrichment planned — track via Devon Energy (id=66).
 - DuPont de Nemours (id=54): DD, Petrochemical & Specialty Chemicals, $6.92B rev, 25,300 employees, $258.0M WWT addressable (24%; 27%−8%mismatch+5%MS=24%; CEO Lori Koch new June 2024, Digital Center 25-person/40+ projects, 3-way company split = major IT separation demand, Azure+SAP+M365 confirmed, channel_mismatch=Wilmington DE outside STOLA, ms_standardized=true, ai_maturity=10; sub_sector corrected from Downstream Refining) [MEDIUM_HIGH]
 - Matador Resources (id=167): MTDR, Upstream E&P, $3.59B rev, 700 employees, $33.1M WWT addressable (27%; no adjustments; no CIO identified, founder-CEO conservative culture, Dallas HQ in STOLA, ms_standardized=false, ai_maturity=4) [MEDIUM_HIGH]
 - Range Resources (id=154): RRC, Upstream E&P, $3.21B rev, 700 employees, $30.0M WWT addressable (27%; no adjustments; no CIO identified, Fort Worth TX in STOLA, Appalachian-focused operationally conservative, ms_standardized=false, ai_maturity=4) [MEDIUM_HIGH]
@@ -162,6 +162,8 @@ Rules:
 - New C-suite hire from NVIDIA/Microsoft/Amazon/GE = +3
 - Earnings call AI budget mention = +4
 
+signal_category column limit: VARCHAR(20) — max 20 characters. Use short values: "Capex", "M&A", "Digital", "CIO", "AI", "New Hire" etc. "Digital Transformation" (22 chars) causes HTTP 500.
+
 OEM deduction rule: oem_direct_deduction is manual-confirmation only — same standard as incumbent_msp. Never auto-applied by revenue threshold. Confirmed YES: ExxonMobil, Chevron, Halliburton. All others confirmed NO or pending assessment.
 
 ## Tier 2 Revenue Population (2026-05-13)
@@ -175,7 +177,9 @@ Tier 2 estimates run (2026-05-15, --tier 2): 168 companies estimated, 0 errors
 - Grand total mid (Tier 2): $30.24B across 168 companies
 - Grand total WWT high (Tier 2): $12.86B across 168 companies
 - 15 companies remain with N/A estimates (revenue NULL after yfinance pull — mostly very small or delisted)
-- Top 10 by WWT addressable high: SLB $2,695M, Baker Hughes $1,507M, Dow $1,305M, OXY $530M, Plains All American $418M, Eastman Chemical $399M, PPG Industries $339M, NOV $304M, DuPont $258M, Westlake Chemical $243M
+- Top 10 by WWT addressable high (pre-enrichment estimates — updated below for enriched companies): SLB $2,695M, Baker Hughes $1,507M, Dow $1,305M, OXY $530M, Eastman Chemical $399M, NOV $304M, DuPont $258M, Westlake Chemical $243M
+- Plains All American (id=86): ENRICHED 2026-05-16 → $135.7M WWT high (revised down from $418M pre-enrichment; Midstream EBITDA×2.5 denominator applied, all flags false, 27% base)
+- PPG Industries (id=60): ENRICHED 2026-05-16 → $619.4M WWT high (revised up from $339M pre-enrichment; sub_sector corrected to Petrochemical & Specialty Chemicals, ms_standardized=true, channel_mismatch=true Pittsburgh, ai_maturity=14; effective 24%)
 
 ## Pending Work
 Completed this session (May 14–15, 2026):
@@ -191,6 +195,9 @@ Completed this session (May 14–15, 2026):
 
 Active pending:
 1. OGE Energy (id=587) — ENRICHED (2026-05-15): $142.6M WWT addressable high (27%), 0.9% CRM penetration (Warmth 2/5) — see stub/enriched section below
+   Plains All American (id=86) — ENRICHED (2026-05-16): $135.7M WWT high (27%, EBITDA×2.5 denominator)
+   PPG Industries (id=60) — ENRICHED (2026-05-16): $619.4M WWT high (24%, ms_standardized+channel_mismatch)
+   Coterra Energy (id=81) — ACQUIRED by Devon Energy (May 7, 2026); status updated
 2. Client Executive field UI — migration 0011 built and API wired; UI verification pending
 3. Remaining Tier 2 enrichment — 141 companies have revenue_ttm but no full enrichment profile
 4. Financial Capacity scoring for regulated utilities — Sempra $48B capex plan understated by revenue-based scoring; may warrant denominator adjustment
@@ -245,6 +252,8 @@ Note: 6 stub/enriched company records added 2026-05-15 (ids 587–592).
   Fluor Corporation (id=589, FLR): ENRICHED (2026-05-15) — $16.3B rev FY2024, 27,000 emp, Irving TX (STOLA), sub_sector=Oilfield & Energy Services, ms_standardized=true, incumbent_msp=Kyndryl (CONFIRMED May 2026, WWT internal), ai_maturity=10, Tier 2. WWT addressable high $420.2M (32% − 10% Kyndryl = 22% effective). CEO Jim Breuer (new May 2025), CPO Raj Desai (oversees IT+AI, Oct 2024). No standalone CIO. Microsoft Dynamics 365 + Copilot + Azure confirmed. #1 data center construction company (Data Centre Magazine). CRM: $1.08M pipeline (0.26% of $420.2M → Warmth 2/5). Fortune 500 #265. Displacement path: new CEO/CPO reset cycle + WWT data center practice alignment.
   OGE Energy (id=587, OGE): ENRICHED (2026-05-15) — $3.26B rev, $1.36B EBITDA, 2,248 emp, Oklahoma City, sub_sector=Energy Utilities, ai_maturity=9, ms_standardized=false, channel_mismatch=false, Tier 3. WWT addressable high $142.6M (EBITDA×2.5 denominator, 27% effective; $164.9M at 32% if M365 confirmed). CIO David Parker (promoted 2025, led SAP S/4HANA RISE go-live — ASUG 2025 showcase). LANDMARK April 2026: Google data center ESAs signed (3 DCs, Muskogee x2 + Stillwater $3B AI campus). $7.3B 5-yr capex plan. CRM: $1.29M pipeline (0.9% of $142.6M → Warmth 2/5). No MSP. SAP + ServiceNow + OpenText stack — no M365 evidence. WWT opportunity: SAP RISE just completed = integration partner opening; Google DC load growth driving grid modernization investment cycle.
   Continental Resources (id=592): is_private=TRUE, ticker=NULL — taken private by Harold Hamm Oct 2022. No financial enrichment possible. CRM retained for relationship tracking only ($0.07M pipeline).
+  Plains All American (id=86, PAA): ENRICHED 2026-05-16 — $50.1B rev (commodity pass-through), $3.33B EBITDA, 4,200 emp, Houston HQ (STOLA). sub_sector=Midstream Pipeline & Processing, all flags false (no MSP, no CoE, no channel mismatch), ai_maturity=4. Denominator=EBITDA×2.5=$8.32B. WWT addressable high $135.7M (27% base). CEO Willie Chiang since 2018. FY2024 EBITDA above guidance; Ironwood Midstream acquisition closed Q1 2025 (~$670M). Tech stack basic: Kubernetes, Citrix, Enverus pipeline data platform. WWT angle: OT/SCADA, pipeline data management, cybersecurity.
+  PPG Industries (id=60, PPG): ENRICHED 2026-05-16 — $15.875B rev, $2.27B EBITDA, 50,000 emp, Pittsburgh PA HQ (STOLA territory, channel_mismatch=true flagged). sub_sector=Petrochemical & Specialty Chemicals, ms_standardized=true, channel_mismatch=true, ai_maturity=14 (below ≥15 threshold). WWT addressable high $619.4M (24% effective: 27%+5%MS−8%mismatch). CIO Bhaskar Ramachandran (top 100 CIO recognition). CEO Tim Knavish (Jan 2023). SAP S/4HANA global rollout + Azure migration in progress. Restructuring targeting $175M savings by end 2025.
   Fidelis New Energy (id=588), Terraflow Energy (id=590), Independence Power Holdings (id=591): no revenue data; CRM pipeline only.
 
 Pipeline for newly linked accounts (3yr rolling):

@@ -1,0 +1,63 @@
+{
+  "company_id": 86,
+  "ticker": "PAA",
+  "profile": {
+    "employee_count": 4200,
+    "hq_city": "Houston",
+    "hq_country": "US",
+    "tech_decision_city": "Houston",
+    "revenue_ttm": 50073000000,
+    "ebitda_ttm": 3326000000,
+    "sub_sector": "Midstream Pipeline & Processing",
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "channel_mismatch_note": null,
+    "incumbent_msp": null,
+    "oem_direct_confirmed": false,
+    "offshore_coe_confirmed": false
+  },
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Willie Chiang",
+      "hire_date": "2018-01-01",
+      "is_current": true,
+      "signal_score": 2,
+      "source": "web_search"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "earnings_signal",
+      "signal_category": "Capex",
+      "signal_title": "FY2024 Adjusted EBITDA above guidance; 2025 capital plan $640M",
+      "signal_date": "2025-02-07",
+      "signal_description": "FY2024 Adjusted EBITDA $2.78B attributable to PAA, above top of guidance. 2025 guidance $2.80-2.95B. $400M growth capital + $240M maintenance capital planned for 2025.",
+      "spend_impact_direction": "up",
+      "score_points": 2,
+      "source": "Plains All American Q4 2024 earnings release"
+    },
+    {
+      "signal_type": "partnership",
+      "signal_category": "M&A",
+      "signal_title": "Ironwood Midstream acquisition closed Q1 2025 (~$670M)",
+      "signal_date": "2025-01-01",
+      "signal_description": "Closed three bolt-on acquisitions including Ironwood Midstream Energy for ~$670M net to PAA in Q1 2025, expanding integrated midstream asset base.",
+      "spend_impact_direction": "up",
+      "score_points": 2,
+      "source": "PAA Q4 2024 earnings release"
+    }
+  ],
+  "spend_model_flags": {
+    "ms_standardized": false,
+    "incumbent_msp": false,
+    "offshore_coe": false,
+    "oem_direct_confirmed": false,
+    "channel_mismatch": false,
+    "ai_maturity_score": 4,
+    "ai_maturity_notes": "No standalone CIO identified. No digital transformation signals. No AI programs. Primarily pipeline ops focus. Enverus pipeline data platform. Score 4 — well below ≥15 threshold."
+  },
+  "enrichment_confidence": "MEDIUM",
+  "enrichment_date": "2026-05-16",
+  "enrichment_notes": "Publicly traded MLP owning and operating midstream energy infrastructure — crude oil, NGL and natural gas pipelines, terminalling, storage and gathering. HQ 333 Clay Street Houston TX (STOLA, no channel mismatch). FY2024 revenue $50.1B (commodity pass-through heavy — midstream denominator Revenue×0.12 applies). Adjusted EBITDA FY2024 $3.33B, 2025 guidance $2.80-2.95B. ~4,200 employees. No standalone CIO identified — operations-focused MLP with lean corporate structure. Tech stack basic: Kubernetes, Citrix, Windows Server, Enverus. No confirmed MSP. CEO Willie Chiang. Active bolt-on acquisition program (Ironwood Midstream closed Q1 2025). WWT angle: OT/SCADA modernization, pipeline data management, cybersecurity for critical infrastructure."
+}
