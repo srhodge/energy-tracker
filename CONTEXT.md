@@ -179,7 +179,7 @@ Tier 2 estimates run (2026-05-15, --tier 2): 168 companies estimated, 0 errors
 - 15 companies remain with N/A estimates (revenue NULL after yfinance pull — mostly very small or delisted)
 - Top 10 by WWT addressable high (pre-enrichment estimates — updated below for enriched companies): SLB $2,695M, Baker Hughes $1,507M, Dow $1,305M, OXY $530M, Eastman Chemical $399M, NOV $304M, DuPont $258M, Westlake Chemical $243M
 - Plains All American (id=86): ENRICHED 2026-05-16 → $135.7M WWT high (revised down from $418M pre-enrichment; Midstream EBITDA×2.5 denominator applied, all flags false, 27% base)
-- PPG Industries (id=60): ENRICHED 2026-05-16 → $619.4M WWT high (revised up from $339M pre-enrichment; sub_sector corrected to Petrochemical & Specialty Chemicals, ms_standardized=true, channel_mismatch=true Pittsburgh, ai_maturity=14; effective 24%)
+- PPG Industries (id=60): ENRICHED 2026-05-16 → $490.4M WWT high (revised up from $339M pre-enrichment; sub_sector corrected to Petrochemical & Specialty Chemicals, ms_standardized=false, channel_mismatch=true Pittsburgh, ai_maturity=14; effective 19%)
 
 ## Pending Work
 Completed this session (May 14–15, 2026):
@@ -196,7 +196,7 @@ Completed this session (May 14–15, 2026):
 Active pending:
 1. OGE Energy (id=587) — ENRICHED (2026-05-15): $142.6M WWT addressable high (27%), 0.9% CRM penetration (Warmth 2/5) — see stub/enriched section below
    Plains All American (id=86) — ENRICHED (2026-05-16): $135.7M WWT high (27%, EBITDA×2.5 denominator)
-   PPG Industries (id=60) — ENRICHED (2026-05-16): $619.4M WWT high (24%, ms_standardized+channel_mismatch)
+   PPG Industries (id=60) — ENRICHED (2026-05-16): $490.4M WWT high (19%, ms_standardized=false, channel_mismatch=true Pittsburgh)
    Coterra Energy (id=81) — ACQUIRED by Devon Energy (May 7, 2026); status updated
 2. Client Executive field UI — migration 0011 built and API wired; UI verification pending
 3. Remaining Tier 2 enrichment — 141 companies have revenue_ttm but no full enrichment profile
@@ -253,7 +253,7 @@ Note: 6 stub/enriched company records added 2026-05-15 (ids 587–592).
   OGE Energy (id=587, OGE): ENRICHED (2026-05-15) — $3.26B rev, $1.36B EBITDA, 2,248 emp, Oklahoma City, sub_sector=Energy Utilities, ai_maturity=9, ms_standardized=false, channel_mismatch=false, Tier 3. WWT addressable high $142.6M (EBITDA×2.5 denominator, 27% effective; $164.9M at 32% if M365 confirmed). CIO David Parker (promoted 2025, led SAP S/4HANA RISE go-live — ASUG 2025 showcase). LANDMARK April 2026: Google data center ESAs signed (3 DCs, Muskogee x2 + Stillwater $3B AI campus). $7.3B 5-yr capex plan. CRM: $1.29M pipeline (0.9% of $142.6M → Warmth 2/5). No MSP. SAP + ServiceNow + OpenText stack — no M365 evidence. WWT opportunity: SAP RISE just completed = integration partner opening; Google DC load growth driving grid modernization investment cycle.
   Continental Resources (id=592): is_private=TRUE, ticker=NULL — taken private by Harold Hamm Oct 2022. No financial enrichment possible. CRM retained for relationship tracking only ($0.07M pipeline).
   Plains All American (id=86, PAA): ENRICHED 2026-05-16 — $50.1B rev (commodity pass-through), $3.33B EBITDA, 4,200 emp, Houston HQ (STOLA). sub_sector=Midstream Pipeline & Processing, all flags false (no MSP, no CoE, no channel mismatch), ai_maturity=4. Denominator=EBITDA×2.5=$8.32B. WWT addressable high $135.7M (27% base). CEO Willie Chiang since 2018. FY2024 EBITDA above guidance; Ironwood Midstream acquisition closed Q1 2025 (~$670M). Tech stack basic: Kubernetes, Citrix, Enverus pipeline data platform. WWT angle: OT/SCADA, pipeline data management, cybersecurity.
-  PPG Industries (id=60, PPG): ENRICHED 2026-05-16 — $15.875B rev, $2.27B EBITDA, 50,000 emp, Pittsburgh PA HQ (STOLA territory, channel_mismatch=true flagged). sub_sector=Petrochemical & Specialty Chemicals, ms_standardized=true, channel_mismatch=true, ai_maturity=14 (below ≥15 threshold). WWT addressable high $619.4M (24% effective: 27%+5%MS−8%mismatch). CIO Bhaskar Ramachandran (top 100 CIO recognition). CEO Tim Knavish (Jan 2023). SAP S/4HANA global rollout + Azure migration in progress. Restructuring targeting $175M savings by end 2025.
+  PPG Industries (id=60, PPG): ENRICHED 2026-05-16 — $15.875B rev, $2.27B EBITDA, 50,000 emp, Pittsburgh PA HQ (STOLA territory, channel_mismatch=true flagged). sub_sector=Petrochemical & Specialty Chemicals, ms_standardized=false, channel_mismatch=true, ai_maturity=14 (below ≥15 threshold). WWT addressable high $490.4M (19% effective: 27%−8%mismatch). CIO Bhaskar Ramachandran (top 100 CIO recognition). CEO Tim Knavish (Jan 2023). SAP S/4HANA global rollout + Azure migration in progress. Restructuring targeting $175M savings by end 2025.
   Fidelis New Energy (id=588), Terraflow Energy (id=590), Independence Power Holdings (id=591): no revenue data; CRM pipeline only.
 
 Pipeline for newly linked accounts (3yr rolling):
