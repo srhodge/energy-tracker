@@ -1,0 +1,21 @@
+144	AR	Antero Resources	United States	None
+150	CHRD	Chord Energy	United States	None
+8	COP	ConocoPhillips	United States	None
+345	CVI	CVR Energy	United States	Downstream Refining
+12	ENB	Enbridge	Canada	None
+21	EOG	EOG Resources	United States	None
+67	HAL	Halliburton	United States	Oilfield & Energy Services
+258	HP	Helmerich & Payne	United States	None
+152	DINO	HF Sinclair	United States	None
+63	LYB	LyondellBasell	United States	Downstream Refining
+567	NCSM	NCS Multistage	United States	None
+402	PARR	Par Pacific Holdings	United States	Downstream Refining
+259	PBF	PBF Energy	United States	None
+34	PSX	Phillips 66	United States	None
+244	SSL	Sasol	South Africa	None
+31	SRE	Sempra Energy	United States	Upstream E&P
+53	TRGP	Targa Resources	United States	None
+214	TE.PA	Technip Energies	France	None
+110	FTI	TechnipFMC	United Kingdom	None
+179	WFRD	Weatherford International	United States	Oilfield & Energy Services
+201	WOR.AX	Worley	Australia	Oilfield & Energy Services

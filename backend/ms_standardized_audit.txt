@@ -1,0 +1,19 @@
+3 | CVX | Chevron | Integrated O&G
+8 | COP | ConocoPhillips | Upstream E&P
+12 | ENB | Enbridge | Midstream Pipeline & Processing
+28 | SLB | Schlumberger | Oilfield & Energy Services
+30 | KMI | Kinder Morgan | Midstream Pipeline & Processing
+31 | SRE | Sempra Energy | Energy Utilities
+34 | PSX | Phillips 66 | Downstream Refining
+38 | MPC | Marathon Petroleum | Downstream Refining
+42 | OXY | Occidental Petroleum | Upstream E&P
+43 | MPLX | MPLX (subsidiary of Marathon Petroleum) | Midstream Pipeline & Processing
+52 | BKR | Baker Hughes | Oilfield & Energy Services
+54 | DD | Dupont De Nemours | Petrochemical & Specialty Chemicals
+55 | DOW | Dow | Petrochemical & Specialty Chemicals
+63 | LYB | LyondellBasell | Petrochemical & Specialty Chemicals
+66 | DVN | Devon Energy | Upstream E&P
+67 | HAL | Halliburton | Oilfield & Energy Services
+106 | EMN | Eastman Chemical | Petrochemical & Specialty Chemicals
+244 | SSL | Sasol | Petrochemical & Specialty Chemicals
+589 | FLR | Fluor Corporation | Oilfield & Energy Services

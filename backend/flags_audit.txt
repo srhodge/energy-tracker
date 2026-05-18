@@ -1,0 +1,28 @@
+ID     Ticker   Name                                   MS    Mismatch  MSP                  OEM   CoE   AI
+--------------------------------------------------------------------------------------------------------------
+2      XOM      ExxonMobil                             False False     Accenture, Deloitte, McKinsey True  True  18
+3      CVX      Chevron                                False False     HCL Technologies, LTIMindtree True  True  13
+12     ENB      Enbridge                               True  True                           False False 16
+23     WMB      Williams Companies                     False True                           False False None
+29     OKE      Oneok                                  False True                           False False None
+31     SRE      Sempra Energy                          False True                           False False None
+32     FANG     Diamondback Energy                     False True                           False False None
+38     MPC      Marathon Petroleum                     False True                           False False None
+43     MPLX     MPLX (subsidiary of Marathon Petrole   False True                           False False None
+54     DD       Dupont De Nemours                      True  True                           False False None
+55     DOW      Dow                                    True  True                           False False None
+60     PPG      PPG Industries                         False True                           False False 14
+67     HAL      Halliburton                            True  False     Accenture            True  False None
+73     EQT      EQT Corporation                        False True                           False False None
+106    EMN      Eastman Chemical                       True  True                           False False None
+110    FTI      TechnipFMC                             False True                           False False None
+144    AR       Antero Resources                       False True                           False False None
+159    AM       Antero Midstream                       False True                           False False None
+201    WOR.AX   Worley                                 False True                           False False None
+214    TE.PA    Technip Energies                       False True                           False False None
+244    SSL      Sasol                                  False True                           False False 13
+258    HP       Helmerich & Payne                      False True                           False False None
+259    PBF      PBF Energy                             False True                           False False None
+589    FLR      Fluor Corporation                      True  False     Kyndryl              False False 10
+
+Total: 24 companies
