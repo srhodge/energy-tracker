@@ -1,62 +1,55 @@
 {
   "company_id": 63,
+  "ticker": "LYB",
   "profile": {
-    "sub_sector": "Petrochemical & Specialty Chemicals",
     "employee_count": 26000,
-    "employee_count_source": "annual_report_2024",
     "hq_city": "Houston",
-    "hq_country": "United States",
+    "hq_country": "US",
     "tech_decision_city": "Houston",
-    "tech_decision_country": "United States",
     "revenue_ttm": 37700000000,
-    "is_private": false,
-    "is_pe_backed": false,
-    "commodity_exposure_pct": 65,
-    "revenue_denominator": "revenue",
-    "offshore_coe_confirmed": false,
-    "incumbent_msp": null,
-    "ms_standardized": true,
+    "ebitda_ttm": 2500000000,
+    "sub_sector": "Petrochemical & Specialty Chemicals",
+    "ms_standardized": false,
     "channel_mismatch_flag": false,
-    "oem_direct_confirmed": false
+    "channel_mismatch_note": null,
+    "incumbent_msp": null,
+    "oem_direct_confirmed": false,
+    "offshore_coe_confirmed": false,
+    "ai_maturity_score": 4
   },
   "leadership": [
     {
       "role": "CEO",
       "person_name": "Peter Vanacker",
-      "location_city": "Houston",
-      "location_country": "United States",
       "hire_date": "2022-06-01",
       "is_current": true,
-      "spend_category": "All",
-      "signal_score": 1,
-      "source": "company_website"
+      "signal_score": 2,
+      "source": "web_search"
     }
   ],
   "signals": [
     {
       "signal_type": "strategic_pivot",
-      "signal_category": "Digital",
-      "signal_date": "2024-01-01",
-      "signal_title": "LyondellBasell Value Enhancement Program targeting $800M+ EBITDA improvement \u2014 digital analytics as named pillar",
-      "signal_description": "LyondellBasell launched its Value Enhancement Program (VEP) targeting $800M+ in recurring EBITDA improvements. CEO Peter Vanacker has named technology as one of three strategic pillars. Data analytics and digital transformation are explicit components of the program, which spans 90+ manufacturing sites globally.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
+      "signal_category": "Capex",
+      "signal_title": "Cash Improvement Plan $800M achieved; IT contracts cut",
+      "signal_date": "2025-04-01",
+      "signal_description": "Cash Improvement Plan targeting $500M run-rate savings, expanded to $600M for 2025, $800M achieved. Fixed cost reductions include IT contract changes and headcount. Capex cut to $1.2B for 2026. Cumulative $1.3B target by end 2026.",
+      "spend_impact_direction": "down",
       "score_points": 2,
-      "source": "press_release"
+      "source": "LYB Q1-Q3 2025 earnings releases"
+    },
+    {
+      "signal_type": "leadership",
+      "signal_category": "New Hire",
+      "signal_title": "Director Infrastructure Services Kaushik Majumder hired",
+      "signal_date": "2025-05-01",
+      "signal_description": "Kaushik Majumder hired as Director Infrastructure Services from hubergroup, leading 60+ person team based in India. Prior experience at BASF, Linde, Accenture. Highest visible IT leadership hire in recent LYB history.",
+      "spend_impact_direction": "neutral",
+      "score_points": 2,
+      "source": "Indian Chemical News May 2025"
     }
   ],
-  "spend_model_flags": {
-    "oem_direct_deduction": false,
-    "offshore_coe": false,
-    "incumbent_msp": false,
-    "channel_mismatch": false,
-    "ms_standardized": true,
-    "ms_standardized_notes": "Microsoft Power BI confirmed deployed. Microsoft 365 in tech stack. Azure confirmed as cloud platform. Softchoice/WWT licensing opportunity likely \u2014 EA confirmation pending.",
-    "high_ai_maturity": false,
-    "ai_maturity_score": 8,
-    "ai_maturity_notes": "No CIO at C-suite level identified \u2014 unusual for $37.7B company. Board tech advisory via Bridget Karlin (Kaiser Permanente SVP IT, former IBM GTS CTO, Intel IoT GM). CEO names technology as strategic pillar. Power BI and SAP confirmed. No CAIO, no AI CoE, no NVIDIA partnership. Score 8 \u2014 below >=15 threshold.",
-    "territory": "STOLA",
-    "channel_mismatch_notes": "Incorporated Netherlands but operationally HQ Houston TX. Technology decisions made in Houston \u2014 within WWT STOLA territory. No channel conflict."
-  },
-  "enrichment_notes": "FY2024 revenue $37.7B across chemicals and petrochemicals. 26,000 employees globally. No CIO at C-suite level \u2014 IT embedded under COO or CFO. SAP confirmed ERP backbone. Microsoft Power BI and Azure confirmed. No incumbent MSP found. Exited refining Q1 2025 \u2014 operational simplification. VEP ($800M+ EBITDA) is active transformation signal. Confidence MEDIUM due to no identified CIO."
+  "enrichment_confidence": "MEDIUM",
+  "enrichment_date": "2026-05-17",
+  "enrichment_notes": "Global petrochemical leader — polyolefins, chemicals, refining and technology licensing. Incorporated Netherlands, operational HQ Houston TX (STOLA, no channel mismatch). FY2025 revenue ~$37.7B, EBITDA excl. identified items $2.5B. ~26,000 employees. No standalone CIO identified publicly. Director-level Infrastructure Services hire Kaushik Majumder (May 2025, from hubergroup) leads 60+ person team in India. Cash Improvement Plan: $800M achieved 2025, $1.3B cumulative target by end 2026 — IT contract changes and headcount reductions included. Capex reduced to $1.2B 2026. No MSP confirmed. No OEM direct. No M365 evidence. ms_standardized=false. ai_maturity=4 — no CIO-level digital transformation signals, infrastructure director only. WWT angle: infrastructure consolidation, managed services opportunity during cost reduction cycle, OT modernization at Channelview TX and La Porte TX facilities."
 }

@@ -1,72 +1,83 @@
 {
   "company_id": 42,
+  "ticker": "OXY",
   "profile": {
-    "sub_sector": "Upstream E&P",
     "employee_count": 12000,
-    "employee_count_source": "annual_report_2024",
     "hq_city": "Houston",
-    "hq_country": "United States",
+    "hq_country": "US",
     "tech_decision_city": "Houston",
-    "tech_decision_country": "United States",
     "revenue_ttm": 26720000000,
-    "is_private": false,
-    "is_pe_backed": false,
-    "commodity_exposure_pct": 80,
-    "revenue_denominator": "revenue",
-    "offshore_coe_confirmed": false,
-    "incumbent_msp": null,
-    "ms_standardized": true,
+    "ebitda_ttm": 7200000000,
+    "sub_sector": "Upstream E&P",
+    "ms_standardized": false,
     "channel_mismatch_flag": false,
+    "channel_mismatch_note": null,
+    "incumbent_msp": null,
     "oem_direct_confirmed": false,
-    "data_enrichment_tier": 2
+    "offshore_coe_confirmed": false,
+    "ai_maturity_score": 13
   },
   "leadership": [
     {
+      "role": "CIO",
+      "person_name": "Yanni Charalambous",
+      "hire_date": "2020-01-01",
+      "is_current": true,
+      "signal_score": 3,
+      "source": "web_search"
+    },
+    {
       "role": "CEO",
       "person_name": "Vicki Hollub",
-      "location_city": "Houston",
-      "location_country": "United States",
       "hire_date": "2016-04-01",
       "is_current": true,
-      "spend_category": "All",
-      "signal_score": 8,
-      "source": "company_website"
+      "signal_score": 4,
+      "source": "web_search"
     }
   ],
   "signals": [
     {
-      "signal_type": "ai_deployment",
-      "signal_category": "AI",
-      "signal_date": "2024-01-01",
-      "signal_title": "Occidental ruthless automation — 40% of onshore production transitioned to automated operations",
-      "signal_description": "Occidental's CEO Vicki Hollub has mandated 'ruthless automation' across Permian operations. Approximately 40% of onshore production now runs via automated AI/IoT field operations, driving ~9% reduction in domestic operational expenditures per BOE. Board-reviewed AI program confirmed in proxy statement. Confirms active, scaled AI deployment in operations.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
-      "score_points": 3,
-      "source": "annual_report"
-    },
-    {
-      "signal_type": "m_and_a",
-      "signal_category": "Digital",
-      "signal_date": "2024-08-01",
-      "signal_title": "Occidental CrownRock acquisition August 2024 — active IT systems integration demand",
-      "signal_description": "Occidental closed the $12B CrownRock acquisition in August 2024, adding significant Midland Basin scale. Post-acquisition IT integration of CrownRock systems into Occidental's infrastructure creates near-term IT spend demand across ERP, field automation, and data platforms.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
-      "score_points": 1,
-      "source": "press_release"
-    },
-    {
       "signal_type": "ai_announcement",
-      "signal_category": "AI",
+      "signal_category": "Automation",
+      "signal_title": "40% Permian production automated; ruthless automation mandate",
       "signal_date": "2024-03-01",
-      "signal_title": "Occidental Board reviews AI use cases — data analytics and operational efficiency confirmed in proxy",
-      "signal_description": "Occidental's 2024 proxy statement confirms the Board of Directors reviews AI use cases annually, specifically data analytics and operational efficiency applications. Board-level AI governance is a leading indicator of structured AI investment programs.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
-      "score_points": 1,
-      "source": "sec_filing"
+      "signal_description": "CEO Vicki Hollub's ruthless automation mandate — 40% of Permian production now runs via automated AI/IoT field operations, driving ~9% reduction in domestic opex per BOE. Board reviews AI use cases annually per proxy statement.",
+      "spend_impact_direction": "up",
+      "score_points": 3,
+      "source": "OXY FY2024 proxy and annual report"
+    },
+    {
+      "signal_type": "partnership",
+      "signal_category": "M&A",
+      "signal_title": "CrownRock $12B acquisition closed; active IT integration",
+      "signal_date": "2024-08-01",
+      "signal_description": "CrownRock acquisition closed Aug 2024 for $12B, adding significant Midland Basin scale. Active multi-year IT integration of CrownRock systems into OXY infrastructure — ERP, field automation, and data platforms.",
+      "spend_impact_direction": "up",
+      "score_points": 3,
+      "source": "OXY 10-K FY2024"
+    },
+    {
+      "signal_type": "strategic_pivot",
+      "signal_category": "Operations",
+      "signal_title": "Richard Jackson promoted SVP and COO Oct 2025",
+      "signal_date": "2025-10-02",
+      "signal_description": "Richard Jackson promoted to SVP and COO Oct 2025 with mandate to advance subsurface characterization, cost efficiencies and integrated technology value across global operations.",
+      "spend_impact_direction": "up",
+      "score_points": 2,
+      "source": "OXY 8-K Oct 2025"
+    },
+    {
+      "signal_type": "partnership",
+      "signal_category": "Carbon",
+      "signal_title": "STRATOS DAC plant operational — world's largest",
+      "signal_date": "2025-06-01",
+      "signal_description": "STRATOS direct air capture plant now operational — world's largest DAC facility in Permian Basin. Complex OT/IT infrastructure for carbon capture operations creates new IT investment area.",
+      "spend_impact_direction": "up",
+      "score_points": 3,
+      "source": "OXY 2025 operations disclosures"
     }
   ],
-  "enrichment_notes": "FY2024 revenue $26.72B. ~12,000 employees (post-CrownRock, OxyChem sold Oct 2025 to Berkshire Hathaway for $9.7B). Houston HQ in STOLA — clean account. No MSP identified. Azure + M365 + SAP confirmed. Ruthless automation mandate is key AI signal — 40% Permian production automated. CrownRock Aug 2024 = active IT integration demand. CEO transition (Hollub → COO Richard Jackson) = IT budget reset cycle. STRATOS DAC facility = emerging IT investment area. ai_maturity_score=13 (below ≥15). WWT opportunity: active automation and AI program, Permian digital operations, no MSP displacement needed."
+  "enrichment_confidence": "HIGH",
+  "enrichment_date": "2026-05-17",
+  "enrichment_notes": "Major E&P with OxyChem chemicals (sold to Berkshire Hathaway Oct 2025, $9.7B) and low-carbon ventures. Houston HQ (STOLA, no channel mismatch). FY2024 revenue $26.72B, ~12,000 employees. CIO: Yanni Charalambous, VP and CIO — 20+ years IT and cybersecurity at OXY, reports directly to CEO Vicki Hollub. CIO briefs full Board on cybersecurity per 10-K disclosure. CEO Vicki Hollub drives ruthless automation — 40% of Permian production automated. CrownRock acquisition ($12B, Aug 2024) = active multi-year IT integration demand. New COO Richard Jackson promoted Oct 2025 with technology-forward mandate. STRATOS DAC plant operational 2025. No confirmed MSP. No OEM direct. ms_standardized=false. ai_maturity=13 — strong automation mandate, below ≥15 threshold. WWT angle: CrownRock IT integration (active), OT/cybersecurity (CIO owns it), low-carbon tech infrastructure (STRATOS DAC), Permian automation expansion."
 }
