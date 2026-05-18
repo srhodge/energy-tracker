@@ -1,25 +1,45 @@
 {
   "company_id": 79,
+  "ticker": "WLK",
   "profile": {
-    "sub_sector": "Petrochemical & Specialty Chemicals",
     "employee_count": 16000,
-    "employee_count_source": "annual_report_2024",
     "hq_city": "Houston",
-    "hq_country": "United States",
+    "hq_country": "US",
     "tech_decision_city": "Houston",
-    "tech_decision_country": "United States",
-    "revenue_ttm": 10980000000,
-    "is_private": false,
-    "is_pe_backed": false,
-    "commodity_exposure_pct": 50,
-    "offshore_coe_confirmed": false,
-    "incumbent_msp": null,
+    "revenue_ttm": 11170000000,
+    "ebitda_ttm": 1100000000,
+    "sub_sector": "Petrochemical & Specialty Chemicals",
     "ms_standardized": false,
     "channel_mismatch_flag": false,
+    "channel_mismatch_note": null,
+    "incumbent_msp": null,
     "oem_direct_confirmed": false,
-    "data_enrichment_tier": 2
+    "offshore_coe_confirmed": false,
+    "ai_maturity_score": 3
   },
-  "leadership": [],
-  "signals": [],
-  "enrichment_notes": "FY2024 revenue $10.98B — petrochemicals, PVC/chlor-alkali, and building products. Sub-sector corrected from Downstream Refining to Petrochemical & Specialty Chemicals (denominator = Revenue). ~16,000 employees. Houston HQ in STOLA — clean account. No CIO, CDO, or AI programs identified. No MSP or CoE. No MS standardization confirmed. Closely held family-controlled company (Chao family ~70% ownership) — conservative IT spending culture likely. WWT opportunity: Houston STOLA account, no MSP displacement, but limited IT leadership visibility and family-controlled structure reduces near-term engagement probability."
+  "leadership": [
+    {
+      "role": "CEO",
+      "person_name": "Jean-Marc Gilson",
+      "hire_date": "2024-07-01",
+      "is_current": true,
+      "signal_score": 2,
+      "source": "WLK 8-K July 2024"
+    }
+  ],
+  "signals": [
+    {
+      "signal_type": "leadership_hire",
+      "signal_category": "New Hire",
+      "signal_title": "Jean-Marc Gilson appointed CEO — former LyondellBasell CEO",
+      "signal_date": "2024-07-01",
+      "signal_description": "Jean-Marc Gilson appointed CEO July 2024, previously CEO of LyondellBasell. Brings external chemicals industry perspective to Chao family-controlled company. Driving PEM profitability improvement plan. Board seat added Feb 2026.",
+      "spend_impact_direction": "up",
+      "score_points": 2,
+      "source": "WLK 8-K July 2024"
+    }
+  ],
+  "enrichment_confidence": "MEDIUM",
+  "enrichment_date": "2026-05-17",
+  "enrichment_notes": "Integrated petrochemical company — PVC, chlor-alkali, housing and infrastructure products. Houston HQ (STOLA, no channel mismatch). FY2025 revenue $11.17B, EBITDA compressed by chemical cycle downturn — reported EBITDA negative due to $727M goodwill write-off and PEM restructuring charges; underlying EBITDA excl. identified items ~$1.1B. ~16,000 employees. CIO exists per 10-K cybersecurity disclosure but name not publicly available — both CIO and Senior Director Cybersecurity have decades of experience. New CEO Jean-Marc Gilson (appointed Jul 2024, formerly LyondellBasell CEO) driving PEM profitability improvement plan. Family-controlled — Chao family owns ~70%+ which limits strategic IT investment appetite. No MSP confirmed. No M365 evidence. ai_maturity=3 — no digital transformation signals, no AI programs, family-controlled conservative culture, CIO anonymous. Cash position strong ($2.9B), investment-grade. WWT angle: new CEO from LYB may drive modernization; OT at Channelview TX and Lake Charles LA facilities; PVC/chlor-alkali manufacturing IT."
 }

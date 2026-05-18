@@ -1,61 +1,53 @@
 {
   "company_id": 76,
+  "ticker": "EXE",
   "profile": {
-    "sub_sector": "Upstream E&P",
     "employee_count": 2400,
-    "employee_count_source": "annual_report_2024",
     "hq_city": "Houston",
-    "hq_country": "United States",
+    "hq_country": "US",
     "tech_decision_city": "Houston",
-    "tech_decision_country": "United States",
     "revenue_ttm": 12960000000,
-    "is_private": false,
-    "is_pe_backed": false,
-    "commodity_exposure_pct": 90,
-    "revenue_denominator": "revenue",
-    "offshore_coe_confirmed": false,
-    "incumbent_msp": null,
+    "ebitda_ttm": 4500000000,
+    "sub_sector": "Upstream E&P",
     "ms_standardized": false,
     "channel_mismatch_flag": false,
+    "channel_mismatch_note": null,
+    "incumbent_msp": null,
     "oem_direct_confirmed": false,
-    "data_enrichment_tier": 2
+    "offshore_coe_confirmed": false,
+    "ai_maturity_score": 7
   },
   "leadership": [
     {
-      "role": "CEO",
-      "person_name": "Michael Wichterich",
-      "location_city": "Houston",
-      "location_country": "United States",
-      "hire_date": "2026-02-09",
+      "role": "CIO",
+      "person_name": "Mr. Christ",
+      "hire_date": "2021-01-01",
       "is_current": true,
-      "spend_category": "All",
+      "signal_score": 3,
+      "source": "Expand Energy management team page"
+    },
+    {
+      "role": "CEO",
+      "person_name": "Nick Dell'Osso",
+      "hire_date": "2021-01-01",
+      "is_current": false,
       "signal_score": 2,
       "source": "company_website"
     }
   ],
   "signals": [
     {
-      "signal_type": "m_and_a",
-      "signal_category": "Digital",
-      "signal_date": "2024-10-01",
-      "signal_title": "Expand Energy formed from Chesapeake + Southwestern merger — active post-merger IT integration demand",
-      "signal_description": "Expand Energy Corporation was formed in October 2024 from the merger of Chesapeake Energy and Southwestern Energy, creating the largest US independent natural gas producer. Active IT integration of two separate ERP, production data, land, and operations systems creates significant near-term IT spend demand.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
+      "signal_type": "earnings_signal",
+      "signal_category": "Capex",
+      "signal_title": "Q2 2025: synergy target raised to $600M; added to S&P 500",
+      "signal_date": "2025-07-29",
+      "signal_description": "Q2 2025: Adjusted EBITDAX $1.18B. Annual synergy outlook increased to $600M by YE2026 — ~50% above original $400M target. Added to S&P 500 March 2025. Investment grade from all three rating agencies. IT systems consolidation is explicit component of synergy program.",
+      "spend_impact_direction": "up",
       "score_points": 2,
-      "source": "press_release"
-    },
-    {
-      "signal_type": "ai_announcement",
-      "signal_category": "Digital",
-      "signal_date": "2026-02-09",
-      "signal_title": "Expand Energy HQ relocation to Houston — new leadership and IT infrastructure transformation",
-      "signal_description": "Expand Energy announced HQ relocation from Oklahoma City to Houston in February 2026, coinciding with CEO transition from Dell'Osso to interim CEO Wichterich and permanent CEO search. HQ move triggers IT infrastructure changes, lease and facilities transitions, and signals strategic repositioning. New permanent CEO appointment expected to reset IT budget priorities.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
-      "score_points": 4,
-      "source": "press_release"
+      "source": "Expand Energy Q2 2025 earnings release"
     }
   ],
-  "enrichment_notes": "FY2024 revenue $12.96B — pure upstream natural gas E&P (denominator = Revenue). ~2,400 employees post-merger. Relocating HQ to Houston (announced Feb 2026) — channel_mismatch=false (future STOLA account). Interim CEO Michael Wichterich, permanent CEO search underway. Post-merger IT integration (Chesapeake + Southwestern systems) is primary near-term IT demand. No CIO, MSP, CoE, or AI programs identified. Confidence LOW — company in leadership and location transition. WWT opportunity: will be Houston STOLA account, post-merger IT integration demand, but leadership uncertainty limits near-term engagement."
+  "enrichment_confidence": "HIGH",
+  "enrichment_date": "2026-05-17",
+  "enrichment_notes": "Largest US natural gas producer — formed from Chesapeake Energy + Southwestern Energy merger (Oct 2024). HQ relocated to Houston Feb 2026 (STOLA, no channel mismatch). FY2025 Adjusted EBITDAX ~$4.5B. ~2,400 employees. CIO CONFIRMED: Mr. Christ, VP and Chief Information Officer — previously VP/CIO at Chesapeake Energy since 2021, prior VP Internal Audit and Supply Chain, prior Ernst & Young executive director. CIO inherited from Chesapeake side of merger. Interim CEO Michael Wichterich (Feb 2026, per separate DB record). Added to S&P 500 March 2025. Investment grade all agencies. Synergy target increased to $600M by YE2026 (~50% above original target) — IT systems consolidation is explicit component. No MSP confirmed. No M365 evidence. ai_maturity=7 — active IT integration of two large E&P companies, CIO confirmed, synergy program includes IT consolidation, natural gas AI data center demand positioning. WWT angle: active Chesapeake+Southwestern IT integration, CIO Christ is the entry point, natural gas data center power demand."
 }

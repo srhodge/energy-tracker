@@ -1,61 +1,55 @@
 {
   "company_id": 27,
+  "ticker": "ET",
   "profile": {
-    "sub_sector": "Midstream Pipeline & Processing",
     "employee_count": 12000,
-    "employee_count_source": "annual_report_2024",
     "hq_city": "Dallas",
-    "hq_country": "United States",
+    "hq_country": "US",
     "tech_decision_city": "Dallas",
-    "tech_decision_country": "United States",
     "revenue_ttm": 92290000000,
-    "is_private": false,
-    "is_pe_backed": false,
-    "commodity_exposure_pct": 75,
-    "revenue_denominator": "revenue",
-    "offshore_coe_confirmed": false,
-    "incumbent_msp": null,
+    "ebitda_ttm": 15500000000,
+    "sub_sector": "Midstream Pipeline & Processing",
     "ms_standardized": false,
     "channel_mismatch_flag": false,
+    "channel_mismatch_note": null,
+    "incumbent_msp": null,
     "oem_direct_confirmed": false,
-    "data_enrichment_tier": 2
+    "offshore_coe_confirmed": false,
+    "ai_maturity_score": 5
   },
   "leadership": [
     {
-      "role": "CEO",
+      "role": "Co-CEO",
       "person_name": "Tom Long",
-      "location_city": "Dallas",
-      "location_country": "United States",
-      "hire_date": null,
+      "hire_date": "2021-01-01",
       "is_current": true,
-      "spend_category": "All",
       "signal_score": 2,
       "source": "company_website"
     }
   ],
   "signals": [
     {
-      "signal_type": "ai_announcement",
-      "signal_category": "Digital",
-      "signal_date": "2025-01-01",
-      "signal_title": "Energy Transfer positioning natural gas infrastructure as AI data center power supply",
-      "signal_description": "Energy Transfer is positioning its natural gas pipeline and storage infrastructure as a key power supply source for AI data center campuses. Active LinkedIn communications and investor messaging around behind-the-meter natural gas for data center power. Signals board awareness of AI infrastructure demand as growth opportunity.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
-      "score_points": 2,
-      "source": "press_release"
+      "signal_type": "partnership",
+      "signal_category": "Operations",
+      "signal_title": "CloudBurst Data Centers natural gas supply — 1.2 GW AI data center, San Marcos TX",
+      "signal_date": "2025-02-10",
+      "signal_description": "CloudBurst Data Centers long-term natural gas supply agreement — Oasis Pipeline to supply up to 450,000 MMBtu/day for ~1.2 GW AI data center in San Marcos TX. 10+ year term. Behind-the-meter power for AI compute campus.",
+      "spend_impact_direction": "up",
+      "score_points": 3,
+      "source": "Energy Transfer 8-K Feb 2025"
     },
     {
-      "signal_type": "partnership",
-      "signal_category": "Digital",
-      "signal_date": "2024-06-01",
-      "signal_title": "Energy Transfer 20-year LNG SPA with Chevron — Lake Charles LNG digital operations",
-      "signal_description": "Energy Transfer signed a 20-year LNG Sales and Purchase Agreement with Chevron for the Lake Charles LNG export project. Large-scale LNG operations require advanced digital monitoring, process control, and safety systems — a meaningful IT investment signal for the facility.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
-      "score_points": 1,
-      "source": "press_release"
+      "signal_type": "strategic_pivot",
+      "signal_category": "M&A",
+      "signal_title": "Lake Charles LNG MidOcean JV — 30% stake, $3.5B commitment",
+      "signal_date": "2025-04-01",
+      "signal_description": "Lake Charles LNG MidOcean JV — MidOcean commits 30% of construction costs and 30% of LNG production. 20-year Chevron SPA already in place. Large-scale LNG facility drives OT/SCADA and digital operations IT investment.",
+      "spend_impact_direction": "up",
+      "score_points": 2,
+      "source": "Energy Transfer Q1 2025 earnings"
     }
   ],
-  "enrichment_notes": "FY2024 revenue $92.29B — highly commodity-exposed (Sunoco LP retail fuel pass-through inflates revenue). ~12,000 employees. Dallas HQ in STOLA — clean territory. No CIO, MSP, CoE, or AI programs identified. Co-CEO structure (Kelcy Warren + Tom Long) is founder-controlled and operationally focused. Confidence LOW. ai_maturity_score=5 (well below ≥15). WWT opportunity: Dallas STOLA account, no MSP displacement, but limited IT visibility and very commodity-exposed culture. Primary hook is natural gas AI data center positioning."
+  "enrichment_confidence": "MEDIUM",
+  "enrichment_date": "2026-05-17",
+  "enrichment_notes": "One of the largest US midstream MLPs — crude oil, NGL, natural gas pipelines, storage, terminals. Dallas HQ (STOLA, no channel mismatch). FY2025 Q4 Adjusted EBITDA $4.18B (+8%), full year ~$15.5B EBITDA. Revenue $92.3B (commodity pass-through heavy — midstream EBITDA×2.5 denominator applies). ~12,000 employees. No standalone CIO identified — operations-focused MLP structure. Co-CEO Tom Long drives AI data center power positioning strategy. Key signal: CloudBurst Data Centers long-term natural gas supply agreement signed Feb 2025 — up to 1.2 GW behind-the-meter power for AI data center in central Texas via Oasis Pipeline. Lake Charles LNG MidOcean JV (Apr 2025, 30% stake). Active expansion: Mustang Draw processing plant (275 MMcf/d, Permian, Q2 2026). No MSP confirmed. No M365 evidence. ai_maturity=5 — data center power positioning is energy revenue play not internal IT, no confirmed internal AI/digital programs. WWT angle: OT/SCADA for massive pipeline network, cybersecurity for critical infrastructure, data center connectivity infrastructure."
 }
