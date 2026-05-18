@@ -1,50 +1,73 @@
 {
   "company_id": 30,
+  "ticker": "KMI",
   "profile": {
-    "sub_sector": "Midstream Pipeline & Processing",
     "employee_count": 10933,
-    "employee_count_source": "annual_report_2024",
     "hq_city": "Houston",
-    "hq_country": "United States",
+    "hq_country": "US",
     "tech_decision_city": "Houston",
-    "tech_decision_country": "United States",
-    "revenue_ttm": 15100000000,
-    "is_private": false,
-    "is_pe_backed": false,
-    "commodity_exposure_pct": 20,
-    "revenue_denominator": "revenue",
-    "offshore_coe_confirmed": false,
-    "incumbent_msp": null,
-    "ms_standardized": true,
+    "revenue_ttm": 16940000000,
+    "ebitda_ttm": 8390000000,
+    "sub_sector": "Midstream Pipeline & Processing",
+    "ms_standardized": false,
     "channel_mismatch_flag": false,
+    "channel_mismatch_note": null,
+    "incumbent_msp": null,
     "oem_direct_confirmed": false,
-    "data_enrichment_tier": 2
+    "offshore_coe_confirmed": false,
+    "ai_maturity_score": 11
   },
   "leadership": [
     {
-      "role": "CIO",
+      "role": "CAO",
       "person_name": "Michael Pitta",
-      "location_city": "Houston",
-      "location_country": "United States",
       "hire_date": "2024-02-01",
       "is_current": true,
-      "spend_category": "All",
-      "signal_score": 7,
-      "source": "company_website"
+      "signal_score": 2,
+      "source": "web_search"
+    },
+    {
+      "role": "CEO",
+      "person_name": "Kim Dang",
+      "hire_date": "2023-01-01",
+      "is_current": true,
+      "signal_score": 3,
+      "source": "web_search"
     }
   ],
   "signals": [
     {
-      "signal_type": "ai_announcement",
-      "signal_category": "AI",
+      "signal_type": "strategic_pivot",
+      "signal_category": "Capex",
+      "signal_title": "Project backlog $9.3B — AI data center gas demand",
       "signal_date": "2025-01-01",
-      "signal_title": "Kinder Morgan CFO drives GenAI and automation strategy — regular CIO partnership for AI opportunity identification",
-      "signal_description": "Kinder Morgan's CFO is actively driving GenAI and automation strategy, meeting regularly with the CIO to identify AI deployment opportunities. AI deployment is focused on revenue generation in addition to cost reduction. Confirms C-suite AI commitment even without a standalone CIO function.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
+      "signal_description": "Project backlog surged from $1.4B to $9.3B driven by AI data center natural gas demand. $1.7B Trident Pipeline (Texas), $3.5B Copper State Connector (Arizona), $1.7B Mississippi Crossing sanctioned. $3.4B capex planned 2026.",
+      "spend_impact_direction": "up",
+      "score_points": 4,
+      "source": "KMI investor presentations 2025"
+    },
+    {
+      "signal_type": "partnership",
+      "signal_category": "AI",
+      "signal_title": "Palantir Foundry + Xage zero-trust OT security deployed",
+      "signal_date": "2023-01-01",
+      "signal_description": "Multi-year Palantir Foundry deployment for pipeline analytics and operational efficiency. Xage Security zero-trust OT cybersecurity architecture deployed across pipeline network.",
+      "spend_impact_direction": "up",
       "score_points": 3,
-      "source": "press_release"
+      "source": "KMI strategic analysis 2025"
+    },
+    {
+      "signal_type": "earnings_signal",
+      "signal_category": "Capex",
+      "signal_title": "FY2025 record EBITDA $8.39B; revenue $16.94B",
+      "signal_date": "2026-01-21",
+      "signal_description": "FY2025 record Adjusted EBITDA $8.39B (+6% YoY), revenue $16.94B. Record annual net income and EBITDA. $3.4B capex planned 2026. CEO described current opportunity set as most robust in company history.",
+      "spend_impact_direction": "up",
+      "score_points": 2,
+      "source": "KMI Q4 2025 earnings release"
     }
   ],
-  "enrichment_notes": "FY2024 revenue $15.1B — fee-based midstream (denominator = Revenue × 0.12 = $1.81B). 10,933 employees. Houston HQ in STOLA — clean account. IT embedded under CAO (Michael Pitta, VP/CAO since Feb 2024) — not a standalone CIO function. CFO actively drives GenAI and automation strategy. $5B+ pipeline expansion backlog for AI data center natural gas demand. No MSP or CoE. Azure + SAP + M365 confirmed. ai_maturity_score=10 (below ≥15). WWT opportunity: Houston account, no MSP, CFO AI engagement is entry angle, $5B pipeline backlog IT infrastructure demand."
+  "enrichment_confidence": "HIGH",
+  "enrichment_date": "2026-05-17",
+  "enrichment_notes": "Largest natural gas pipeline network in North America — ~66,000 miles, transports ~40% of US natural gas. Houston HQ (STOLA, no channel mismatch). FY2025 record revenue $16.94B, Adjusted EBITDA $8.39B (+6% YoY). ~10,933 employees. Technology leadership: Michael Pitta is VP/CAO overseeing HR, IT and Administration — not a standalone CIO. CFO actively collaborates with Pitta on GenAI strategy (per IMD case study). Palantir Foundry deployed for pipeline analytics. Xage Security zero-trust OT cybersecurity deployed. $9.3B project backlog — largest in company history (AI data center gas demand). No MSP confirmed. No M365 evidence — ms_standardized=false. ai_maturity=11 — Palantir + Xage deployed, CFO GenAI engagement, below ≥15 threshold. WWT angle: OT/SCADA for massive pipeline expansion, cybersecurity (Xage = zero-trust entry point), data center connectivity infrastructure."
 }

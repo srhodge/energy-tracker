@@ -1,84 +1,93 @@
 {
   "company_id": 12,
+  "ticker": "ENB",
   "profile": {
-    "sub_sector": "Midstream Pipeline & Processing",
     "employee_count": 12000,
-    "employee_count_source": "annual_report_2025",
     "hq_city": "Calgary",
-    "hq_country": "Canada",
+    "hq_country": "CA",
     "tech_decision_city": "Calgary",
-    "tech_decision_country": "Canada",
     "revenue_ttm": 38750000000,
-    "revenue_denominator": "revenue",
-    "is_private": false,
-    "is_pe_backed": false,
-    "commodity_exposure_pct": 55,
+    "ebitda_ttm": 18600000000,
+    "sub_sector": "Midstream Pipeline & Processing",
     "ms_standardized": true,
-    "offshore_coe_confirmed": false,
-    "incumbent_msp": null,
     "channel_mismatch_flag": true,
-    "channel_mismatch_note": "HQ Calgary \u2014 primary tech decisions outside WWT STOLA territory. Major US operations include Ingleside Energy Center (TX), Texas Eastern Transmission, and newly acquired Dominion gas utilities in Ohio, Utah, and North Carolina.",
-    "data_enrichment_tier": 1,
-    "oem_direct_confirmed": false
+    "channel_mismatch_note": "HQ Calgary AB — outside WWT STOLA territory. Major US ops: Ingleside Energy Center TX, Texas Eastern Transmission, Dominion gas utilities OH/UT/NC.",
+    "incumbent_msp": null,
+    "oem_direct_confirmed": false,
+    "offshore_coe_confirmed": false,
+    "ai_maturity_score": 16
   },
   "leadership": [
     {
       "role": "CIO",
       "person_name": "Bhushan Ivaturi",
-      "location_city": "Calgary",
-      "location_country": "Canada",
-      "hire_date": null,
-      "linkedin_url": null,
+      "hire_date": "2020-01-01",
       "is_current": true,
-      "spend_category": "All",
-      "signal_score": 13,
+      "signal_score": 5,
       "source": "public_disclosure"
+    },
+    {
+      "role": "CEO",
+      "person_name": "Greg Ebel",
+      "hire_date": "2023-01-01",
+      "is_current": true,
+      "signal_score": 3,
+      "source": "web_search"
     }
   ],
   "signals": [
     {
-      "signal_type": "m_and_a",
+      "signal_type": "partnership",
+      "signal_category": "AI",
+      "signal_title": "Microsoft AI partnership: M365 Copilot + ChatENB Azure OpenAI",
+      "signal_date": "2024-10-01",
+      "signal_description": "Enbridge-Microsoft AI partnership confirmed: M365 Copilot rolled out to ~4,000 employees (~1/3 workforce), ChatENB Azure OpenAI chatbot deployed to all staff, Bing Enterprise company-wide. CIO Bhushan Ivaturi confirmed 80%+ workloads migrated to Azure. ms_standardized=true confirmed with source.",
+      "spend_impact_direction": "up",
+      "score_points": 5,
+      "source": "BIC Magazine Oct 2024"
+    },
+    {
+      "signal_type": "partnership",
       "signal_category": "M&A",
+      "signal_title": "$14B Dominion gas utilities acquisition; IT integration active",
       "signal_date": "2024-12-01",
-      "signal_title": "Completed $14B acquisition of three Dominion US gas utilities \u2014 IT integration underway",
-      "signal_description": "Enbridge completed its $14B acquisition of three Dominion Energy US gas utilities (Questar, East Ohio Gas, Public Service North Carolina) in 2024, adding North America's largest gas utility operation by volume. IT integration of three separate utility platforms represents significant active demand.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
+      "signal_description": "Enbridge completed $14B acquisition of three Dominion Energy US gas utilities (Questar, East Ohio Gas, Public Service North Carolina), adding North America's largest gas utility operation by volume. Active IT integration of three separate utility platforms.",
+      "spend_impact_direction": "up",
       "score_points": 2,
-      "source": "sec_filing"
+      "source": "SEC filing Dec 2024"
     },
     {
       "signal_type": "ai_announcement",
       "signal_category": "AI",
+      "signal_title": "GenAI for retiring workforce knowledge capture",
       "signal_date": "2024-09-01",
-      "signal_title": "Generative AI for knowledge capture to address retiring Baby Boomer workforce",
-      "signal_description": "CIO Bhushan Ivaturi is driving generative AI programs specifically designed to capture and transfer institutional knowledge from retiring Baby Boomer employees. This workforce transition challenge is a top IT investment driver at Enbridge, underpinned by the completed cloud migration.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
+      "signal_description": "CIO Bhushan Ivaturi driving generative AI programs to capture institutional knowledge from retiring Baby Boomer employees. Top IT investment driver underpinned by completed cloud migration.",
+      "spend_impact_direction": "up",
       "score_points": 3,
-      "source": "public_disclosure"
-    },
-    {
-      "signal_type": "ai_announcement",
-      "signal_category": "OT",
-      "signal_date": "2024-06-01",
-      "signal_title": "AI-enabled pipeline inspection gauges and leak detection in production",
-      "signal_description": "Enbridge has deployed AI-enabled pipeline inspection gauges and automated leak detection systems across its 17,000+ mile pipeline network. Corrosion monitoring systems also use AI for predictive maintenance, reducing pipeline integrity risk.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
-      "score_points": 2,
       "source": "public_disclosure"
     },
     {
       "signal_type": "strategic_pivot",
       "signal_category": "Cloud",
+      "signal_title": "Cloud migration complete: 17 DCs to 4, 9,050 servers decommissioned",
       "signal_date": "2024-01-01",
-      "signal_title": "Cloud migration complete \u2014 17 data centers consolidated to 4, 9,050 servers decommissioned",
-      "signal_description": "Enbridge completed a major cloud migration reducing its data center footprint from 17 to 4 facilities and decommissioning 9,050 servers. Carbon footprint reduced 66% via shift to renewable-powered cloud. This completed foundation enables AI and data workloads across the post-Dominion enterprise.",
-      "sentiment": "positive",
-      "spend_impact_direction": "increase",
+      "signal_description": "Enbridge completed cloud migration reducing data centers from 17 to 4 and decommissioning 9,050 servers. Carbon footprint reduced 66%. Foundation enables AI/data workloads across post-Dominion enterprise.",
+      "spend_impact_direction": "up",
       "score_points": 2,
       "source": "public_disclosure"
+    },
+    {
+      "signal_type": "earnings_signal",
+      "signal_category": "Capex",
+      "signal_title": "FY2024 Adjusted EBITDA $18.6B +13%; 19th consecutive guidance year",
+      "signal_date": "2025-02-14",
+      "signal_description": "FY2024 Adjusted EBITDA $18.6B (+13%), DCF $12.0B (+6%). 19th consecutive year of financial guidance achievement. $7B capital deployment planned 2025. 30th consecutive annual dividend increase.",
+      "spend_impact_direction": "up",
+      "score_points": 2,
+      "source": "Enbridge Q4 2024 earnings release"
     }
-  ]
+  ],
+  "enrichment_confidence": "HIGH",
+  "enrichment_date": "2026-05-17",
+  "enrichment_notes": "Largest energy infrastructure company in North America — liquids pipelines, gas transmission/distribution, renewable energy. Calgary HQ (channel mismatch, outside STOLA). FY2024 EBITDA $18.6B (+13%), 19th consecutive guidance year. ~12,000 employees. CONFIRMED Microsoft partnership: CIO Bhushan Ivaturi (SVP and CIO) led multi-year Microsoft collaboration — 80%+ workloads to Azure, M365 Copilot to ~4,000 employees, ChatENB Azure OpenAI chatbot to all staff, Bing Enterprise company-wide. ms_standardized=TRUE confirmed. ai_maturity=16 — M365 Copilot + Azure OpenAI deployed at scale, exceeds ≥15 threshold, AI bonus applies. Dominion $14B acquisition complete — active IT integration of 3 utility platforms. No MSP confirmed. WWT angle: Azure expansion beyond 80%, Copilot + security, OT cybersecurity for 17,000+ mile pipeline network, Dominion utility IT integration."
 }
