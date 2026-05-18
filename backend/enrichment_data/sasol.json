@@ -15,9 +15,9 @@
     "revenue_denominator": "revenue",
     "offshore_coe_confirmed": false,
     "incumbent_msp": null,
-    "ms_standardized": true,
-    "channel_mismatch_flag": true,
-    "channel_mismatch_note": "HQ Johannesburg South Africa \u2014 significant channel mismatch. US operations at Lake Charles LA (within STOLA reach) but primary technology decisions made in South Africa. Channel mismatch flag applied.",
+    "ms_standardized": false,
+    "channel_mismatch_flag": false,
+    "channel_mismatch_note": null,
     "oem_direct_confirmed": false
   },
   "leadership": [
@@ -49,14 +49,12 @@
     "oem_direct_deduction": false,
     "offshore_coe": false,
     "incumbent_msp": false,
-    "channel_mismatch": true,
-    "ms_standardized": true,
-    "ms_standardized_notes": "Microsoft Copilot and Microsoft 365 confirmed. Azure confirmed as cloud platform. SAP on Azure likely. Softchoice/WWT licensing opportunity may exist for US operations.",
+    "channel_mismatch": false,
+    "ms_standardized": false,
     "high_ai_maturity": false,
     "ai_maturity_score": 13,
-    "ai_maturity_notes": "CIO Lungile Mginqi is externally active and driving GenAI agenda publicly (+2 CIO signal). Microsoft Copilot confirmed deployment (+2 MS AI platform signal). GenAI program with 10-30 use cases in production (+4 AI budget/program signal, though cost was initially zero). Score 13 \u2014 below \u226515 threshold. Notable for a South African company \u2014 above average for the region.",
-    "territory": "STOLA",
-    "channel_mismatch_notes": "HQ Johannesburg South Africa \u2014 significant channel mismatch. US operations at Lake Charles LA (within STOLA reach) but primary technology decisions made in South Africa. Channel mismatch flag applied."
+    "ai_maturity_notes": "CIO Lungile Mginqi is externally active and driving GenAI agenda publicly. Microsoft Copilot confirmed deployment. GenAI program with 10-30 use cases in production. Score 13 \u2014 below \u226515 threshold.",
+    "territory": "STOLA"
   },
-  "enrichment_notes": "FY TTM revenue ~$13.9B USD (fiscal year ends June 30). 27,411 employees. Revenue >$10B triggers OEM deduction. HQ Johannesburg = channel mismatch. CIO Lungile Mginqi confirmed and active. Microsoft Copilot + Azure + SAP confirmed. No incumbent MSP found. South Africa country multiplier applies (Step 3). AI maturity 13, below threshold. US Lake Charles chemicals complex is the main WWT entry point."
+  "enrichment_notes": "Petrochemical & Specialty Chemicals company HQ Johannesburg South Africa. FY2024 revenue $13.9B, 27,411 employees. CIO Lungile Mginqi confirmed and active. channel_mismatch=false (cleared 2026-05-17). ms_standardized=false (cleared 2026-05-16). ai_maturity=13. WWT addressable $451.9M at 27%. NOTE: No active WWT account team assigned as of May 2026 — not covered by STOLA, MENA, or any other territory. Practical near-term opportunity is low until coverage is assigned. Do not prioritize for outreach without confirming account ownership first. US Lake Charles chemicals complex is the most logical WWT entry point if coverage is established."
 }
